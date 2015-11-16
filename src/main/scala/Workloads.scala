@@ -71,6 +71,7 @@ object Workloads {
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/example-init-cluster-state.log"
+  val exampleAllTraceFileName = "traces/example-all-cluster-state.log"
   assert((new File(examplePrefillTraceFileName)).exists())
   val exampleBatchPrefillTraceWLGenerator =
       new PrefillPbbTraceWorkloadGenerator("PrefillBatch",
@@ -105,16 +106,18 @@ object Workloads {
   assert((new File(exampleInterarrivalTraceFileName)).exists())
   assert((new File(exampleNumTasksTraceFileName)).exists())
   assert((new File(exampleJobDurationTraceFileName)).exists())
+  assert((new File(exampleAllTraceFileName)).exists())
 
   // A workload based on traces of interarrival times, tasks-per-job,
   // and job duration. Task shapes now based on pre-fill traces.
+  // Now task shapes are based on all jobs traces from google
   val exampleWorkloadGeneratorTraceAllBatch =
       new TraceAllWLGenerator(
           "Batch".intern(),
           exampleInterarrivalTraceFileName,
           exampleNumTasksTraceFileName,
           exampleJobDurationTraceFileName,
-          examplePrefillTraceFileName,
+          exampleAllTraceFileName,
           maxCpusPerTask = 3.9, // Machines in example cluster have 4 CPUs.
           maxMemPerTask = 15.9) // Machines in example cluster have 16GB mem.
 
@@ -124,7 +127,7 @@ object Workloads {
           exampleInterarrivalTraceFileName,
           exampleNumTasksTraceFileName,
           exampleJobDurationTraceFileName,
-          examplePrefillTraceFileName,
+          exampleAllTraceFileName,
           maxCpusPerTask = 3.9,
           maxMemPerTask = 15.9)
 

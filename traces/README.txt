@@ -18,7 +18,7 @@ Column 5: UNSPECIFIED/UNUSED
 === 8 column format ===
 Column 5: number of tasks
 Column 6: aggregate CPU usage of job (in num cores)
-Column 7: aggregate Ram usage of job (in bytes)
+Column 7: º (in bytes)
 
 == CMB_PBB split logic ==
 For our primary research evaluation in [2] we used a job -> scheduler assignment policy as follows, which we call CMB_PBB.
