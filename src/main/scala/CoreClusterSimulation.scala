@@ -484,6 +484,7 @@ abstract class Scheduler(val name: String,
    */
   def scheduleJob(job: Job,
                   cellState: CellState): Seq[ClaimDelta] = {
+    //TODO: Aquí tendremos que comprobar que el job encaja en las máquinas encendidas y si no levantar el tema
     assert(simulator != null)
     assert(cellState != null)
     assert(job.cpusPerTask <= cellState.cpusPerMachine,
@@ -903,6 +904,7 @@ class CellState(val numMachines: Int,
                              appliedDelta.mem,
                              availableCpus,
                              availableMem))
+        //TODO: Candidato a decidir si apagar máquinas
       }
     })
   }

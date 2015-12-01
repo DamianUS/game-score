@@ -171,6 +171,27 @@ for env in experiment_result_set.experiment_env:
                                      get_mad(conflict_fraction_median,
                                              daily_conflict_fractions))
 
+      scheduler_stats_key = (env.cell_name, sched_stat.scheduler_name, "scheduler_stats")
+      output_strings[scheduler_stats_key] += \
+          "%s%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
+                                     env.cell_name,
+                                     sched_stat.scheduler_name,
+                                     exp_result.constant_think_time,
+                                     exp_result.per_task_think_time,
+                                     exp_result.avg_job_interarrival_time,
+                                     sched_stat.useful_busy_time,
+                                     sched_stat.wasted_busy_time,
+                                     sched_stat.num_successful_transactions,
+                                     sched_stat.num_failed_transactions,
+                                     sched_stat.num_no_resources_found_scheduling_attempts,
+                                     sched_stat.num_retried_transactions,
+                                     sched_stat.num_jobs_timed_out_scheduling,
+                                     sched_stat.num_successful_task_transactions,
+                                     sched_stat.num_failed_task_transactions,
+                                     sched_stat.is_multi_path,
+                                     sched_stat.num_jobs_left_in_queue,
+                                     sched_stat.failed_find_victim_attempts)
+
 # Create output files.
 # One output file for each unique (cell_name, scheduler_name, metric) tuple.
 for key_tuple, out_str in output_strings.iteritems():

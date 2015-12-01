@@ -64,7 +64,7 @@ object Simulation {
       }
     }
     val pp = new ParseParms(helpString)
-    pp.parm("--thread-pool-size", "4").rex("^\\d*") // optional_arg
+    pp.parm("--thread-pool-size", "1").rex("^\\d*") // optional_arg
     pp.parm("--random-seed").rex("^\\d*") // optional_arg
 
     var inputArgs = Map[String, String]()
@@ -302,9 +302,8 @@ object Simulation {
      * we want to use.
      */
     var allWorkloadDescs = List[WorkloadDesc]()
-    // allWorkloadDescs ::= exampleWorkloadDesc
-
-    // allWorkloadDescs ::= exampleWorkloadPrefillDesc
+    allWorkloadDescs ::= exampleWorkloadDesc
+    //allWorkloadDescs ::= exampleWorkloadPrefillDesc
 
     // Prefills jobs based on prefill trace, draws job and task stats from
     // exponential distributions.
@@ -318,7 +317,7 @@ object Simulation {
     // Prefills jobs based on prefill trace. Loads Job stats (interarrival
     // time, num tasks, duration) and task stats (cpusPerTask, memPerTask)
     // from traces.
-    allWorkloadDescs ::= exampleTraceAllWorkloadPrefillDesc
+    //allWorkloadDescs ::= exampleTraceAllWorkloadPrefillDesc
 
     /**
      * Set up a run of experiments.
@@ -375,8 +374,8 @@ object Simulation {
     val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = true
-    val runOmega = true
+    val runMesos = false
+    val runOmega = false
 
     val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
