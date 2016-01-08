@@ -504,6 +504,7 @@ abstract class Scheduler(val name: String,
     var remainingCandidates =
         math.max(0, cellState.numMachines - numMachinesToBlackList).toInt
     while(numRemainingTasks > 0 && remainingCandidates > 0) {
+      //TODO: La estrategia de elegir una máquina random debe sustituirse
       // Pick a random machine out of the remaining pool, i.e., out of the set
       // of machineIDs in the first remainingCandidate slots of the candidate
       // pool.
