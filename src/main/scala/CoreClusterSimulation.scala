@@ -665,6 +665,9 @@ class CellState(val numMachines: Int,
   val allocatedCpusPerMachine = new Array[Double](numMachines)
   val allocatedMemPerMachine = new Array[Double](numMachines)
   val machineSeqNums = new Array[Int](numMachines)
+  // An array where index 0 is the highest loaded machine and n-1 is the lowest
+  // loaded machine. Values are Machine IDs
+  var machinesLoad = new Array[Int] (numMachines)
 
   // Map from scheduler name to number of cpus assigned to that scheduler.
   val occupiedCpus = HashMap[String, Double]()
