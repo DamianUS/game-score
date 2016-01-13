@@ -20,6 +20,7 @@ object BasicPickerCandidate extends CellStateResourcesPicker{
       for( i <- (cellState.machinesLoad.length - remainingCandidatesVar) to cellState.machinesLoad.length-1){
         if (cellState.availableCpusPerMachine(cellState.machinesLoad(i)) >= job.cpusPerTask && cellState.availableMemPerMachine(cellState.machinesLoad(i)) >= job.memPerTask) {
           machineID=cellState.machinesLoad(i)
+          assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+getName())
           loop.break;
         }
         else{

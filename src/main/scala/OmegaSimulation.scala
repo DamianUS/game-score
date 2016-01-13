@@ -28,16 +28,17 @@ package ClusterSchedulingSimulation
 
 import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
+import efficiency.power_off_policies.PowerOffPolicy
+import efficiency.power_on_policies.PowerOnPolicy
 
 import collection.mutable.HashMap
-import collection.mutable.ListBuffer
 
 class OmegaSimulatorDesc(
-    val schedulerDescs: Seq[OmegaSchedulerDesc],
-    runTime: Double,
-    val conflictMode: String,
-    val transactionMode: String)
-   extends ClusterSimulatorDesc(runTime){
+                          val schedulerDescs: Seq[OmegaSchedulerDesc],
+                          runTime: Double,
+                          val conflictMode: String,
+                          val transactionMode: String)
+  extends ClusterSimulatorDesc(runTime){
   override
   def newSimulator(constantThinkTime: Double,
                    perTaskThinkTime: Double,
@@ -49,7 +50,9 @@ class OmegaSimulatorDesc(
                    prefillWorkloads: Seq[Workload],
                    logging: Boolean = false,
                    cellStateResourcesSorter: CellStateResourcesSorter,
-                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator = {
+                   cellStateResourcesPicker: CellStateResourcesPicker,
+                   powerOnPolicy: PowerOnPolicy,
+                   powerOffPolicy: PowerOffPolicy): ClusterSimulator = {
     assert(blackListPercent >= 0.0 && blackListPercent <= 1.0)
     var schedulers = HashMap[String, OmegaScheduler]()
     // Create schedulers according to experiment parameters.
@@ -64,41 +67,43 @@ class OmegaSimulatorDesc(
           schedDesc.perTaskThinkTimes.toSeq: _*)
       var newBlackListPercent = 0.0
       if (schedulerWorkloadsToSweepOver
-          .contains(schedDesc.name)) {
+        .contains(schedDesc.name)) {
         newBlackListPercent = blackListPercent
         schedulerWorkloadsToSweepOver(schedDesc.name)
-            .foreach(workloadName => {
-          constantThinkTimes(workloadName) = constantThinkTime
-          perTaskThinkTimes(workloadName) = perTaskThinkTime
-        })
+          .foreach(workloadName => {
+            constantThinkTimes(workloadName) = constantThinkTime
+            perTaskThinkTimes(workloadName) = perTaskThinkTime
+          })
       }
       println("Creating new scheduler %s".format(schedDesc.name))
       schedulers(schedDesc.name) =
-          new OmegaScheduler(schedDesc.name,
-                             constantThinkTimes.toMap,
-                             perTaskThinkTimes.toMap,
-                             math.floor(newBlackListPercent *
-                               cellStateDesc.numMachines.toDouble).toInt)
+        new OmegaScheduler(schedDesc.name,
+          constantThinkTimes.toMap,
+          perTaskThinkTimes.toMap,
+          math.floor(newBlackListPercent *
+            cellStateDesc.numMachines.toDouble).toInt)
     })
     val cellState = new CellState(cellStateDesc.numMachines,
-                                  cellStateDesc.cpusPerMachine,
-                                  cellStateDesc.memPerMachine,
-                                  conflictMode,
-                                  transactionMode)
-      println("Creating new OmegaSimulator with schedulers %s."
-              .format(schedulers.values.map(_.toString).mkString(", ")))
-      println("Setting OmegaSimulator(%s, %s)'s common cell state to %d"
-              .format(conflictMode,
-                      transactionMode,
-                      cellState.hashCode))
+      cellStateDesc.cpusPerMachine,
+      cellStateDesc.memPerMachine,
+      conflictMode,
+      transactionMode)
+    println("Creating new OmegaSimulator with schedulers %s."
+      .format(schedulers.values.map(_.toString).mkString(", ")))
+    println("Setting OmegaSimulator(%s, %s)'s common cell state to %d"
+      .format(conflictMode,
+        transactionMode,
+        cellState.hashCode))
     new OmegaSimulator(cellState,
-                       schedulers.toMap,
-                       workloadToSchedulerMap,
-                       workloads,
-                       prefillWorkloads,
-                       logging,
+      schedulers.toMap,
+      workloadToSchedulerMap,
+      workloads,
+      prefillWorkloads,
+      logging,
       cellStateResourcesSorter = cellStateResourcesSorter,
-      cellStateResourcesPicker = cellStateResourcesPicker)
+      cellStateResourcesPicker = cellStateResourcesPicker,
+      powerOnPolicy = powerOnPolicy,
+      powerOffPolicy = powerOffPolicy)
   }
 }
 
@@ -110,9 +115,9 @@ class OmegaSimulatorDesc(
 class OmegaSchedulerDesc(name: String,
                          constantThinkTimes: Map[String, Double],
                          perTaskThinkTimes: Map[String, Double])
-                        extends SchedulerDesc(name,
-                                              constantThinkTimes,
-                                              perTaskThinkTimes)
+  extends SchedulerDesc(name,
+    constantThinkTimes,
+    perTaskThinkTimes)
 
 class OmegaSimulator(cellState: CellState,
                      override val schedulers: Map[String, OmegaScheduler],
@@ -122,16 +127,20 @@ class OmegaSimulator(cellState: CellState,
                      logging: Boolean = false,
                      monitorUtilization: Boolean = true,
                      cellStateResourcesSorter: CellStateResourcesSorter,
-                     cellStateResourcesPicker: CellStateResourcesPicker)
-                    extends ClusterSimulator(cellState,
-                                             schedulers,
-                                             workloadToSchedulerMap,
-                                             workloads,
-                                             prefillWorkloads,
-                                             logging,
-                                             monitorUtilization,
-                      cellStateResourcesSorter = cellStateResourcesSorter,
-                      cellStateResourcesPicker = cellStateResourcesPicker) {
+                     cellStateResourcesPicker: CellStateResourcesPicker,
+                     powerOnPolicy: PowerOnPolicy,
+                     powerOffPolicy: PowerOffPolicy)
+  extends ClusterSimulator(cellState,
+    schedulers,
+    workloadToSchedulerMap,
+    workloads,
+    prefillWorkloads,
+    logging,
+    monitorUtilization,
+    cellStateResourcesSorter = cellStateResourcesSorter,
+    cellStateResourcesPicker = cellStateResourcesPicker,
+    powerOnPolicy = powerOnPolicy,
+    powerOffPolicy = powerOffPolicy) {
   // Set up a pointer to this simulator in each scheduler.
   schedulers.values.foreach(_.omegaSimulator = this)
 }
@@ -150,16 +159,16 @@ class OmegaScheduler(name: String,
                      constantThinkTimes: Map[String, Double],
                      perTaskThinkTimes: Map[String, Double],
                      numMachinesToBlackList: Double = 0)
-                    extends Scheduler(name,
-                                      constantThinkTimes,
-                                      perTaskThinkTimes,
-                                      numMachinesToBlackList) {
+  extends Scheduler(name,
+    constantThinkTimes,
+    perTaskThinkTimes,
+    numMachinesToBlackList) {
   println("scheduler-id-info: %d, %s, %d, %s, %s"
-          .format(Thread.currentThread().getId(),
-                  name,
-                  hashCode(),
-                  constantThinkTimes.mkString(";"),
-                  perTaskThinkTimes.mkString(";")))
+    .format(Thread.currentThread().getId(),
+      name,
+      hashCode(),
+      constantThinkTimes.mkString(";"),
+      perTaskThinkTimes.mkString(";")))
   // TODO(andyk): Clean up these <subclass>Simulator classes
   //              by templatizing the Scheduler class and having only
   //              one simulator of the correct type, instead of one
@@ -171,7 +180,7 @@ class OmegaScheduler(name: String,
   def checkRegistered = {
     super.checkRegistered
     assert(omegaSimulator != null, "This scheduler has not been added to a " +
-                                   "simulator yet.")
+      "simulator yet.")
   }
 
   def incrementDailycounter(counter: HashMap[Int, Int]) = {
@@ -184,16 +193,16 @@ class OmegaScheduler(name: String,
   override
   def addJob(job: Job) = {
     assert(simulator != null, "This scheduler has not been added to a " +
-                              "simulator yet.")
+      "simulator yet.")
 
     assert(job.unscheduledTasks > 0)
     super.addJob(job)
     pendingQueue.enqueue(job)
     simulator.log("Scheduler %s enqueued job %d of workload type %s."
-                  .format(name, job.id, job.workloadName))
+      .format(name, job.id, job.workloadName))
     if (!scheduling) {
       omegaSimulator.log("Set %s scheduling to TRUE to schedule job %d."
-                         .format(name, job.id))
+        .format(name, job.id))
       scheduling = true
       handleJob(pendingQueue.dequeue)
     }
@@ -214,24 +223,24 @@ class OmegaScheduler(name: String,
       // Schedule the job in private cellstate.
       assert(job.unscheduledTasks > 0)
       val claimDeltas = scheduleJob(job, privateCellState)
-      simulator.log(("Job %d (%s) finished %f seconds of scheduling " + 
-                     "thinktime; now trying to claim resources for %d " +
-                     "tasks with %f cpus and %f mem each.")
-                     .format(job.id,
-                             job.workloadName,
-                             jobThinkTime,
-                             job.numTasks,
-                             job.cpusPerTask,
-                             job.memPerTask))
+      simulator.log(("Job %d (%s) finished %f seconds of scheduling " +
+        "thinktime; now trying to claim resources for %d " +
+        "tasks with %f cpus and %f mem each.")
+        .format(job.id,
+          job.workloadName,
+          jobThinkTime,
+          job.numTasks,
+          job.cpusPerTask,
+          job.memPerTask))
       if (claimDeltas.length > 0) {
         // Attempt to claim resources in common cellstate by committing
         // a transaction.
         omegaSimulator.log("Submitting a transaction for %d tasks for job %d."
-                           .format(claimDeltas.length, job.id))
+          .format(claimDeltas.length, job.id))
         val commitResult = omegaSimulator.cellState.commit(claimDeltas, true)
         job.unscheduledTasks -= commitResult.committedDeltas.length
         omegaSimulator.log("%d tasks successfully committed for job %d."
-                           .format(commitResult.committedDeltas.length, job.id))
+          .format(commitResult.committedDeltas.length, job.id))
         numSuccessfulTaskTransactions += commitResult.committedDeltas.length
         numFailedTaskTransactions += commitResult.conflictedDeltas.length
         if (job.numSchedulingAttempts > 1)
@@ -242,16 +251,16 @@ class OmegaScheduler(name: String,
           numSuccessfulTransactions += 1
           incrementDailycounter(dailySuccessTransactions)
           recordUsefulTimeScheduling(job,
-                                     jobThinkTime,
-                                     job.numSchedulingAttempts == 1)
+            jobThinkTime,
+            job.numSchedulingAttempts == 1)
         } else {
           numFailedTransactions += 1
           incrementDailycounter(dailyFailedTransactions)
           // omegaSimulator.log("adding %f seconds to wastedThinkTime counter."
           //                   .format(jobThinkTime))
           recordWastedTimeScheduling(job,
-                                     jobThinkTime,
-                                     job.numSchedulingAttempts == 1)
+            jobThinkTime,
+            job.numSchedulingAttempts == 1)
           // omegaSimulator.log(("Transaction task CONFLICTED for job-%d on " +
           //                     "machines %s.")
           //                    .format(job.id,
@@ -260,33 +269,37 @@ class OmegaScheduler(name: String,
         }
       } else {
         simulator.log(("Not enough resources of the right shape were " +
-                      "available to schedule even one task of job %d, " +
-                      "so not submitting a transaction.").format(job.id))
+          "available to schedule even one task of job %d, " +
+          "so not submitting a transaction.").format(job.id))
         numNoResourcesFoundSchedulingAttempts += 1
       }
 
       var jobEventType = "" // Set this conditionally below; used in logging.
       // If the job isn't yet fully scheduled, put it back in the queue.
       if (job.unscheduledTasks > 0) {
+        //TODO: Buen sitio para la lógica de encender
+        if(omegaSimulator.cellState.numberOfMachinesOn < omegaSimulator.cellState.numMachines){
+          simulator.powerOn.powerOn(omegaSimulator.cellState, job)
+        }
         // Give up on a job if (a) it hasn't scheduled a single task in
         // 100 tries or (b) it hasn't finished scheduling after 1000 tries.
         if ((job.numSchedulingAttempts > 100 &&
-             job.unscheduledTasks == job.numTasks) ||
-            job.numSchedulingAttempts > 1000) {
+          job.unscheduledTasks == job.numTasks) ||
+          job.numSchedulingAttempts > 1000) {
           println(("Abandoning job %d (%f cpu %f mem) with %d/%d " +
-                 "remaining tasks, after %d scheduling " +
-                 "attempts.").format(job.id,
-                                     job.cpusPerTask,
-                                     job.memPerTask,
-                                     job.unscheduledTasks,
-                                     job.numTasks,
-                                     job.numSchedulingAttempts))
+            "remaining tasks, after %d scheduling " +
+            "attempts.").format(job.id,
+            job.cpusPerTask,
+            job.memPerTask,
+            job.unscheduledTasks,
+            job.numTasks,
+            job.numSchedulingAttempts))
           numJobsTimedOutScheduling += 1
           jobEventType = "abandoned"
         } else {
           simulator.log(("Job %d still has %d unscheduled tasks, adding it " +
-                         "back to scheduler %s's job queue.")
-                         .format(job.id, job.unscheduledTasks, name))
+            "back to scheduler %s's job queue.")
+            .format(job.id, job.unscheduledTasks, name))
           simulator.afterDelay(1) {
             addJob(job)
           }

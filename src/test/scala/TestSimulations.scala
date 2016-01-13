@@ -26,6 +26,8 @@
 
 import efficiency.ordering_cellstate_resources_policies.{NoSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources.{RandomPicker, CellStateResourcesPicker}
+import efficiency.power_off_policies.NoPowerOffPolicy
+import efficiency.power_on_policies.NoPowerOnPolicy
 import org.scalatest.FunSuite
 
 import ClusterSchedulingSimulation.Workload
@@ -63,43 +65,47 @@ class SimulatorsTestSuite extends FunSuite {
     // Build a workload manually.
     var workload = new Workload("unif")
     val numJobs = 4 // Don't change this unless you update the
-                    // hand calculations used in assert()-s below.
-    val defaultSortingPolicy = NoSorter;
+    // hand calculations used in assert()-s below.
+    val defaultSortingPolicy = NoSorter
     val defaultPickingPolicy = RandomPicker
+    val defaultPowerOnPolicy = NoPowerOnPolicy
+    val defaultPowerOffPolicy = NoPowerOffPolicy
 
     (1 to numJobs).foreach(i => {
       workload.addJob(new Job(id = i,
-                                   submitted = 0,
-                                   numTasks = i,
-                                   taskDuration = i,
-                                   workloadName = workload.name,
-                                   cpusPerTask = 1.0,
-                                   memPerTask = 1.0))
+        submitted = 0,
+        numTasks = i,
+        taskDuration = i,
+        workloadName = workload.name,
+        cpusPerTask = 1.0,
+        memPerTask = 1.0))
     })
     assert(workload.numJobs == numJobs)
     assert(workload.getJobs.last.id == numJobs)
 
     // Create a simple scheduler.
     val scheduler = new MonolithicScheduler("simple_sched",
-                                            Map("unif" -> 1),
-                                            Map("unif" -> 1))
+      Map("unif" -> 1),
+      Map("unif" -> 1))
 
     // Set up a CellState, conflictMode and transactionMode shouldn't 
     // matter for a Monolithic Simulator.
     val monolithicCellState = new CellState(1, 10.0, 20.0,
-                                            conflictMode = "sequence-numbers",
-                                            transactionMode = "all-or-nothing")
+      conflictMode = "sequence-numbers",
+      transactionMode = "all-or-nothing")
 
     val monolithicSimulator = new ClusterSimulator(
-        monolithicCellState,  
-        Map(scheduler.name -> scheduler),
-        Map("unif" -> Seq("simple_sched")),
-        List(workload),
-        List(),
-        logging = true,
-        monitorUtilization = false,
+      monolithicCellState,
+      Map(scheduler.name -> scheduler),
+      Map("unif" -> Seq("simple_sched")),
+      List(workload),
+      List(),
+      logging = true,
+      monitorUtilization = false,
       cellStateResourcesSorter = defaultSortingPolicy,
-      cellStateResourcesPicker = defaultPickingPolicy)
+      cellStateResourcesPicker = defaultPickingPolicy,
+      powerOnPolicy = defaultPowerOnPolicy,
+      powerOffPolicy = defaultPowerOffPolicy)
 
     assert(monolithicSimulator.schedulers.size == 1)
     assert(monolithicSimulator.workloadToSchedulerMap.size == 1)
@@ -114,46 +120,50 @@ class SimulatorsTestSuite extends FunSuite {
     // and runs for 3 seconds (since jobs are numbered 0 to 3 and each job has
     // task duration set to its id number).
     assert(monolithicSimulator.currentTime ==
-           numJobs + (1 to numJobs).sum + numJobs - 1)
+      numJobs + (1 to numJobs).sum + numJobs - 1)
   }
 
   test("testStats") {
+    val defaultPowerOnPolicy = NoPowerOnPolicy
+    val defaultPowerOffPolicy = NoPowerOffPolicy
     var workload = new Workload("unif")
     val numJobs = 4 // Don't change this unless you update the
-                    // hand calculations used in assert()-s below.
+    // hand calculations used in assert()-s below.
     val defaultSortingPolicy = NoSorter;
     val defaultPickingPolicy = RandomPicker
     workload = new Workload("unif")
     (1 to numJobs).foreach(i => {
       workload.addJob(Job(id = i,
-                               submitted = i,
-                               numTasks = i,
-                               taskDuration = i,
-                               workloadName = workload.name,
-                               cpusPerTask = 1.0,
-                               memPerTask = 1.0))
+        submitted = i,
+        numTasks = i,
+        taskDuration = i,
+        workloadName = workload.name,
+        cpusPerTask = 1.0,
+        memPerTask = 1.0))
     })
 
     // Create a simple scheduler.
     val scheduler = new MonolithicScheduler("simple_sched",
-                                            Map("unif" -> 1),
-                                            Map("unif" -> 1))
+      Map("unif" -> 1),
+      Map("unif" -> 1))
 
     // Set up a CellState
     val monolithicCellState = new CellState(1, 10.0, 20.0,
-                                            conflictMode = "sequence-numbers",
-                                            transactionMode = "all-or-nothing")
+      conflictMode = "sequence-numbers",
+      transactionMode = "all-or-nothing")
 
     val monolithicSimulator = new ClusterSimulator(
-          monolithicCellState,
-          Map(scheduler.name -> scheduler),
-          Map("unif" -> Seq("simple_sched")),
-          List(workload),
-          List(),
-          logging = true,
-          monitorUtilization = false,
+      monolithicCellState,
+      Map(scheduler.name -> scheduler),
+      Map("unif" -> Seq("simple_sched")),
+      List(workload),
+      List(),
+      logging = true,
+      monitorUtilization = false,
       cellStateResourcesSorter = defaultSortingPolicy,
-      cellStateResourcesPicker = defaultPickingPolicy)
+      cellStateResourcesPicker = defaultPickingPolicy,
+      powerOnPolicy = defaultPowerOnPolicy,
+      powerOffPolicy = defaultPowerOffPolicy)
 
     monolithicSimulator.run()
 
@@ -170,11 +180,11 @@ class SimulatorsTestSuite extends FunSuite {
     // job 3 arrives 3, thinktime 4, finishes at 10, queued 3
     // job 4 arrives 4, thinktime 5, finishes at 15 , queued 6
     assert(workload.avgJobQueueTimeTillFirstScheduled ==
-           (0.0 + 1.0 + 3.0 + 6.0)/4.0)
+      (0.0 + 1.0 + 3.0 + 6.0)/4.0)
     println(workload.jobQueueTimeTillFirstScheduledPercentile(0.9))
     val array = Array[Double](0.0, 1.0, 3.0, 6.0)
     assert(workload.jobQueueTimeTillFirstScheduledPercentile(0.9) ==
-           array((3 *0.9).toInt))
+      array((3 *0.9).toInt))
   }
 
   /**
@@ -184,21 +194,23 @@ class SimulatorsTestSuite extends FunSuite {
   // The following test exercises functionality that is not yet implemented,
   // so we currently expect it to fail.
   test("mesosSimulatorSingleSchedulerZeroResourceJobsTest") {
+    val defaultPowerOnPolicy = NoPowerOnPolicy
+    val defaultPowerOffPolicy = NoPowerOffPolicy
     println("\n\n\n=====================")
     println("Testing Mesos simulator functionality.")
     println("=====================\n\n")
     val defaultSortingPolicy = NoSorter;
     val defaultPickingPolicy = RandomPicker
     var workload = new Workload("unif")
-    val numJobs = 40 
+    val numJobs = 40
     (1 to numJobs).foreach(i => {
       workload.addJob(Job(id = i,
-                               submitted = i,
-                               numTasks = i,
-                               taskDuration = i,
-                               workloadName = workload.name,
-                               cpusPerTask = 1.0,
-                               memPerTask = 1.0))
+        submitted = i,
+        numTasks = i,
+        taskDuration = i,
+        workloadName = workload.name,
+        cpusPerTask = 1.0,
+        memPerTask = 1.0))
     })
 
     // Create a simple scheduler, turn off partial job scheduling
@@ -208,52 +220,54 @@ class SimulatorsTestSuite extends FunSuite {
     // of the test cell (e.g., to 1000cpus and 1000mem),
     // which would allow all of the jobs to fit simultaneously.
     val scheduler = new MesosScheduler(name = "mesos_test_sched",
-                                       constantThinkTimes = Map("unif" -> 1),
-                                       perTaskThinkTimes = Map("unif" -> 1),
-                                       schedulePartialJobs = false)
+      constantThinkTimes = Map("unif" -> 1),
+      perTaskThinkTimes = Map("unif" -> 1),
+      schedulePartialJobs = false)
 
     // Set up a CellState with plenty of space so that no jobs 
     val mesosCellState = new CellState(1, 100.0, 200.0,
-                                       conflictMode = "resource-fit",
-                                       transactionMode = "all-or-nothing")
+      conflictMode = "resource-fit",
+      transactionMode = "all-or-nothing")
 
     // Create a round-robin allocator
     val allocatorConstantThinkTime = 1.0
     val mesosDRFAllocator = new MesosAllocator(allocatorConstantThinkTime)
 
     val mesosSimulator = new MesosSimulator(
-          mesosCellState,
-          Map(scheduler.name -> scheduler),
-          Map("unif" -> Seq("mesos_test_sched")),
-          List(workload),
-          List(),
-          mesosDRFAllocator,
-          logging = true,
-          monitorUtilization = false,
-          cellStateResourcesSorter = defaultSortingPolicy,
-          cellStateResourcesPicker = defaultPickingPolicy)
+      mesosCellState,
+      Map(scheduler.name -> scheduler),
+      Map("unif" -> Seq("mesos_test_sched")),
+      List(workload),
+      List(),
+      mesosDRFAllocator,
+      logging = true,
+      monitorUtilization = false,
+      cellStateResourcesSorter = defaultSortingPolicy,
+      cellStateResourcesPicker = defaultPickingPolicy,
+      powerOnPolicy = defaultPowerOnPolicy,
+      powerOffPolicy = defaultPowerOffPolicy)
 
     mesosSimulator.run()
     assert(mesosSimulator.agendaSize == 0, ("Mesos Agenda should have been " +
-                                            "zero when simulator finished " +
-                                            "running, but was %d.")
-                                           .format(mesosSimulator.agendaSize))
+      "zero when simulator finished " +
+      "running, but was %d.")
+      .format(mesosSimulator.agendaSize))
     // Each job has constant think time of 1, and per task think of 1.
     // Thus, job i (which has i tasks) will think for 1 + i seconds.
     // So we have numJobs seconds from the constant term of each job, and
     // and 1 + 2 + ... + i from the i term.
     assert(workload.totalJobUsefulThinkTimes == numJobs + (1 to numJobs).sum,
-           ("totalJobThinkTimes should have been %d, but was %f. THIS TEST " +
-            "EXERCISES FUNCTIONALITY THAT IS NOT YET IMPLEMENTED, SO WE " +
-            "CURRENTLY EXPECT IT TO FAIL").format(
-           numJobs + (1 to numJobs).sum, workload.totalJobUsefulThinkTimes))
+      ("totalJobThinkTimes should have been %d, but was %f. THIS TEST " +
+        "EXERCISES FUNCTIONALITY THAT IS NOT YET IMPLEMENTED, SO WE " +
+        "CURRENTLY EXPECT IT TO FAIL").format(
+        numJobs + (1 to numJobs).sum, workload.totalJobUsefulThinkTimes))
     // For .75 percentile we should see 1 + i (see comment above)
     // where i = 40 * .75.
     assert(workload.jobUsefulThinkTimesPercentile(.75) == 1 + (40 * .75).toInt,
-           ("Expected jobUsefulThinkTimesPercentil(0.75) to be %d, " +
-            "but it was %f.")
-           .format(1 + (40 * .75).toInt,
-                   workload.jobUsefulThinkTimesPercentile(.75)))
+      ("Expected jobUsefulThinkTimesPercentil(0.75) to be %d, " +
+        "but it was %f.")
+        .format(1 + (40 * .75).toInt,
+          workload.jobUsefulThinkTimesPercentile(.75)))
   }
 
   test("MesosAllocatorTest") {
@@ -265,6 +279,8 @@ class SimulatorsTestSuite extends FunSuite {
    * Omega simulator tests.
    */
   test("omegaSimulatorCellStateSyncApplyDeltaAndCommitTest") {
+    val defaultPowerOnPolicy = NoPowerOnPolicy
+    val defaultPowerOffPolicy = NoPowerOffPolicy
     println("\n\n\n=====================")
     println("omegaSimulatorCellStateSyncApplyDeltaAndCommitTest")
     println("=====================\n\n")
@@ -272,37 +288,39 @@ class SimulatorsTestSuite extends FunSuite {
     // Set up a workload with one job with one task.
     var workload = new Workload("unif")
     workload.addJob(Job(id = 1,
-                        submitted = 1.0,
-                        numTasks = 1,
-                        taskDuration = 10.0,
-                        workloadName = workload.name,
-                        cpusPerTask = 1.0,
-                        memPerTask = 1.0))
+      submitted = 1.0,
+      numTasks = 1,
+      taskDuration = 10.0,
+      workloadName = workload.name,
+      cpusPerTask = 1.0,
+      memPerTask = 1.0))
     val defaultSortingPolicy = NoSorter;
     val defaultPickingPolicy = RandomPicker
     // Create an Omega scheduler.
     val scheduler = new OmegaScheduler(name = "omega_test_sched",
-                                       constantThinkTimes = Map("unif" -> 1),
-                                       perTaskThinkTimes = Map("unif" -> 1))
+      constantThinkTimes = Map("unif" -> 1),
+      perTaskThinkTimes = Map("unif" -> 1))
 
     // Set up a CellState.
     val commonCellState = new CellState(numMachines = 10,
-                                        cpusPerMachine = 1.0,
-                                        memPerMachine = 2.0,
-                                        conflictMode = "sequence-numbers",
-                                        transactionMode = "all-or-nothing")
+      cpusPerMachine = 1.0,
+      memPerMachine = 2.0,
+      conflictMode = "sequence-numbers",
+      transactionMode = "all-or-nothing")
 
     // Set up a Simulator.
     val omegaSimulator = new OmegaSimulator(
-          commonCellState,
-          Map(scheduler.name -> scheduler),
-          Map("unif" -> Seq("omega_test_sched")),
-          List(workload),
-          List(),
-          logging = true,
-          monitorUtilization = false,
+      commonCellState,
+      Map(scheduler.name -> scheduler),
+      Map("unif" -> Seq("omega_test_sched")),
+      List(workload),
+      List(),
+      logging = true,
+      monitorUtilization = false,
       cellStateResourcesSorter = defaultSortingPolicy,
-      cellStateResourcesPicker = defaultPickingPolicy)
+      cellStateResourcesPicker = defaultPickingPolicy,
+      powerOnPolicy = defaultPowerOnPolicy,
+      powerOffPolicy = defaultPowerOffPolicy)
 
     // Create a private copy of cellstate.
     val privateCellState = commonCellState.copy
@@ -312,16 +330,16 @@ class SimulatorsTestSuite extends FunSuite {
     // Test that the per machine state was successfully copied.
     (0 to commonCellState.allocatedCpusPerMachine.length - 1).foreach{ i => {
       assert(privateCellState.allocatedCpusPerMachine(i) ==
-             commonCellState.allocatedCpusPerMachine(i))
+        commonCellState.allocatedCpusPerMachine(i))
     }}
     assert(privateCellState.machineSeqNums(0) == 0)
     // Make changes to the private cellstate by creating and applying a delta.
     val claimDelta = new ClaimDelta(scheduler,
-                                    machineID = 0,
-                                    privateCellState.machineSeqNums(0),
-                                    duration = 10,
-                                    cpus = 0.25,
-                                    mem = 0.75)
+      machineID = 0,
+      privateCellState.machineSeqNums(0),
+      duration = 10,
+      cpus = 0.25,
+      mem = 0.75)
     claimDelta.apply(privateCellState, false)
     // Check that machines sequence number was incremented in private cellstate.
     assert(privateCellState.machineSeqNums(0) == 1)
@@ -332,8 +350,8 @@ class SimulatorsTestSuite extends FunSuite {
     assert(privateCellState.allocatedMemPerMachine(0) == 0.75)
     // Check that common cellstate didn't change yet.
     assert(commonCellState.availableCpusPerMachine(0) == 1.0,
-           ("commonCellState should have 1.0 cpus available on machine 0, " +
-            "but only has %f.").format(commonCellState.availableCpusPerMachine(0)))
+      ("commonCellState should have 1.0 cpus available on machine 0, " +
+        "but only has %f.").format(commonCellState.availableCpusPerMachine(0)))
     assert(commonCellState.availableMemPerMachine(0) == 2.0)
     assert(commonCellState.allocatedCpusPerMachine(0) == 0.0)
     assert(commonCellState.allocatedMemPerMachine(0) == 0.0)
@@ -356,11 +374,11 @@ class SimulatorsTestSuite extends FunSuite {
     // Make parallel changes in both private cellstates that
     // should cause a conflict in all-or-nothing conflict-mode.
     val claimDelta1 = new ClaimDelta(scheduler,
-                                     machineID = 0,
-                                     privateCellState1.machineSeqNums(0),
-                                     duration = 10,
-                                     cpus = 0.25,
-                                     mem = 0.75)
+      machineID = 0,
+      privateCellState1.machineSeqNums(0),
+      duration = 10,
+      cpus = 0.25,
+      mem = 0.75)
     claimDelta1.apply(privateCellState1, false)
     assert(privateCellState1.machineSeqNums(0) == 2)
 
@@ -372,11 +390,11 @@ class SimulatorsTestSuite extends FunSuite {
     assert(privateCellState2.machineSeqNums(0) == 1)
 
     val claimDelta2 = new ClaimDelta(scheduler,
-                                     machineID = 0,
-                                     privateCellState2.machineSeqNums(0),
-                                     duration = 10,
-                                     cpus = 0.25,
-                                     mem = 0.75)
+      machineID = 0,
+      privateCellState2.machineSeqNums(0),
+      duration = 10,
+      cpus = 0.25,
+      mem = 0.75)
     claimDelta2.apply(privateCellState2, false)
 
     // Commit the changes from the first private cellstate to common cellstate.
@@ -392,38 +410,42 @@ class SimulatorsTestSuite extends FunSuite {
   }
 
   test("omegaSchedulerTest") {
+    val defaultPowerOnPolicy = NoPowerOnPolicy
+    val defaultPowerOffPolicy = NoPowerOffPolicy
     println("===========\nomegaSchedulerTest\n==========")
     println("\nRunning cellstate flow test.")
     var workload = new Workload("unif")
     val defaultSortingPolicy = NoSorter;
     val defaultPickingPolicy = RandomPicker
     workload.addJob(Job(id = 1,
-                             submitted = 1.0,
-                             numTasks = 1,
-                             taskDuration = 10.0,
-                             workloadName = "unif",
-                             cpusPerTask = 1.0,
-                             memPerTask = 1.0))
+      submitted = 1.0,
+      numTasks = 1,
+      taskDuration = 10.0,
+      workloadName = "unif",
+      cpusPerTask = 1.0,
+      memPerTask = 1.0))
 
     val scheduler = new OmegaScheduler(name = "omega_test_sched",
-                                       constantThinkTimes = Map("unif" -> 1),
-                                       perTaskThinkTimes = Map("unif" -> 1))
+      constantThinkTimes = Map("unif" -> 1),
+      perTaskThinkTimes = Map("unif" -> 1))
 
     val commonCellState = new CellState(numMachines = 20,
-                                        cpusPerMachine = 1.0,
-                                        memPerMachine = 1.0,
-                                        conflictMode = "sequence-numbers",
-                                        transactionMode = "all-or-nothing")
+      cpusPerMachine = 1.0,
+      memPerMachine = 1.0,
+      conflictMode = "sequence-numbers",
+      transactionMode = "all-or-nothing")
 
     val omegaSimulator = new OmegaSimulator(commonCellState,
-                                            Map(scheduler.name -> scheduler),
-                                            Map("unif" -> Seq("omega_test_sched")),
-                                            List(workload),
-                                            List(),
-                                            logging = true,
-                                            monitorUtilization = false,
+      Map(scheduler.name -> scheduler),
+      Map("unif" -> Seq("omega_test_sched")),
+      List(workload),
+      List(),
+      logging = true,
+      monitorUtilization = false,
       cellStateResourcesSorter = defaultSortingPolicy,
-      cellStateResourcesPicker = defaultPickingPolicy)
+      cellStateResourcesPicker = defaultPickingPolicy,
+      powerOnPolicy = defaultPowerOnPolicy,
+      powerOffPolicy = defaultPowerOffPolicy)
 
     // The job should be scheduled as soon as it is added to the scheduler.
     println("adding a job to scheduler.")
@@ -436,44 +458,48 @@ class SimulatorsTestSuite extends FunSuite {
   test("omegaSimulatorRunWithSingleSchedulerTest") {
     println("===========\nomegaSimulatorRunWithSingleSchedulerTest\n===========")
     println("\nRunning cellstate run w/ single scheduler test.")
+    val defaultPowerOnPolicy = NoPowerOnPolicy
+    val defaultPowerOffPolicy = NoPowerOffPolicy
     // Set up a workload with 40 jobs, each with 1 task.
     var workload = new Workload("unif")
     val defaultSortingPolicy = NoSorter;
     val defaultPickingPolicy = RandomPicker
-    val numJobs = 40 
+    val numJobs = 40
     (1 to numJobs).foreach(i => {
       workload.addJob(Job(id = i,
-                               submitted = i,
-                               numTasks = 1,
-                               taskDuration = i,
-                               workloadName = workload.name,
-                               cpusPerTask = 1.0,
-                               memPerTask = 1.0))
+        submitted = i,
+        numTasks = 1,
+        taskDuration = i,
+        workloadName = workload.name,
+        cpusPerTask = 1.0,
+        memPerTask = 1.0))
     })
 
     // Create an Omega scheduler.
     val scheduler = new OmegaScheduler(name = "omega_test_sched",
-                                       constantThinkTimes = Map("unif" -> 1),
-                                       perTaskThinkTimes = Map("unif" -> 1))
+      constantThinkTimes = Map("unif" -> 1),
+      perTaskThinkTimes = Map("unif" -> 1))
 
     // Set up a CellState.
     val commonCellState = new CellState(numMachines = 1000,
-                                        cpusPerMachine = 1.0,
-                                        memPerMachine = 1.0,
-                                        conflictMode = "sequence-numbers",
-                                        transactionMode = "all-or-nothing")
+      cpusPerMachine = 1.0,
+      memPerMachine = 1.0,
+      conflictMode = "sequence-numbers",
+      transactionMode = "all-or-nothing")
 
     // Set up a Simulator.
     val omegaSimulator = new OmegaSimulator(
-          commonCellState,
-          Map(scheduler.name -> scheduler),
-          Map("unif" -> Seq("omega_test_sched")),
-          List(workload),
-          List(),
-          logging = true,
-          monitorUtilization = false,
+      commonCellState,
+      Map(scheduler.name -> scheduler),
+      Map("unif" -> Seq("omega_test_sched")),
+      List(workload),
+      List(),
+      logging = true,
+      monitorUtilization = false,
       cellStateResourcesSorter = defaultSortingPolicy,
-      cellStateResourcesPicker = defaultPickingPolicy)
+      cellStateResourcesPicker = defaultPickingPolicy,
+      powerOnPolicy = defaultPowerOnPolicy,
+      powerOffPolicy = defaultPowerOffPolicy)
 
     omegaSimulator.run()
     // Each job is scheduled two seconds after it arrives since all jobs
@@ -482,25 +508,26 @@ class SimulatorsTestSuite extends FunSuite {
     // Thus the simulator should finish at time 121, when the final task
     // finishes running.
     assert(omegaSimulator.currentTime == 121,
-           "Simulation ran for %f seconds, but should have run for %d"
-           .format(omegaSimulator.currentTime, 121))
+      "Simulation ran for %f seconds, but should have run for %d"
+        .format(omegaSimulator.currentTime, 121))
   }
-  
+
   test("UniformWorkloadGeneratorTest") {
+
     println("\nRunning Uniform workload generator test.")
     // create a new WorkloadGenerator
     var workloadGen =
-        new UniformWorkloadGenerator(workloadName = "test_wl",
-                                     initJobInterarrivalTime = 1.0,
-                                     tasksPerJob = 2,
-                                     jobDuration = 3.0,
-                                     cpusPerTask = 4.0,
-                                     memPerTask = 5.0)
+      new UniformWorkloadGenerator(workloadName = "test_wl",
+        initJobInterarrivalTime = 1.0,
+        tasksPerJob = 2,
+        jobDuration = 3.0,
+        cpusPerTask = 4.0,
+        memPerTask = 5.0)
 
     // Test newWorkload.
     val workload = workloadGen.newWorkload(100.0)
     assert(workload.numJobs == 100, "numJobs was %d, should have been %d"
-                                    .format(workload.numJobs, 100))
+      .format(workload.numJobs, 100))
     for(j <- workload.getJobs) {
       assert(j.numTasks == 2.0)
       assert(j.taskDuration == 3.0)
@@ -523,34 +550,34 @@ class SimulatorsTestSuite extends FunSuite {
 
     // Load Service jobs.
     val servicePrefillTraceWLGenerator = new PrefillPbbTraceWorkloadGenerator(
-        "PrefillService", filename)
+      "PrefillService", filename)
     val prefillServiceWL = servicePrefillTraceWLGenerator.newWorkload(1000.0)
     // Cross validated by running at command line:
     val numServiceJobsInFile
-      = Seq("awk",
-            "$1 == 11 && $4 == 1 && $5 != 0 && $5 != 1",
-            filename)
-           .!!.split("\n").length
+    = Seq("awk",
+      "$1 == 11 && $4 == 1 && $5 != 0 && $5 != 1",
+      filename)
+      .!!.split("\n").length
     assert(prefillServiceWL.numJobs == numServiceJobsInFile,
-           ("Expected to find %d prefill service jobs from tracefile " +
-            "%s, but found %d.")
-           .format(numServiceJobsInFile, filename, prefillServiceWL.numJobs))
+      ("Expected to find %d prefill service jobs from tracefile " +
+        "%s, but found %d.")
+        .format(numServiceJobsInFile, filename, prefillServiceWL.numJobs))
     for (j <- prefillServiceWL.getJobs) {
       assert(j.submitted == 0)
     }
 
     // Load batch jobs.
     val batchPrefillTraceWLGenerator = new PrefillPbbTraceWorkloadGenerator(
-        "PrefillBatch", filename)
-    val prefillBatchWL = batchPrefillTraceWLGenerator.newWorkload(1000.0)  
+      "PrefillBatch", filename)
+    val prefillBatchWL = batchPrefillTraceWLGenerator.newWorkload(1000.0)
     val numBatchJobsInFile
-      = Seq("awk",
-            "$1 == 11 && ($4 != 1 || $5 == 0 || $5 == 1)",
-            filename)
-           .!!.split("\n").length
+    = Seq("awk",
+      "$1 == 11 && ($4 != 1 || $5 == 0 || $5 == 1)",
+      filename)
+      .!!.split("\n").length
     assert(prefillBatchWL.numJobs == numBatchJobsInFile,
-           ("Expected to find %d prefill batch jobs from tracefile %s, " +
-             "but found %d.")
-           .format(numBatchJobsInFile, filename, prefillBatchWL.numJobs))
+      ("Expected to find %d prefill batch jobs from tracefile %s, " +
+        "but found %d.")
+        .format(numBatchJobsInFile, filename, prefillBatchWL.numJobs))
   }
 }

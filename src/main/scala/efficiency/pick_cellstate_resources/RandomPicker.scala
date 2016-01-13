@@ -24,6 +24,7 @@ object RandomPicker extends CellStateResourcesPicker{
         if (cellState.availableCpusPerMachine(currMachID) >= job.cpusPerTask &&
           cellState.availableMemPerMachine(currMachID) >= job.memPerTask) {
           machineID=currMachID
+          assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+getName())
           loop.break;
         }
         else {

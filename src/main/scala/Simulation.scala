@@ -52,6 +52,8 @@ import java.nio.channels.FileChannel
 import ca.zmatrix.utils._
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, NoSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources._
+import efficiency.power_off_policies.{PowerOffPolicy, NoPowerOffPolicy}
+import efficiency.power_on_policies.{NoPowerOnPolicy, PowerOnPolicy}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.immutable.NumericRange
@@ -382,13 +384,18 @@ object Simulation {
     val runOmega = false
 
     //All sorting and picking policies
-    val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter);
-    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicPicker, BasicPickerCandidate, BasicReversePicker, BasicReversePickerCandidate);
+    val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
+    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicPicker, BasicPickerCandidate, BasicReversePicker, BasicReversePickerCandidate)
+    val powerOnPolicies = List[PowerOnPolicy](NoPowerOnPolicy)
+    val powerOffPolicies = List[PowerOffPolicy](NoPowerOffPolicy)
 
 
     //Default sorting and picking policies
-    val defaultSortingPolicy = List[CellStateResourcesSorter](NoSorter);
-    val defaultPickingPolicy = List[CellStateResourcesPicker](RandomPicker);
+    val defaultSortingPolicy = List[CellStateResourcesSorter](NoSorter)
+    val defaultPickingPolicy = List[CellStateResourcesPicker](RandomPicker)
+    val defaultPowerOnPolicy = List[PowerOnPolicy](NoPowerOnPolicy)
+    val defaultPowerOffPolicy = List[PowerOffPolicy](NoPowerOffPolicy)
+
 
     val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
@@ -411,6 +418,8 @@ object Simulation {
     val sweepLambda = false
     val sweepSorting = false
     val sweepPicking = false
+    val sweepPowerOn = false
+    val sweepPowerOff = false
 
     var sweepDimensions = collection.mutable.ListBuffer[String]()
     if (sweepC)
@@ -427,6 +436,10 @@ object Simulation {
       sweepDimensions += "Sorting"
     if (sweepPicking)
       sweepDimensions += "Picking"
+    if (sweepPowerOn)
+      sweepDimensions += "PowerOn"
+    if (sweepPowerOff)
+      sweepDimensions += "PowerOff"
 
     val formatter = new java.text.SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
     val dateTimeStamp = formatter.format(new java.util.Date)
@@ -481,7 +494,9 @@ object Simulation {
                 prefillCpuLimits = prefillCpuLim,
                 simulationTimeout = timeout,
                 cellStateResourcesSorterList = defaultSortingPolicy,
-                cellStateResourcesPickerList = defaultPickingPolicy)
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepCL) {
@@ -504,7 +519,9 @@ object Simulation {
                 prefillCpuLimits = prefillCpuLim,
                 simulationTimeout = timeout,
                 cellStateResourcesSorterList = defaultSortingPolicy,
-                cellStateResourcesPickerList = defaultPickingPolicy)
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepL) {
@@ -527,7 +544,9 @@ object Simulation {
                 prefillCpuLimits = prefillCpuLim,
                 simulationTimeout = timeout,
                 cellStateResourcesSorterList = defaultSortingPolicy,
-                cellStateResourcesPickerList = defaultPickingPolicy)
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepPickiness) {
@@ -550,7 +569,9 @@ object Simulation {
                 prefillCpuLimits = prefillCpuLim,
                 simulationTimeout = timeout,
                 cellStateResourcesSorterList = defaultSortingPolicy,
-                cellStateResourcesPickerList = defaultPickingPolicy)
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepLambda) {
@@ -574,7 +595,9 @@ object Simulation {
                 prefillCpuLimits = prefillCpuLim,
                 simulationTimeout = timeout,
                 cellStateResourcesSorterList = defaultSortingPolicy,
-                cellStateResourcesPickerList = defaultPickingPolicy)
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
           }
         }
@@ -600,7 +623,9 @@ object Simulation {
           prefillCpuLimits = prefillCpuLim,
           simulationTimeout = timeout,
           cellStateResourcesSorterList = defaultSortingPolicy,
-          cellStateResourcesPickerList = defaultPickingPolicy)
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepCL) {
@@ -619,7 +644,9 @@ object Simulation {
           prefillCpuLimits = prefillCpuLim,
           simulationTimeout = timeout,
           cellStateResourcesSorterList = defaultSortingPolicy,
-          cellStateResourcesPickerList = defaultPickingPolicy)
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepL) {
@@ -638,7 +665,9 @@ object Simulation {
           prefillCpuLimits = prefillCpuLim,
           simulationTimeout = timeout,
           cellStateResourcesSorterList = defaultSortingPolicy,
-          cellStateResourcesPickerList = defaultPickingPolicy)
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepPickiness) {
@@ -657,7 +686,9 @@ object Simulation {
           prefillCpuLimits = prefillCpuLim,
           simulationTimeout = timeout,
           cellStateResourcesSorterList = defaultSortingPolicy,
-          cellStateResourcesPickerList = defaultPickingPolicy)
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepLambda) {
@@ -677,7 +708,9 @@ object Simulation {
           prefillCpuLimits = prefillCpuLim,
           simulationTimeout = timeout,
           cellStateResourcesSorterList = defaultSortingPolicy,
-          cellStateResourcesPickerList = defaultPickingPolicy)
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
     }
 
@@ -707,7 +740,9 @@ object Simulation {
               prefillCpuLimits = prefillCpuLim,
               simulationTimeout = timeout,
               cellStateResourcesSorterList = defaultSortingPolicy,
-              cellStateResourcesPickerList = defaultPickingPolicy)
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepCL) {
@@ -727,7 +762,9 @@ object Simulation {
               prefillCpuLimits = prefillCpuLim,
               simulationTimeout = timeout,
               cellStateResourcesSorterList = defaultSortingPolicy,
-              cellStateResourcesPickerList = defaultPickingPolicy)
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepL) {
@@ -747,7 +784,9 @@ object Simulation {
               prefillCpuLimits = prefillCpuLim,
               simulationTimeout = timeout,
               cellStateResourcesSorterList = defaultSortingPolicy,
-              cellStateResourcesPickerList = defaultPickingPolicy)
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepPickiness) {
@@ -767,7 +806,9 @@ object Simulation {
               prefillCpuLimits = prefillCpuLim,
               simulationTimeout = timeout,
               cellStateResourcesSorterList = defaultSortingPolicy,
-              cellStateResourcesPickerList = defaultPickingPolicy)
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepLambda) {
@@ -788,7 +829,9 @@ object Simulation {
               prefillCpuLimits = prefillCpuLim,
               simulationTimeout = timeout,
               cellStateResourcesSorterList = defaultSortingPolicy,
-              cellStateResourcesPickerList = defaultPickingPolicy)
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
         }
       }

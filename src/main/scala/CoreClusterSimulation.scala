@@ -28,6 +28,8 @@ package ClusterSchedulingSimulation
 
 import efficiency.ordering_cellstate_resources_policies.{NoSorter, BasicLoadSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources._
+import efficiency.power_off_policies.PowerOffPolicy
+import efficiency.power_on_policies.PowerOnPolicy
 
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.IndexedSeq
@@ -124,7 +126,9 @@ abstract class ClusterSimulatorDesc(val runTime: Double) {
                    prefillWorkloads: Seq[Workload],
                    logging: Boolean = false,
                    cellStateResourcesSorter: CellStateResourcesSorter,
-                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator
+                   cellStateResourcesPicker: CellStateResourcesPicker,
+                   powerOnPolicy: PowerOnPolicy,
+                   powerOffPolicy: PowerOffPolicy): ClusterSimulator
 }
 
 /**
@@ -147,7 +151,9 @@ class ClusterSimulator(val cellState: CellState,
                        monitorUtilization: Boolean = true,
                        monitoringPeriod: Double = 1.0,
                        cellStateResourcesSorter: CellStateResourcesSorter,
-                       cellStateResourcesPicker: CellStateResourcesPicker)
+                       cellStateResourcesPicker: CellStateResourcesPicker,
+                       powerOnPolicy: PowerOnPolicy,
+                       powerOffPolicy: PowerOffPolicy)
                       extends Simulator(logging) {
   assert(schedulers.size > 0, "At least one scheduler must be provided to" +
                               "scheduler constructor.")
@@ -161,6 +167,8 @@ class ClusterSimulator(val cellState: CellState,
   })
   val sorter = cellStateResourcesSorter
   val picker = cellStateResourcesPicker
+  val powerOn = powerOnPolicy
+  val powerOff = powerOffPolicy
   // Set up a pointer to this simulator in the cellstate.
   cellState.simulator = this
   // Set up a pointer to this simulator in each scheduler.
@@ -451,7 +459,7 @@ abstract class Scheduler(val name: String,
     for(mID <- 0 to cellState.numMachines - 1) {
       val cpusAvail = cellState.availableCpusPerMachine(mID)
       val memAvail = cellState.availableMemPerMachine(mID)
-      if (cpusAvail > 0.0 || memAvail > 0.0) {
+      if (cellState.isMachineOn(mID) && (cpusAvail > 0.0 || memAvail > 0.0)) {
         // Create and apply a claim delta.
         assert(mID >= 0 && mID < cellState.machineSeqNums.length)
         //TODO(andyk): Clean up semantics around taskDuration in ClaimDelta
@@ -493,7 +501,6 @@ abstract class Scheduler(val name: String,
    */
   def scheduleJob(job: Job,
                   cellState: CellState): Seq[ClaimDelta] = {
-    //TODO: Aquí tendremos que comprobar que el job encaja en las máquinas encendidas y si no levantar el tema
     assert(simulator != null)
     assert(cellState != null)
     assert(job.cpusPerTask <= cellState.cpusPerMachine,
@@ -506,11 +513,11 @@ abstract class Scheduler(val name: String,
 
     // Cache candidate pools in this scheduler for performance improvements.
     var candidatePool =
-        candidatePoolCache.getOrElseUpdate(cellState.numMachines,
+        candidatePoolCache.getOrElseUpdate(cellState.numberOfMachinesOn,
                                            Array.range(0, cellState.numMachines))
 
     var numRemainingTasks = job.unscheduledTasks
-    var remainingCandidates = math.max(0, cellState.numMachines - numMachinesToBlackList).toInt
+    var remainingCandidates = math.max(0, cellState.numberOfMachinesOn - numMachinesToBlackList).toInt
     while(numRemainingTasks > 0 && remainingCandidates > 0) {
       simulator.sorter.orderResources(cellState)
       val pickResult = simulator.picker.pickResource(cellState, job, candidatePool, remainingCandidates);
@@ -634,7 +641,9 @@ class CellState(val numMachines: Int,
                 val cpusPerMachine: Double,
                 val memPerMachine: Double,
                 val conflictMode: String,
-                val transactionMode: String) {
+                val transactionMode: String,
+                 val powerOnTime : Double = 30.0,
+                 val powerOffTime : Double = 10.0) {
   assert(conflictMode.equals("resource-fit") ||
          conflictMode.equals("sequence-numbers"),
          "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
@@ -670,10 +679,50 @@ class CellState(val numMachines: Int,
   var totalLockedCpus = 0.0
   var totalLockedMem = 0.0
 
+  // Efficiency vars
+
+  //Estados: 0 Apagado, 1 encendido, 2 apagando, 3 encendiendo
+  // array donde el índice es el número de la máquina y el valor una Lista con los tiempos donde se empieza el apagado/encendido. Con esto podemos, además de saber el número de apagados, saber la distribución temporal de los mismos.
+  val powerOffs = new Array[Seq[Double]](numMachines);
+  val powerOns = new Array[Seq[Double]](numMachines);
+  // array donde el indice es el id de la maquina y 0-1 es apagado/encendido (por defecto todos encendidos)
+  val machinePowerState = Array.fill[Int](numMachines)(1)
+
+  def isMachineOn(machineID: Int) : Boolean = {
+    machinePowerState(machineID) == 1
+  }
+
+  def numberOfMachinesOn = machinePowerState.toSeq.filter(_ == 1).length
+  def numberOfMachinesOff = machinePowerState.toSeq.filter(_ == 0).length
+  def numberOfMachinesTurningOn = machinePowerState.toSeq.filter(_ == 3).length
+  def numberOfMachinesTurningOff = machinePowerState.toSeq.filter(_ == 2).length
+
   def totalCpus = numMachines * cpusPerMachine
   def totalMem = numMachines * memPerMachine
-  def availableCpus = totalCpus - (totalOccupiedCpus + totalLockedCpus)
-  def availableMem = totalMem - (totalOccupiedMem + totalLockedMem)
+  def onCpus = numberOfMachinesOn * cpusPerMachine
+  def onMem = numberOfMachinesOn * memPerMachine
+  def availableCpus = onCpus - (totalOccupiedCpus + totalLockedCpus)
+  def availableMem = onMem - (totalOccupiedMem + totalLockedMem)
+
+  def powerOnMachine(machineID: Int) = {
+    if(machinePowerState(machineID)==0 || machinePowerState(machineID)==2){
+      machinePowerState(machineID) = 3
+      powerOns(machineID) :+ simulator.currentTime
+      simulator.afterDelay(powerOnTime){
+        machinePowerState(machineID) = 1
+      }
+    }
+  }
+
+  def powerOffMachine(machineID: Int) = {
+    if(machinePowerState(machineID)==1 || machinePowerState(machineID)==3){
+      machinePowerState(machineID) = 2
+      powerOffs(machineID) :+ simulator.currentTime
+      simulator.afterDelay(powerOffTime){
+        machinePowerState(machineID) = 0
+      }
+    }
+  }
 
   // Convenience methods to see how many cpus/mem are available on a machine.
   def availableCpusPerMachine(machineID: Int) = {

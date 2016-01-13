@@ -28,6 +28,8 @@ package ClusterSchedulingSimulation
 
 import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
+import efficiency.power_off_policies.PowerOffPolicy
+import efficiency.power_on_policies.PowerOnPolicy
 
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
@@ -69,7 +71,9 @@ class Experiment(
                   // Default simulations to 10 minute timeout.
                   simulationTimeout: Double = 60.0*10.0,
                   cellStateResourcesSorterList: Seq[CellStateResourcesSorter],
-                  cellStateResourcesPickerList: Seq[CellStateResourcesPicker]) extends Runnable {
+                  cellStateResourcesPickerList: Seq[CellStateResourcesPicker],
+                  powerOnPolicies: Seq[PowerOnPolicy],
+                  powerOffPolicies: Seq[PowerOffPolicy]) extends Runnable {
   prefillCpuLimits.values.foreach(l => assert(l >= 0.0 && l <= 1.0))
   prefillMemLimits.values.foreach(l => assert(l >= 0.0 && l <= 1.0))
 
@@ -197,450 +201,460 @@ class Experiment(
                 cellStateResourcesSorterList.foreach(cellStateResourcesSorter => {
                   println ("\nSet picking strategy "+cellStateResourcesSorter.getName())
 
-                  // Make a copy of the workloads that this run of the simulator
-                  // will modify by using them to track statistics.
-                  val workloads = ListBuffer[Workload]()
-                  commonWorkloadSet.foreach(workload => {
-                    workloads.append(workload.copy)
-                  })
-                  // Setup and and run the simulator.
-                  val simulator =
-                    simulatorDesc.newSimulator(constantThinkTime,
-                      perTaskThinkTime,
-                      blackListPercent,
-                      schedulerWorkloadsToSweepOver,
-                      schedulerWorkloadMap,
-                      workloadDesc.cellStateDesc,
-                      workloads,
-                      prefillWorkloads,
-                      logging,
-                      cellStateResourcesSorter,
-                      cellStateResourcesPicker)
+                  powerOnPolicies.foreach(powerOnPolicy => {
+                    println("\nSet power on policy "+powerOnPolicy.getName())
 
-                  println("Running simulation with run().")
-                  val success: Boolean = simulator.run(Some(simulatorDesc.runTime),
-                    Some(simulationTimeout))
-                  if (success) {
-                    // Simulation did not time out, so record stats.
-                    /**
-                     * Capture statistics into a protocolbuffer.
-                     */
-                    val experimentResult =
-                      ExperimentResultSet.ExperimentEnv.ExperimentResult.newBuilder()
+                    powerOffPolicies.foreach(powerOffPolicy => {
+                      println ("\nSet power off strategy "+powerOffPolicy.getName())
 
-                    experimentResult.setCellStateAvgCpuUtilization(
-                      simulator.avgCpuUtilization / simulator.cellState.totalCpus)
-                    experimentResult.setCellStateAvgMemUtilization(
-                      simulator.avgMemUtilization / simulator.cellState.totalMem)
+                      // Make a copy of the workloads that this run of the simulator
+                      // will modify by using them to track statistics.
+                      val workloads = ListBuffer[Workload]()
+                      commonWorkloadSet.foreach(workload => {
+                        workloads.append(workload.copy)
+                      })
+                      // Setup and and run the simulator.
+                      val simulator =
+                        simulatorDesc.newSimulator(constantThinkTime,
+                          perTaskThinkTime,
+                          blackListPercent,
+                          schedulerWorkloadsToSweepOver,
+                          schedulerWorkloadMap,
+                          workloadDesc.cellStateDesc,
+                          workloads,
+                          prefillWorkloads,
+                          logging,
+                          cellStateResourcesSorter,
+                          cellStateResourcesPicker,
+                          powerOnPolicy,
+                          powerOffPolicy)
 
-                    experimentResult.setCellStateAvgCpuLocked(
-                      simulator.avgCpuLocked / simulator.cellState.totalCpus)
-                    experimentResult.setCellStateAvgMemLocked(
-                      simulator.avgMemLocked / simulator.cellState.totalMem)
+                      println("Running simulation with run().")
+                      val success: Boolean = simulator.run(Some(simulatorDesc.runTime),
+                        Some(simulationTimeout))
+                      if (success) {
+                        // Simulation did not time out, so record stats.
+                        /**
+                         * Capture statistics into a protocolbuffer.
+                         */
+                        val experimentResult =
+                          ExperimentResultSet.ExperimentEnv.ExperimentResult.newBuilder()
 
-                    // Save repeated stats about workloads.
-                    workloads.foreach(workload => {
-                      val workloadStats = ExperimentResultSet.
-                        ExperimentEnv.
-                        ExperimentResult.
-                        WorkloadStats.newBuilder()
-                      workloadStats.setWorkloadName(workload.name)
-                      workloadStats.setNumJobs(workload.numJobs)
-                      workloadStats.setNumJobsScheduled(
-                        workload.getJobs.filter(_.numSchedulingAttempts > 0).length)
-                      workload
-                      workloadStats.setJobThinkTimes90Percentile(
-                        workload.jobUsefulThinkTimesPercentile(0.9))
-                      workloadStats.setAvgJobQueueTimesTillFirstScheduled(
-                        workload.avgJobQueueTimeTillFirstScheduled)
-                      workloadStats.setAvgJobQueueTimesTillFullyScheduled(
-                        workload.avgJobQueueTimeTillFullyScheduled)
-                      workloadStats.setJobQueueTimeTillFirstScheduled90Percentile(
-                        workload.jobQueueTimeTillFirstScheduledPercentile(0.9))
-                      workloadStats.setJobQueueTimeTillFullyScheduled90Percentile(
-                        workload.jobQueueTimeTillFullyScheduledPercentile(0.9))
-                      workloadStats.setNumSchedulingAttempts90Percentile(
-                        workload.numSchedulingAttemptsPercentile(0.9))
-                      workloadStats.setNumSchedulingAttempts99Percentile(
-                        workload.numSchedulingAttemptsPercentile(0.99))
-                      workloadStats.setNumTaskSchedulingAttempts90Percentile(
-                        workload.numTaskSchedulingAttemptsPercentile(0.9))
-                      workloadStats.setNumTaskSchedulingAttempts99Percentile(
-                        workload.numTaskSchedulingAttemptsPercentile(0.99))
+                        experimentResult.setCellStateAvgCpuUtilization(
+                          simulator.avgCpuUtilization / simulator.cellState.totalCpus)
+                        experimentResult.setCellStateAvgMemUtilization(
+                          simulator.avgMemUtilization / simulator.cellState.totalMem)
 
-                      experimentResult.addWorkloadStats(workloadStats)
-                    })
-                    // Record workload specific details about the parameter sweeps.
-                    experimentResult.setSweepWorkload(workloadToSweepOver)
-                    experimentResult.setAvgJobInterarrivalTime(
-                      avgJobInterarrivalTime.getOrElse(
-                        workloads.filter(_.name == workloadToSweepOver)
-                          .head.avgJobInterarrivalTime))
+                        experimentResult.setCellStateAvgCpuLocked(
+                          simulator.avgCpuLocked / simulator.cellState.totalCpus)
+                        experimentResult.setCellStateAvgMemLocked(
+                          simulator.avgMemLocked / simulator.cellState.totalMem)
 
-                    // Save repeated stats about schedulers.
-                    simulator.schedulers.values.foreach(scheduler => {
-                      val schedulerStats =
-                        ExperimentResultSet.
-                          ExperimentEnv.
-                          ExperimentResult.
-                          SchedulerStats.newBuilder()
-                      schedulerStats.setSchedulerName(scheduler.name)
-                      schedulerStats.setUsefulBusyTime(
-                        scheduler.totalUsefulTimeScheduling)
-                      schedulerStats.setWastedBusyTime(
-                        scheduler.totalWastedTimeScheduling)
-                      // Per scheduler metrics bucketed by day.
-                      // Use floor since days are zero-indexed. For example, if the
-                      // simulator only runs for 1/2 day, we should only have one
-                      // bucket (day 0), so our range should be 0 to 0. In this example
-                      // we would get floor(runTime / 86400) = floor(0.5) = 0.
-                      val daysRan = math.floor(simulatorDesc.runTime/86400.0).toInt
-                      println("Computing daily stats for days 0 through %d."
-                        .format(daysRan))
-                      (0 to daysRan).foreach {
-                        day: Int => {
-                          val perDayStats =
-                            ExperimentResultSet.
-                              ExperimentEnv.
-                              ExperimentResult.
-                              SchedulerStats.
-                              PerDayStats.newBuilder()
-                          perDayStats.setDayNum(day)
-                          // Busy and wasted time bucketed by day.
-                          perDayStats.setUsefulBusyTime(
-                            scheduler.dailyUsefulTimeScheduling.getOrElse(day, 0.0))
-                          println(("Writing dailyUsefulScheduling(day = %d) = %f for " +
-                            "scheduler %s")
-                            .format(day,
-                              scheduler
-                                .dailyUsefulTimeScheduling
-                                .getOrElse(day, 0.0),
-                              scheduler.name))
-                          perDayStats.setWastedBusyTime(
-                            scheduler.dailyWastedTimeScheduling.getOrElse(day, 0.0))
-                          // Counters bucketed by day.
-                          perDayStats.setNumSuccessfulTransactions(
-                            scheduler.dailySuccessTransactions.getOrElse[Int](day, 0))
-                          perDayStats.setNumFailedTransactions(
-                            scheduler.dailyFailedTransactions.getOrElse[Int](day, 0))
+                        // Save repeated stats about workloads.
+                        workloads.foreach(workload => {
+                          val workloadStats = ExperimentResultSet.
+                            ExperimentEnv.
+                            ExperimentResult.
+                            WorkloadStats.newBuilder()
+                          workloadStats.setWorkloadName(workload.name)
+                          workloadStats.setNumJobs(workload.numJobs)
+                          workloadStats.setNumJobsScheduled(
+                            workload.getJobs.filter(_.numSchedulingAttempts > 0).length)
+                          workload
+                          workloadStats.setJobThinkTimes90Percentile(
+                            workload.jobUsefulThinkTimesPercentile(0.9))
+                          workloadStats.setAvgJobQueueTimesTillFirstScheduled(
+                            workload.avgJobQueueTimeTillFirstScheduled)
+                          workloadStats.setAvgJobQueueTimesTillFullyScheduled(
+                            workload.avgJobQueueTimeTillFullyScheduled)
+                          workloadStats.setJobQueueTimeTillFirstScheduled90Percentile(
+                            workload.jobQueueTimeTillFirstScheduledPercentile(0.9))
+                          workloadStats.setJobQueueTimeTillFullyScheduled90Percentile(
+                            workload.jobQueueTimeTillFullyScheduledPercentile(0.9))
+                          workloadStats.setNumSchedulingAttempts90Percentile(
+                            workload.numSchedulingAttemptsPercentile(0.9))
+                          workloadStats.setNumSchedulingAttempts99Percentile(
+                            workload.numSchedulingAttemptsPercentile(0.99))
+                          workloadStats.setNumTaskSchedulingAttempts90Percentile(
+                            workload.numTaskSchedulingAttemptsPercentile(0.9))
+                          workloadStats.setNumTaskSchedulingAttempts99Percentile(
+                            workload.numTaskSchedulingAttemptsPercentile(0.99))
 
-                          schedulerStats.addPerDayStats(perDayStats)
-                        }}
-
-                      assert(scheduler.perWorkloadUsefulTimeScheduling.size ==
-                        scheduler.perWorkloadWastedTimeScheduling.size,
-                        "the maps held by Scheduler to track per workload " +
-                          "useful and wasted time should be the same size " +
-                          "(Scheduler.addJob() should ensure this).")
-                      scheduler.perWorkloadUsefulTimeScheduling.foreach{
-                        case (workloadName, workloadUsefulBusyTime) => {
-                          val perWorkloadBusyTime =
-                            ExperimentResultSet.
-                              ExperimentEnv.
-                              ExperimentResult.
-                              SchedulerStats.
-                              PerWorkloadBusyTime.newBuilder()
-                          perWorkloadBusyTime.setWorkloadName(workloadName)
-                          perWorkloadBusyTime.setUsefulBusyTime(workloadUsefulBusyTime)
-                          perWorkloadBusyTime.setWastedBusyTime(
-                            scheduler.perWorkloadWastedTimeScheduling(workloadName))
-
-                          schedulerStats.addPerWorkloadBusyTime(perWorkloadBusyTime)
-                        }}
-                      // Counts of sched-level job transaction successes, failures,
-                      // and retries.
-                      schedulerStats.setNumSuccessfulTransactions(
-                        scheduler.numSuccessfulTransactions)
-                      schedulerStats.setNumFailedTransactions(
-                        scheduler.numFailedTransactions)
-                      schedulerStats.setNumNoResourcesFoundSchedulingAttempts(
-                        scheduler.numNoResourcesFoundSchedulingAttempts)
-                      schedulerStats.setNumRetriedTransactions(
-                        scheduler.numRetriedTransactions)
-                      schedulerStats.setNumJobsTimedOutScheduling(
-                        scheduler.numJobsTimedOutScheduling)
-                      // Counts of task transaction successes and failures.
-                      schedulerStats.setNumSuccessfulTaskTransactions(
-                        scheduler.numSuccessfulTaskTransactions)
-                      schedulerStats.setNumFailedTaskTransactions(
-                        scheduler.numFailedTaskTransactions)
-
-                      schedulerStats.setIsMultiPath(scheduler.isMultiPath)
-                      schedulerStats.setNumJobsLeftInQueue(scheduler.jobQueueSize)
-                      schedulerStats.setFailedFindVictimAttempts(
-                        scheduler.failedFindVictimAttempts)
-
-                      experimentResult.addSchedulerStats(schedulerStats)
-                    })
-                    // Record scheduler specific details about the parameter sweeps.
-                    schedulerWorkloadsToSweepOver
-                      .foreach{case (schedName, workloadNames) => {
-                        workloadNames.foreach(workloadName => {
-                          val schedulerWorkload =
-                            ExperimentResultSet.
-                              ExperimentEnv.
-                              ExperimentResult.
-                              SchedulerWorkload.newBuilder()
-                          schedulerWorkload.setSchedulerName(schedName)
-                          schedulerWorkload.setWorkloadName(workloadName)
-                          experimentResult.addSweepSchedulerWorkload(schedulerWorkload)
+                          experimentResult.addWorkloadStats(workloadStats)
                         })
-                      }}
+                        // Record workload specific details about the parameter sweeps.
+                        experimentResult.setSweepWorkload(workloadToSweepOver)
+                        experimentResult.setAvgJobInterarrivalTime(
+                          avgJobInterarrivalTime.getOrElse(
+                            workloads.filter(_.name == workloadToSweepOver)
+                              .head.avgJobInterarrivalTime))
 
-                    experimentResult.setConstantThinkTime(constantThinkTime)
-                    experimentResult.setPerTaskThinkTime(perTaskThinkTime)
+                        // Save repeated stats about schedulers.
+                        simulator.schedulers.values.foreach(scheduler => {
+                          val schedulerStats =
+                            ExperimentResultSet.
+                              ExperimentEnv.
+                              ExperimentResult.
+                              SchedulerStats.newBuilder()
+                          schedulerStats.setSchedulerName(scheduler.name)
+                          schedulerStats.setUsefulBusyTime(
+                            scheduler.totalUsefulTimeScheduling)
+                          schedulerStats.setWastedBusyTime(
+                            scheduler.totalWastedTimeScheduling)
+                          // Per scheduler metrics bucketed by day.
+                          // Use floor since days are zero-indexed. For example, if the
+                          // simulator only runs for 1/2 day, we should only have one
+                          // bucket (day 0), so our range should be 0 to 0. In this example
+                          // we would get floor(runTime / 86400) = floor(0.5) = 0.
+                          val daysRan = math.floor(simulatorDesc.runTime/86400.0).toInt
+                          println("Computing daily stats for days 0 through %d."
+                            .format(daysRan))
+                          (0 to daysRan).foreach {
+                            day: Int => {
+                              val perDayStats =
+                                ExperimentResultSet.
+                                  ExperimentEnv.
+                                  ExperimentResult.
+                                  SchedulerStats.
+                                  PerDayStats.newBuilder()
+                              perDayStats.setDayNum(day)
+                              // Busy and wasted time bucketed by day.
+                              perDayStats.setUsefulBusyTime(
+                                scheduler.dailyUsefulTimeScheduling.getOrElse(day, 0.0))
+                              println(("Writing dailyUsefulScheduling(day = %d) = %f for " +
+                                "scheduler %s")
+                                .format(day,
+                                  scheduler
+                                    .dailyUsefulTimeScheduling
+                                    .getOrElse(day, 0.0),
+                                  scheduler.name))
+                              perDayStats.setWastedBusyTime(
+                                scheduler.dailyWastedTimeScheduling.getOrElse(day, 0.0))
+                              // Counters bucketed by day.
+                              perDayStats.setNumSuccessfulTransactions(
+                                scheduler.dailySuccessTransactions.getOrElse[Int](day, 0))
+                              perDayStats.setNumFailedTransactions(
+                                scheduler.dailyFailedTransactions.getOrElse[Int](day, 0))
 
-                    // Save our results as a protocol buffer.
-                    experimentEnv.addExperimentResult(experimentResult.build())
+                              schedulerStats.addPerDayStats(perDayStats)
+                            }}
+
+                          assert(scheduler.perWorkloadUsefulTimeScheduling.size ==
+                            scheduler.perWorkloadWastedTimeScheduling.size,
+                            "the maps held by Scheduler to track per workload " +
+                              "useful and wasted time should be the same size " +
+                              "(Scheduler.addJob() should ensure this).")
+                          scheduler.perWorkloadUsefulTimeScheduling.foreach{
+                            case (workloadName, workloadUsefulBusyTime) => {
+                              val perWorkloadBusyTime =
+                                ExperimentResultSet.
+                                  ExperimentEnv.
+                                  ExperimentResult.
+                                  SchedulerStats.
+                                  PerWorkloadBusyTime.newBuilder()
+                              perWorkloadBusyTime.setWorkloadName(workloadName)
+                              perWorkloadBusyTime.setUsefulBusyTime(workloadUsefulBusyTime)
+                              perWorkloadBusyTime.setWastedBusyTime(
+                                scheduler.perWorkloadWastedTimeScheduling(workloadName))
+
+                              schedulerStats.addPerWorkloadBusyTime(perWorkloadBusyTime)
+                            }}
+                          // Counts of sched-level job transaction successes, failures,
+                          // and retries.
+                          schedulerStats.setNumSuccessfulTransactions(
+                            scheduler.numSuccessfulTransactions)
+                          schedulerStats.setNumFailedTransactions(
+                            scheduler.numFailedTransactions)
+                          schedulerStats.setNumNoResourcesFoundSchedulingAttempts(
+                            scheduler.numNoResourcesFoundSchedulingAttempts)
+                          schedulerStats.setNumRetriedTransactions(
+                            scheduler.numRetriedTransactions)
+                          schedulerStats.setNumJobsTimedOutScheduling(
+                            scheduler.numJobsTimedOutScheduling)
+                          // Counts of task transaction successes and failures.
+                          schedulerStats.setNumSuccessfulTaskTransactions(
+                            scheduler.numSuccessfulTaskTransactions)
+                          schedulerStats.setNumFailedTaskTransactions(
+                            scheduler.numFailedTaskTransactions)
+
+                          schedulerStats.setIsMultiPath(scheduler.isMultiPath)
+                          schedulerStats.setNumJobsLeftInQueue(scheduler.jobQueueSize)
+                          schedulerStats.setFailedFindVictimAttempts(
+                            scheduler.failedFindVictimAttempts)
+
+                          experimentResult.addSchedulerStats(schedulerStats)
+                        })
+                        // Record scheduler specific details about the parameter sweeps.
+                        schedulerWorkloadsToSweepOver
+                          .foreach{case (schedName, workloadNames) => {
+                            workloadNames.foreach(workloadName => {
+                              val schedulerWorkload =
+                                ExperimentResultSet.
+                                  ExperimentEnv.
+                                  ExperimentResult.
+                                  SchedulerWorkload.newBuilder()
+                              schedulerWorkload.setSchedulerName(schedName)
+                              schedulerWorkload.setWorkloadName(workloadName)
+                              experimentResult.addSweepSchedulerWorkload(schedulerWorkload)
+                            })
+                          }}
+
+                        experimentResult.setConstantThinkTime(constantThinkTime)
+                        experimentResult.setPerTaskThinkTime(perTaskThinkTime)
+
+                        // Save our results as a protocol buffer.
+                        experimentEnv.addExperimentResult(experimentResult.build())
 
 
-                    /**
-                     * TODO(andyk): Once protocol buffer support is finished,
-                     *              remove this.
-                     */
+                        /**
+                         * TODO(andyk): Once protocol buffer support is finished,
+                         *              remove this.
+                         */
 
-                    // Create a sorted list of schedulers and workloads to compute
-                    // a lot of the stats below, so that the we can be sure
-                    // which column is which when we print the stats.
-                    val sortedSchedulers = simulator
-                      .schedulers.values.toList.sortWith(_.name < _.name)
-                    val sortedWorkloads = workloads.toList.sortWith(_.name < _.name)
+                        // Create a sorted list of schedulers and workloads to compute
+                        // a lot of the stats below, so that the we can be sure
+                        // which column is which when we print the stats.
+                        val sortedSchedulers = simulator
+                          .schedulers.values.toList.sortWith(_.name < _.name)
+                        val sortedWorkloads = workloads.toList.sortWith(_.name < _.name)
 
-                    // Sorted names of workloads.
-                    var workloadNames = sortedWorkloads.map(_.name).mkString(" ")
+                        // Sorted names of workloads.
+                        var workloadNames = sortedWorkloads.map(_.name).mkString(" ")
 
-                    // Count the jobs in each workload.
-                    var numJobs = sortedWorkloads.map(_.numJobs).mkString(" ")
+                        // Count the jobs in each workload.
+                        var numJobs = sortedWorkloads.map(_.numJobs).mkString(" ")
 
-                    // Count the jobs in each workload that were actually scheduled.
-                    val numJobsScheduled = sortedWorkloads.map(workload => {
-                      workload.getJobs.filter(_.numSchedulingAttempts > 0).length
-                    }).mkString(" ")
+                        // Count the jobs in each workload that were actually scheduled.
+                        val numJobsScheduled = sortedWorkloads.map(workload => {
+                          workload.getJobs.filter(_.numSchedulingAttempts > 0).length
+                        }).mkString(" ")
 
-                    // Sorted names of Schedulers.
-                    val schedNames = sortedSchedulers.map(_.name).mkString(" ")
+                        // Sorted names of Schedulers.
+                        val schedNames = sortedSchedulers.map(_.name).mkString(" ")
 
-                    // Calculate per scheduler successful, failed, retried
-                    // transaction conflict rates.
-                    val schedSuccessfulTransactions = sortedSchedulers.map(sched => {
-                      sched.numSuccessfulTransactions
-                    }).mkString(" ")
-                    val schedFailedTransactions = sortedSchedulers.map(sched => {
-                      sched.numFailedTransactions
-                    }).mkString(" ")
-                    val schedNoResorucesFoundSchedAttempt = sortedSchedulers.map(sched => {
-                      sched.numNoResourcesFoundSchedulingAttempts
-                    }).mkString(" ")
-                    val schedRetriedTransactions = sortedSchedulers.map(sched => {
-                      sched.numRetriedTransactions
-                    }).mkString(" ")
+                        // Calculate per scheduler successful, failed, retried
+                        // transaction conflict rates.
+                        val schedSuccessfulTransactions = sortedSchedulers.map(sched => {
+                          sched.numSuccessfulTransactions
+                        }).mkString(" ")
+                        val schedFailedTransactions = sortedSchedulers.map(sched => {
+                          sched.numFailedTransactions
+                        }).mkString(" ")
+                        val schedNoResorucesFoundSchedAttempt = sortedSchedulers.map(sched => {
+                          sched.numNoResourcesFoundSchedulingAttempts
+                        }).mkString(" ")
+                        val schedRetriedTransactions = sortedSchedulers.map(sched => {
+                          sched.numRetriedTransactions
+                        }).mkString(" ")
 
-                    // Calculate per scheduler task transaction and conflict rates
-                    val schedSuccessfulTaskTransactions = sortedSchedulers.map(sched => {
-                      sched.numSuccessfulTaskTransactions
-                    }).mkString(" ")
-                    val schedFailedTaskTransactions = sortedSchedulers.map(sched => {
-                      sched.numFailedTaskTransactions
-                    }).mkString(" ")
+                        // Calculate per scheduler task transaction and conflict rates
+                        val schedSuccessfulTaskTransactions = sortedSchedulers.map(sched => {
+                          sched.numSuccessfulTaskTransactions
+                        }).mkString(" ")
+                        val schedFailedTaskTransactions = sortedSchedulers.map(sched => {
+                          sched.numFailedTaskTransactions
+                        }).mkString(" ")
 
-                    val schedNumJobsTimedOutScheduling = sortedSchedulers.map(sched => {
-                      sched.numJobsTimedOutScheduling
-                    }).mkString(" ")
+                        val schedNumJobsTimedOutScheduling = sortedSchedulers.map(sched => {
+                          sched.numJobsTimedOutScheduling
+                        }).mkString(" ")
 
-                    // Calculate per scheduler aggregate (useful + wasted) busy time.
-                    val schedBusyTimes = sortedSchedulers.map(sched => {
-                      println(("calculating busy time for sched %s as " +
-                        "(%f + %f) / %f = %f.")
-                        .format(sched.name,
-                          sched.totalUsefulTimeScheduling,
-                          sched.totalWastedTimeScheduling,
-                          simulator.currentTime,
+                        // Calculate per scheduler aggregate (useful + wasted) busy time.
+                        val schedBusyTimes = sortedSchedulers.map(sched => {
+                          println(("calculating busy time for sched %s as " +
+                            "(%f + %f) / %f = %f.")
+                            .format(sched.name,
+                              sched.totalUsefulTimeScheduling,
+                              sched.totalWastedTimeScheduling,
+                              simulator.currentTime,
+                              (sched.totalUsefulTimeScheduling +
+                                sched.totalWastedTimeScheduling) /
+                                simulator.currentTime))
                           (sched.totalUsefulTimeScheduling +
-                            sched.totalWastedTimeScheduling) /
-                            simulator.currentTime))
-                      (sched.totalUsefulTimeScheduling +
-                        sched.totalWastedTimeScheduling) / simulator.currentTime
-                    }).mkString(" ")
+                            sched.totalWastedTimeScheduling) / simulator.currentTime
+                        }).mkString(" ")
 
-                    // Calculate per scheduler aggregate (useful + wasted) busy time.
-                    val schedUsefulBusyTimes = sortedSchedulers.map(sched => {
-                      sched.totalUsefulTimeScheduling / simulator.currentTime
-                    }).mkString(" ")
+                        // Calculate per scheduler aggregate (useful + wasted) busy time.
+                        val schedUsefulBusyTimes = sortedSchedulers.map(sched => {
+                          sched.totalUsefulTimeScheduling / simulator.currentTime
+                        }).mkString(" ")
 
-                    // Calculate per scheduler aggregate (useful + wasted) busy time.
-                    val schedWastedBusyTimes = sortedSchedulers.map(sched => {
-                      sched.totalWastedTimeScheduling / simulator.currentTime
-                    }).mkString(" ")
+                        // Calculate per scheduler aggregate (useful + wasted) busy time.
+                        val schedWastedBusyTimes = sortedSchedulers.map(sched => {
+                          sched.totalWastedTimeScheduling / simulator.currentTime
+                        }).mkString(" ")
 
-                    // Calculate per-scheduler per-workload useful + wasted busy time.
-                    val perWorkloadSchedBusyTimes = sortedSchedulers.map(sched => {
-                      // Sort by workload name.
-                      val sortedSchedulingTimes =
-                        sched.perWorkloadUsefulTimeScheduling.toList.sortWith(_._1<_._1)
-                      sortedSchedulingTimes.map(nameTimePair => {
-                        (nameTimePair._2 +
-                          sched.perWorkloadWastedTimeScheduling(nameTimePair._1)) /
-                          simulator.currentTime
-                      }).mkString(" ")
-                    }).mkString(" ")
+                        // Calculate per-scheduler per-workload useful + wasted busy time.
+                        val perWorkloadSchedBusyTimes = sortedSchedulers.map(sched => {
+                          // Sort by workload name.
+                          val sortedSchedulingTimes =
+                            sched.perWorkloadUsefulTimeScheduling.toList.sortWith(_._1<_._1)
+                          sortedSchedulingTimes.map(nameTimePair => {
+                            (nameTimePair._2 +
+                              sched.perWorkloadWastedTimeScheduling(nameTimePair._1)) /
+                              simulator.currentTime
+                          }).mkString(" ")
+                        }).mkString(" ")
 
-                    // Calculate 90%tile per-workload time-scheduling for
-                    // scheduled jobs.
-                    // sortedWorkloads is a ListBuffer[Workload]
-                    // Workload.jobs is a ListBuffer[Job].
-                    val jobThinkTimes90Percentile = sortedWorkloads.map(workload => {
-                      workload.jobUsefulThinkTimesPercentile(0.9)
-                    }).mkString(" ")
+                        // Calculate 90%tile per-workload time-scheduling for
+                        // scheduled jobs.
+                        // sortedWorkloads is a ListBuffer[Workload]
+                        // Workload.jobs is a ListBuffer[Job].
+                        val jobThinkTimes90Percentile = sortedWorkloads.map(workload => {
+                          workload.jobUsefulThinkTimesPercentile(0.9)
+                        }).mkString(" ")
 
-                    // Calculate the average time jobs spent in scheduler's queue before
-                    // its first task was first scheduled.
-                    val avgJobQueueTimesTillFirstScheduled = sortedWorkloads.map(workload => {
-                      workload.avgJobQueueTimeTillFirstScheduled
-                    }).mkString(" ")
+                        // Calculate the average time jobs spent in scheduler's queue before
+                        // its first task was first scheduled.
+                        val avgJobQueueTimesTillFirstScheduled = sortedWorkloads.map(workload => {
+                          workload.avgJobQueueTimeTillFirstScheduled
+                        }).mkString(" ")
 
-                    // Calculate the average time jobs spent in scheduler's queue before
-                    // its final task was scheduled..
-                    val avgJobQueueTimesTillFullyScheduled = sortedWorkloads.map(workload => {
-                      workload.avgJobQueueTimeTillFullyScheduled
-                    }).mkString(" ")
+                        // Calculate the average time jobs spent in scheduler's queue before
+                        // its final task was scheduled..
+                        val avgJobQueueTimesTillFullyScheduled = sortedWorkloads.map(workload => {
+                          workload.avgJobQueueTimeTillFullyScheduled
+                        }).mkString(" ")
 
-                    // Calculate the 90%tile per-workload jobQueueTime*-s for
-                    // scheduled jobs.
-                    val jobQueueTimeTillFirstScheduled90Percentile =
-                      sortedWorkloads.map(workload => {
-                        workload.jobQueueTimeTillFirstScheduledPercentile(0.9)
-                      }).mkString(" ")
+                        // Calculate the 90%tile per-workload jobQueueTime*-s for
+                        // scheduled jobs.
+                        val jobQueueTimeTillFirstScheduled90Percentile =
+                          sortedWorkloads.map(workload => {
+                            workload.jobQueueTimeTillFirstScheduledPercentile(0.9)
+                          }).mkString(" ")
 
-                    val jobQueueTimeTillFullyScheduled90Percentile =
-                      sortedWorkloads.map(workload => {
-                        workload.jobQueueTimeTillFullyScheduledPercentile(0.9)
-                      }).mkString(" ")
+                        val jobQueueTimeTillFullyScheduled90Percentile =
+                          sortedWorkloads.map(workload => {
+                            workload.jobQueueTimeTillFullyScheduledPercentile(0.9)
+                          }).mkString(" ")
 
-                    val numSchedulingAttempts90Percentile =
-                      sortedWorkloads.map(workload => {
-                        workload.numSchedulingAttemptsPercentile(0.9)
-                      }).mkString(" ")
+                        val numSchedulingAttempts90Percentile =
+                          sortedWorkloads.map(workload => {
+                            workload.numSchedulingAttemptsPercentile(0.9)
+                          }).mkString(" ")
 
-                    val numSchedulingAttempts99Percentile =
-                      sortedWorkloads.map(workload => {
-                        workload.numSchedulingAttemptsPercentile(0.99)
-                      }).mkString(" ")
+                        val numSchedulingAttempts99Percentile =
+                          sortedWorkloads.map(workload => {
+                            workload.numSchedulingAttemptsPercentile(0.99)
+                          }).mkString(" ")
 
-                    val numSchedulingAttemptsMax =
-                      sortedWorkloads.map(workload => {
-                        workload.getJobs.map(_.numSchedulingAttempts).max
-                      }).mkString(" ")
+                        val numSchedulingAttemptsMax =
+                          sortedWorkloads.map(workload => {
+                            workload.getJobs.map(_.numSchedulingAttempts).max
+                          }).mkString(" ")
 
-                    val numTaskSchedulingAttempts90Percentile =
-                      sortedWorkloads.map(workload => {
-                        workload.numTaskSchedulingAttemptsPercentile(0.9)
-                      }).mkString(" ")
+                        val numTaskSchedulingAttempts90Percentile =
+                          sortedWorkloads.map(workload => {
+                            workload.numTaskSchedulingAttemptsPercentile(0.9)
+                          }).mkString(" ")
 
-                    val numTaskSchedulingAttempts99Percentile =
-                      sortedWorkloads.map(workload => {
-                        workload.numTaskSchedulingAttemptsPercentile(0.99)
-                      }).mkString(" ")
+                        val numTaskSchedulingAttempts99Percentile =
+                          sortedWorkloads.map(workload => {
+                            workload.numTaskSchedulingAttemptsPercentile(0.99)
+                          }).mkString(" ")
 
-                    val numTaskSchedulingAttemptsMax =
-                      sortedWorkloads.map(workload => {
-                        workload.getJobs.map(_.numTaskSchedulingAttempts).max
-                      }).mkString(" ")
+                        val numTaskSchedulingAttemptsMax =
+                          sortedWorkloads.map(workload => {
+                            workload.getJobs.map(_.numTaskSchedulingAttempts).max
+                          }).mkString(" ")
 
-                    // Per-scheduler stats.
-                    val schedulerIsMultiPaths = sortedSchedulers.map(sched => {
-                      if (sched.isMultiPath) "1"
-                      else "0"
-                    }).mkString(" ")
-                    val schedulerJobQueueSizes =
-                      sortedSchedulers.map(_.jobQueueSize).mkString(" ")
+                        // Per-scheduler stats.
+                        val schedulerIsMultiPaths = sortedSchedulers.map(sched => {
+                          if (sched.isMultiPath) "1"
+                          else "0"
+                        }).mkString(" ")
+                        val schedulerJobQueueSizes =
+                          sortedSchedulers.map(_.jobQueueSize).mkString(" ")
 
-                    val prettyLine = ("cell: %s \n" +
-                      "assignment policy: %s \n" +
-                      "runtime: %f \n" +
-                      "avg cpu util: %f \n" +
-                      "avg mem util: %f \n" +
-                      "num workloads %d \n" +
-                      "workload names: %s \n" +
-                      "numjobs: %s \n" +
-                      "num jobs scheduled: %s \n" +
-                      "perWorkloadSchedBusyTimes: %s \n" +
-                      "jobThinkTimes90Percentile: %s \n" +
-                      "avgJobQueueTimesTillFirstScheduled: %s \n" +
-                      "avgJobQueueTimesTillFullyScheduled: %s \n" +
-                      "jobQueueTimeTillFirstScheduled90Percentile: %s \n" +
-                      "jobQueueTimeTillFullyScheduled90Percentile: %s \n" +
-                      "numSchedulingAttempts90Percentile: %s \n" +
-                      "numSchedulingAttempts99Percentile: %s \n" +
-                      "numSchedulingAttemptsMax: %s \n" +
-                      "numTaskSchedulingAttempts90Percentile: %s \n" +
-                      "numTaskSchedulingAttempts99Percentile: %s \n" +
-                      "numTaskSchedulingAttemptsMax: %s \n" +
-                      "simulator.schedulers.size: %d \n" +
-                      "schedNames: %s \n" +
-                      "schedBusyTimes: %s \n" +
-                      "schedUsefulBusyTimes: %s \n" +
-                      "schedWastedBusyTimes: %s \n" +
-                      "schedSuccessfulTransactions: %s \n" +
-                      "schedFailedTransactions: %s \n" +
-                      "schedNoResorucesFoundSchedAttempt: %s \n" +
-                      "schedRetriedTransactions: %s \n" +
-                      "schedSuccessfulTaskTransactions: %s \n" +
-                      "schedFailedTaskTransactions: %s \n" +
-                      "schedNumJobsTimedOutScheduling: %s \n" +
-                      "schedulerIsMultiPaths: %s \n" +
-                      "schedulerNumJobsLeftInQueue: %s \n" +
-                      "workloadToSweepOver: %s \n" +
-                      "avgJobInterarrivalTime: %f \n" +
-                      "constantThinkTime: %f \n" +
-                      "perTaskThinkTime %f").format(
-                      workloadDesc.cell,                                  // %s
-                      workloadDesc.assignmentPolicy,                      // %s
-                      simulatorDesc.runTime,                              // %f
-                      simulator.avgCpuUtilization /
-                        simulator.cellState.totalCpus,                  // %f
-                      simulator.avgMemUtilization /
-                        simulator.cellState.totalMem,                   // %f
-                      workloads.length,                                   // %d
-                      workloadNames,                                      // %s
-                      numJobs,                                            // %s
-                      numJobsScheduled,                                   // %s
-                      perWorkloadSchedBusyTimes,                          // %s
-                      jobThinkTimes90Percentile,                          // %s
-                      avgJobQueueTimesTillFirstScheduled,                 // %s
-                      avgJobQueueTimesTillFullyScheduled,                 // %s
-                      jobQueueTimeTillFirstScheduled90Percentile,         // %s
-                      jobQueueTimeTillFullyScheduled90Percentile,         // %s
-                      numSchedulingAttempts90Percentile,                  // %s
-                      numSchedulingAttempts99Percentile,                  // %s
-                      numSchedulingAttemptsMax,                           // %s
-                      numTaskSchedulingAttempts90Percentile,              // %s
-                      numTaskSchedulingAttempts99Percentile,              // %s
-                      numTaskSchedulingAttemptsMax,                       // %s
-                      simulator.schedulers.size,                          // %d
-                      schedNames,                                         // %s
-                      schedBusyTimes,                                     // %s
-                      schedUsefulBusyTimes,                               // %s
-                      schedWastedBusyTimes,                               // %s
-                      schedSuccessfulTransactions,                        // %s
-                      schedFailedTransactions,                            // %s
-                      schedNoResorucesFoundSchedAttempt,                  // %s
-                      schedRetriedTransactions,                           // %s
-                      schedSuccessfulTaskTransactions,                    // %s
-                      schedFailedTaskTransactions,                        // %s
-                      schedNumJobsTimedOutScheduling,                     // %s
-                      schedulerIsMultiPaths,                              // %s
-                      schedulerJobQueueSizes,
-                      workloadToSweepOver,                                // %s
-                      avgJobInterarrivalTime.getOrElse(
-                        workloads.filter(_.name == workloadToSweepOver) // %f
+                        val prettyLine = ("cell: %s \n" +
+                          "assignment policy: %s \n" +
+                          "runtime: %f \n" +
+                          "avg cpu util: %f \n" +
+                          "avg mem util: %f \n" +
+                          "num workloads %d \n" +
+                          "workload names: %s \n" +
+                          "numjobs: %s \n" +
+                          "num jobs scheduled: %s \n" +
+                          "perWorkloadSchedBusyTimes: %s \n" +
+                          "jobThinkTimes90Percentile: %s \n" +
+                          "avgJobQueueTimesTillFirstScheduled: %s \n" +
+                          "avgJobQueueTimesTillFullyScheduled: %s \n" +
+                          "jobQueueTimeTillFirstScheduled90Percentile: %s \n" +
+                          "jobQueueTimeTillFullyScheduled90Percentile: %s \n" +
+                          "numSchedulingAttempts90Percentile: %s \n" +
+                          "numSchedulingAttempts99Percentile: %s \n" +
+                          "numSchedulingAttemptsMax: %s \n" +
+                          "numTaskSchedulingAttempts90Percentile: %s \n" +
+                          "numTaskSchedulingAttempts99Percentile: %s \n" +
+                          "numTaskSchedulingAttemptsMax: %s \n" +
+                          "simulator.schedulers.size: %d \n" +
+                          "schedNames: %s \n" +
+                          "schedBusyTimes: %s \n" +
+                          "schedUsefulBusyTimes: %s \n" +
+                          "schedWastedBusyTimes: %s \n" +
+                          "schedSuccessfulTransactions: %s \n" +
+                          "schedFailedTransactions: %s \n" +
+                          "schedNoResorucesFoundSchedAttempt: %s \n" +
+                          "schedRetriedTransactions: %s \n" +
+                          "schedSuccessfulTaskTransactions: %s \n" +
+                          "schedFailedTaskTransactions: %s \n" +
+                          "schedNumJobsTimedOutScheduling: %s \n" +
+                          "schedulerIsMultiPaths: %s \n" +
+                          "schedulerNumJobsLeftInQueue: %s \n" +
+                          "workloadToSweepOver: %s \n" +
+                          "avgJobInterarrivalTime: %f \n" +
+                          "constantThinkTime: %f \n" +
+                          "perTaskThinkTime %f").format(
+                          workloadDesc.cell,                                  // %s
+                          workloadDesc.assignmentPolicy,                      // %s
+                          simulatorDesc.runTime,                              // %f
+                          simulator.avgCpuUtilization /
+                            simulator.cellState.totalCpus,                  // %f
+                          simulator.avgMemUtilization /
+                            simulator.cellState.totalMem,                   // %f
+                          workloads.length,                                   // %d
+                          workloadNames,                                      // %s
+                          numJobs,                                            // %s
+                          numJobsScheduled,                                   // %s
+                          perWorkloadSchedBusyTimes,                          // %s
+                          jobThinkTimes90Percentile,                          // %s
+                          avgJobQueueTimesTillFirstScheduled,                 // %s
+                          avgJobQueueTimesTillFullyScheduled,                 // %s
+                          jobQueueTimeTillFirstScheduled90Percentile,         // %s
+                          jobQueueTimeTillFullyScheduled90Percentile,         // %s
+                          numSchedulingAttempts90Percentile,                  // %s
+                          numSchedulingAttempts99Percentile,                  // %s
+                          numSchedulingAttemptsMax,                           // %s
+                          numTaskSchedulingAttempts90Percentile,              // %s
+                          numTaskSchedulingAttempts99Percentile,              // %s
+                          numTaskSchedulingAttemptsMax,                       // %s
+                          simulator.schedulers.size,                          // %d
+                          schedNames,                                         // %s
+                          schedBusyTimes,                                     // %s
+                          schedUsefulBusyTimes,                               // %s
+                          schedWastedBusyTimes,                               // %s
+                          schedSuccessfulTransactions,                        // %s
+                          schedFailedTransactions,                            // %s
+                          schedNoResorucesFoundSchedAttempt,                  // %s
+                          schedRetriedTransactions,                           // %s
+                          schedSuccessfulTaskTransactions,                    // %s
+                          schedFailedTaskTransactions,                        // %s
+                          schedNumJobsTimedOutScheduling,                     // %s
+                          schedulerIsMultiPaths,                              // %s
+                          schedulerJobQueueSizes,
+                          workloadToSweepOver,                                // %s
+                          avgJobInterarrivalTime.getOrElse(
+                            workloads.filter(_.name == workloadToSweepOver) // %f
                                  .head.avgJobInterarrivalTime),
-                      constantThinkTime,                                  // %f
-                      perTaskThinkTime)                                   // %f
+                          constantThinkTime,                                  // %f
+                          perTaskThinkTime)                                   // %f
 
-                    println(prettyLine + "\n")
-                  } else { // if (success)
-                    println("Simulation timed out.")
-                  }
+                        println(prettyLine + "\n")
+                      } else { // if (success)
+                        println("Simulation timed out.")
+                      }
+                    }) // power on
+                  })// power off
                 }) // sorting
               })// picking
             }) // blackListPercent

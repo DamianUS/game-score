@@ -28,6 +28,8 @@ package ClusterSchedulingSimulation
 
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
+import efficiency.power_off_policies.PowerOffPolicy
+import efficiency.power_on_policies.{PowerOnPolicy, NoPowerOnPolicy}
 
 import scala.collection.mutable.HashMap
 
@@ -38,7 +40,7 @@ import scala.collection.mutable.HashMap
  */
 class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
                               runTime: Double)
-                             extends ClusterSimulatorDesc(runTime){
+  extends ClusterSimulatorDesc(runTime){
   override
   def newSimulator(constantThinkTime: Double,
                    perTaskThinkTime: Double,
@@ -50,7 +52,9 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
                    prefillWorkloads: Seq[Workload],
                    logging: Boolean = false,
                    cellStateResourcesSorter: CellStateResourcesSorter,
-                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator = {
+                   cellStateResourcesPicker: CellStateResourcesPicker,
+                   powerOnPolicy: PowerOnPolicy,
+                   powerOffPolicy: PowerOffPolicy): ClusterSimulator = {
     var schedulers = HashMap[String, Scheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -63,36 +67,38 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
           schedDesc.perTaskThinkTimes.toSeq: _*)
       var newBlackListPercent = 0.0
       if (schedulerWorkloadsToSweepOver
-          .contains(schedDesc.name)) {
+        .contains(schedDesc.name)) {
         newBlackListPercent = blackListPercent
         schedulerWorkloadsToSweepOver(schedDesc.name)
-            .foreach(workloadName => {
-          constantThinkTimes(workloadName) = constantThinkTime
-          perTaskThinkTimes(workloadName) = perTaskThinkTime
-        })
+          .foreach(workloadName => {
+            constantThinkTimes(workloadName) = constantThinkTime
+            perTaskThinkTimes(workloadName) = perTaskThinkTime
+          })
       }
       schedulers(schedDesc.name) =
-          new MonolithicScheduler(schedDesc.name,
-                                  constantThinkTimes.toMap,
-                                  perTaskThinkTimes.toMap,
-                                  math.floor(newBlackListPercent *
-                                    cellStateDesc.numMachines.toDouble).toInt)
+        new MonolithicScheduler(schedDesc.name,
+          constantThinkTimes.toMap,
+          perTaskThinkTimes.toMap,
+          math.floor(newBlackListPercent *
+            cellStateDesc.numMachines.toDouble).toInt)
     })
 
     val cellState = new CellState(cellStateDesc.numMachines,
-                                  cellStateDesc.cpusPerMachine,
-                                  cellStateDesc.memPerMachine,
-                                  conflictMode = "resource-fit",
-                                  transactionMode = "all-or-nothing")
+      cellStateDesc.cpusPerMachine,
+      cellStateDesc.memPerMachine,
+      conflictMode = "resource-fit",
+      transactionMode = "all-or-nothing")
 
     new ClusterSimulator(cellState,
-                         schedulers.toMap,
-                         workloadToSchedulerMap,
-                         workloads,
-                         prefillWorkloads,
-                         logging,
+      schedulers.toMap,
+      workloadToSchedulerMap,
+      workloads,
+      prefillWorkloads,
+      logging,
       cellStateResourcesSorter = cellStateResourcesSorter,
-      cellStateResourcesPicker = cellStateResourcesPicker)
+      cellStateResourcesPicker = cellStateResourcesPicker,
+      powerOnPolicy = powerOnPolicy,
+      powerOffPolicy = powerOffPolicy)
   }
 }
 
@@ -100,22 +106,22 @@ class MonolithicScheduler(name: String,
                           constantThinkTimes: Map[String, Double],
                           perTaskThinkTimes: Map[String, Double],
                           numMachinesToBlackList: Double = 0)
-                         extends Scheduler(name,
-                                           constantThinkTimes,
-                                           perTaskThinkTimes,
-                                           numMachinesToBlackList) {
+  extends Scheduler(name,
+    constantThinkTimes,
+    perTaskThinkTimes,
+    numMachinesToBlackList) {
 
   println("scheduler-id-info: %d, %s, %d, %s, %s"
-          .format(Thread.currentThread().getId(),
-                  name,
-                  hashCode(),
-                  constantThinkTimes.mkString(";"),
-                  perTaskThinkTimes.mkString(";")))
+    .format(Thread.currentThread().getId(),
+      name,
+      hashCode(),
+      constantThinkTimes.mkString(";"),
+      perTaskThinkTimes.mkString(";")))
 
   override
   def addJob(job: Job) = {
     assert(simulator != null, "This scheduler has not been added to a " +
-                              "simulator yet.")
+      "simulator yet.")
     super.addJob(job)
     job.lastEnqueued = simulator.currentTime
     pendingQueue.enqueue(job)
@@ -134,7 +140,7 @@ class MonolithicScheduler(name: String,
    */
   def scheduleNextJobAction(): Unit = {
     assert(simulator != null, "This scheduler has not been added to a " +
-                              "simulator yet.")
+      "simulator yet.")
     if (!scheduling && !pendingQueue.isEmpty) {
       scheduling = true
       val job = pendingQueue.dequeue
@@ -144,8 +150,8 @@ class MonolithicScheduler(name: String,
       simulator.log("getThinkTime returned " + thinkTime)
       simulator.afterDelay(thinkTime) {
         simulator.log(("Scheduler %s finished scheduling job %d. " +
-                       "Attempting to schedule next job in scheduler's " +
-                       "pendingQueue.").format(name, job.id))
+          "Attempting to schedule next job in scheduler's " +
+          "pendingQueue.").format(name, job.id))
         job.numSchedulingAttempts += 1
         job.numTaskSchedulingAttempts += job.unscheduledTasks
         val claimDeltas = scheduleJob(job, simulator.cellState)
@@ -153,43 +159,47 @@ class MonolithicScheduler(name: String,
           simulator.cellState.scheduleEndEvents(claimDeltas)
           job.unscheduledTasks -= claimDeltas.length
           simulator.log("scheduled %d tasks of job %d's, %d remaining."
-                        .format(claimDeltas.length, job.id, job.unscheduledTasks))
+            .format(claimDeltas.length, job.id, job.unscheduledTasks))
           numSuccessfulTransactions += 1
           recordUsefulTimeScheduling(job,
-                                     thinkTime,
-                                     job.numSchedulingAttempts == 1)
+            thinkTime,
+            job.numSchedulingAttempts == 1)
         } else {
           simulator.log(("No tasks scheduled for job %d (%f cpu %f mem) " +
-                         "during this scheduling attempt, not recording " +
-                         "any busy time. %d unscheduled tasks remaining.")
-                        .format(job.id,
-                                job.cpusPerTask,
-                                job.memPerTask,
-                                job.unscheduledTasks))
+            "during this scheduling attempt, not recording " +
+            "any busy time. %d unscheduled tasks remaining.")
+            .format(job.id,
+              job.cpusPerTask,
+              job.memPerTask,
+              job.unscheduledTasks))
         }
         var jobEventType = "" // Set this conditionally below; used in logging.
         // If the job isn't yet fully scheduled, put it back in the queue.
         if (job.unscheduledTasks > 0) {
+          //TODO: Buen sitio para la lógica de encender
+          if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+            simulator.powerOn.powerOn(simulator.cellState, job)
+          }
           simulator.log(("Job %s didn't fully schedule, %d / %d tasks remain " +
-                         "(shape: %f cpus, %f mem). Putting it " +
-                         "back in the queue").format(job.id,
-                                                     job.unscheduledTasks,
-                                                     job.numTasks,
-                                                     job.cpusPerTask,
-                                                     job.memPerTask))
+            "(shape: %f cpus, %f mem). Putting it " +
+            "back in the queue").format(job.id,
+            job.unscheduledTasks,
+            job.numTasks,
+            job.cpusPerTask,
+            job.memPerTask))
           // Give up on a job if (a) it hasn't scheduled a single task in
           // 100 tries or (b) it hasn't finished scheduling after 1000 tries.
           if ((job.numSchedulingAttempts > 100 &&
-               job.unscheduledTasks == job.numTasks) ||
-              job.numSchedulingAttempts > 1000) {
+            job.unscheduledTasks == job.numTasks) ||
+            job.numSchedulingAttempts > 1000) {
             println(("Abandoning job %d (%f cpu %f mem) with %d/%d " +
-                   "remaining tasks, after %d scheduling " +
-                   "attempts.").format(job.id,
-                                       job.cpusPerTask,
-                                       job.memPerTask,
-                                       job.unscheduledTasks,
-                                       job.numTasks,
-                                       job.numSchedulingAttempts))
+              "remaining tasks, after %d scheduling " +
+              "attempts.").format(job.id,
+              job.cpusPerTask,
+              job.memPerTask,
+              job.unscheduledTasks,
+              job.numTasks,
+              job.numSchedulingAttempts))
             numJobsTimedOutScheduling += 1
             jobEventType = "abandoned"
           } else {
@@ -216,7 +226,7 @@ class MonolithicScheduler(name: String,
         scheduleNextJobAction()
       }
       simulator.log("Scheduler named '%s' started scheduling job %d "
-                    .format(name,job.id))
+        .format(name,job.id))
     }
   }
 }

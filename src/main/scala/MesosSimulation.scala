@@ -28,15 +28,17 @@ package ClusterSchedulingSimulation
 
 import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
+import efficiency.power_off_policies.PowerOffPolicy
+import efficiency.power_on_policies.PowerOnPolicy
 
 import collection.mutable.HashMap
 import collection.mutable.ListBuffer
 
 class MesosSimulatorDesc(
-    schedulerDescs: Seq[MesosSchedulerDesc],
-    runTime: Double,
-    val allocatorConstantThinkTime: Double)
-   extends ClusterSimulatorDesc(runTime){
+                          schedulerDescs: Seq[MesosSchedulerDesc],
+                          runTime: Double,
+                          val allocatorConstantThinkTime: Double)
+  extends ClusterSimulatorDesc(runTime){
   override
   def newSimulator(constantThinkTime: Double,
                    perTaskThinkTime: Double,
@@ -48,7 +50,9 @@ class MesosSimulatorDesc(
                    prefillWorkloads: Seq[Workload],
                    logging: Boolean = false,
                    cellStateResourcesSorter: CellStateResourcesSorter,
-                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator = {
+                   cellStateResourcesPicker: CellStateResourcesPicker,
+                   powerOnPolicy: PowerOnPolicy,
+                   powerOffPolicy: PowerOffPolicy): ClusterSimulator = {
     var schedulers = HashMap[String, MesosScheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -61,43 +65,45 @@ class MesosSimulatorDesc(
           schedDesc.perTaskThinkTimes.toSeq: _*)
       var newBlackListPercent = 0.0
       if (schedulerWorkloadsToSweepOver
-          .contains(schedDesc.name)) {
+        .contains(schedDesc.name)) {
         newBlackListPercent = blackListPercent
         schedulerWorkloadsToSweepOver(schedDesc.name)
-            .foreach(workloadName => {
-          constantThinkTimes(workloadName) = constantThinkTime
-          perTaskThinkTimes(workloadName) = perTaskThinkTime
-        })
+          .foreach(workloadName => {
+            constantThinkTimes(workloadName) = constantThinkTime
+            perTaskThinkTimes(workloadName) = perTaskThinkTime
+          })
       }
       schedulers(schedDesc.name) =
-          new MesosScheduler(schedDesc.name,
-                             constantThinkTimes.toMap,
-                             perTaskThinkTimes.toMap,
-                             schedDesc.schedulePartialJobs,
-                             math.floor(newBlackListPercent *
-                               cellStateDesc.numMachines.toDouble).toInt)
+        new MesosScheduler(schedDesc.name,
+          constantThinkTimes.toMap,
+          perTaskThinkTimes.toMap,
+          schedDesc.schedulePartialJobs,
+          math.floor(newBlackListPercent *
+            cellStateDesc.numMachines.toDouble).toInt)
     })
     // It shouldn't matter which transactionMode we choose, but it does
     // matter that we use "resource-fit" conflictMode or else
     // responses to resource offers will likely fail.
     val cellState = new CellState(cellStateDesc.numMachines,
-                                  cellStateDesc.cpusPerMachine,
-                                  cellStateDesc.memPerMachine,
-                                  conflictMode = "resource-fit",
-                                  transactionMode = "all-or-nothing")
+      cellStateDesc.cpusPerMachine,
+      cellStateDesc.memPerMachine,
+      conflictMode = "resource-fit",
+      transactionMode = "all-or-nothing")
 
     val allocator =
-        new MesosAllocator(allocatorConstantThinkTime)
+      new MesosAllocator(allocatorConstantThinkTime)
 
     new MesosSimulator(cellState,
-                       schedulers.toMap,
-                       workloadToSchedulerMap,
-                       workloads,
-                       prefillWorkloads,
-                       allocator,
-                       logging,
-                      cellStateResourcesSorter = cellStateResourcesSorter,
-                      cellStateResourcesPicker = cellStateResourcesPicker)
+      schedulers.toMap,
+      workloadToSchedulerMap,
+      workloads,
+      prefillWorkloads,
+      allocator,
+      logging,
+      cellStateResourcesSorter = cellStateResourcesSorter,
+      cellStateResourcesPicker = cellStateResourcesPicker,
+      powerOnPolicy = powerOnPolicy,
+      powerOffPolicy = powerOffPolicy)
   }
 }
 
@@ -110,31 +116,35 @@ class MesosSimulator(cellState: CellState,
                      logging: Boolean = false,
                      monitorUtilization: Boolean = true,
                      cellStateResourcesSorter: CellStateResourcesSorter,
-                     cellStateResourcesPicker: CellStateResourcesPicker)
-                    extends ClusterSimulator(cellState,
-                                             schedulers,
-                                             workloadToSchedulerMap,
-                                             workloads,
-                                             prefillWorkloads,
-                                             logging,
-                                             monitorUtilization,
-                                              cellStateResourcesSorter = cellStateResourcesSorter,
-                                              cellStateResourcesPicker = cellStateResourcesPicker) {
+                     cellStateResourcesPicker: CellStateResourcesPicker,
+                     powerOnPolicy: PowerOnPolicy,
+                     powerOffPolicy: PowerOffPolicy)
+  extends ClusterSimulator(cellState,
+    schedulers,
+    workloadToSchedulerMap,
+    workloads,
+    prefillWorkloads,
+    logging,
+    monitorUtilization,
+    cellStateResourcesSorter = cellStateResourcesSorter,
+    cellStateResourcesPicker = cellStateResourcesPicker,
+    powerOnPolicy = powerOnPolicy,
+    powerOffPolicy = powerOffPolicy) {
   assert(cellState.conflictMode.equals("resource-fit"),
-         "Mesos requires cellstate to be set up with resource-fit conflictMode")
+    "Mesos requires cellstate to be set up with resource-fit conflictMode")
   // Set up a pointer to this simulator in the allocator.
   allocator.simulator = this
 
   log("========================================================")
   log("Mesos SIM CONSTRUCTOR - CellState total usage: %fcpus (%.1f%s), %fmem (%.1f%s)."
-                .format(cellState.totalOccupiedCpus,
-                        cellState.totalOccupiedCpus /
-                        cellState.totalCpus * 100.0,
-                        "%",
-                        cellState.totalOccupiedMem,
-                        cellState.totalOccupiedMem /
-                          cellState.totalMem * 100.0,
-                        "%"))
+    .format(cellState.totalOccupiedCpus,
+      cellState.totalOccupiedCpus /
+        cellState.totalCpus * 100.0,
+      "%",
+      cellState.totalOccupiedMem,
+      cellState.totalOccupiedMem /
+        cellState.totalMem * 100.0,
+      "%"))
 
   // Set up a pointer to this simulator in each scheduler.
   schedulers.values.foreach(_.mesosSimulator = this)
@@ -144,25 +154,25 @@ class MesosSchedulerDesc(name: String,
                          constantThinkTimes: Map[String, Double],
                          perTaskThinkTimes: Map[String, Double],
                          val schedulePartialJobs: Boolean)
-                        extends SchedulerDesc(name,
-                                              constantThinkTimes,
-                                              perTaskThinkTimes)
+  extends SchedulerDesc(name,
+    constantThinkTimes,
+    perTaskThinkTimes)
 
 class MesosScheduler(name: String,
                      constantThinkTimes: Map[String, Double],
                      perTaskThinkTimes: Map[String, Double],
                      val schedulePartialJobs: Boolean,
                      numMachinesToBlackList: Double = 0)
-                    extends Scheduler(name,
-                                      constantThinkTimes,
-                                      perTaskThinkTimes,
-                                      numMachinesToBlackList) {
+  extends Scheduler(name,
+    constantThinkTimes,
+    perTaskThinkTimes,
+    numMachinesToBlackList) {
   println("scheduler-id-info: %d, %s, %d, %s, %s"
-          .format(Thread.currentThread().getId(),
-                  name,
-                  hashCode(),
-                  constantThinkTimes.mkString(";"),
-                  perTaskThinkTimes.mkString(";")))
+    .format(Thread.currentThread().getId(),
+      name,
+      hashCode(),
+      constantThinkTimes.mkString(";"),
+      perTaskThinkTimes.mkString(";")))
   // TODO(andyk): Clean up these <subclass>Simulator classes
   //              by templatizing the Scheduler class and having only
   //              one simulator of the correct type, instead of one
@@ -174,7 +184,7 @@ class MesosScheduler(name: String,
   def checkRegistered = {
     super.checkRegistered
     assert(mesosSimulator != null, "This scheduler has not been added to a " +
-                                   "simulator yet.")
+      "simulator yet.")
   }
 
   /**
@@ -199,9 +209,11 @@ class MesosScheduler(name: String,
       // TODO(andyk): add an efficient method to CellState that allows us to
       //              check the largest slice of available resources to decode
       //              if we should keep trying to schedule or not.
+      // TODO: Poner una precondición (do-while?) para que si no hay recursos disponibles
+      // pero sí apagados, encienda antes de salir
       while (offer.cellState.availableCpus > 0.000001 &&
-             offer.cellState.availableMem > 0.000001 &&
-             !pendingQueue.isEmpty) {
+        offer.cellState.availableMem > 0.000001 &&
+        !pendingQueue.isEmpty) {
         val job = pendingQueue.dequeue
         job.updateTimeInQueueStats(simulator.currentTime)
         val jobThinkTime = getThinkTime(job)
@@ -216,67 +228,71 @@ class MesosScheduler(name: String,
         // one can, we call scheduleJob(), though we still might not fit
         // any tasks due to fragmentation.
         if (offer.cellState.availableCpus > job.cpusPerTask &&
-            offer.cellState.availableMem > job.cpusPerTask) {
+          offer.cellState.availableMem > job.cpusPerTask) {
           // Schedule the job using the cellstate in the ResourceOffer.
           val claimDeltas = scheduleJob(job, offer.cellState)
           if(claimDeltas.length > 0) {
             numSuccessfulTransactions += 1
             recordUsefulTimeScheduling(job,
-                                       jobThinkTime,
-                                       job.numSchedulingAttempts == 1)
+              jobThinkTime,
+              job.numSchedulingAttempts == 1)
             mesosSimulator.log(("Setting up job %d to accept at least " +
-                                "part of offer %d. About to spend %f seconds " +
-                                "scheduling it. Assigning %d tasks to it.")
-                                .format(job.id, offer.id, jobThinkTime,
-                                        claimDeltas.length))
+              "part of offer %d. About to spend %f seconds " +
+              "scheduling it. Assigning %d tasks to it.")
+              .format(job.id, offer.id, jobThinkTime,
+                claimDeltas.length))
             offerResponse ++= claimDeltas
             job.unscheduledTasks -= claimDeltas.length
           } else {
             mesosSimulator.log(("Rejecting all of offer %d for job %d, " +
-                                "which requires tasks with %f cpu, %f mem. " +
-                                "Not counting busy time for this sched attempt.")
-                                .format(offer.id,
-                                        job.id,
-                                        job.cpusPerTask,
-                                        job.memPerTask))
+              "which requires tasks with %f cpu, %f mem. " +
+              "Not counting busy time for this sched attempt.")
+              .format(offer.id,
+                job.id,
+                job.cpusPerTask,
+                job.memPerTask))
             numNoResourcesFoundSchedulingAttempts += 1
           }
         } else {
           mesosSimulator.log(("Short-path rejecting all of offer %d for " +
-                              "job %d because a single one of its tasks " +
-                              "(%f cpu, %f mem) wouldn't fit into the sum " +
-                              "of the offer's private cell state's " +
-                              "remaining resources (%f cpu, %f mem).")
-                              .format(offer.id,
-                                      job.id,
-                                      job.cpusPerTask,
-                                      job.memPerTask,
-                                      offer.cellState.availableCpus,
-                                      offer.cellState.availableMem))
+            "job %d because a single one of its tasks " +
+            "(%f cpu, %f mem) wouldn't fit into the sum " +
+            "of the offer's private cell state's " +
+            "remaining resources (%f cpu, %f mem).")
+            .format(offer.id,
+              job.id,
+              job.cpusPerTask,
+              job.memPerTask,
+              offer.cellState.availableCpus,
+              offer.cellState.availableMem))
         }
 
         var jobEventType = "" // Set this conditionally below; used in logging.
         // If job is only partially scheduled, put it back in the pendingQueue.
         if (job.unscheduledTasks > 0) {
+          //TODO: Buen sitio para la lógica de encender
+          if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+            simulator.powerOn.powerOn(simulator.cellState, job)
+          }
           mesosSimulator.log(("Job %d is [still] only partially scheduled, " +
-                             "(%d out of %d its tasks remain unscheduled) so " +
-                             "putting it back in the queue.")
-                             .format(job.id,
-                                     job.unscheduledTasks,
-                                     job.numTasks))
+            "(%d out of %d its tasks remain unscheduled) so " +
+            "putting it back in the queue.")
+            .format(job.id,
+              job.unscheduledTasks,
+              job.numTasks))
           // Give up on a job if (a) it hasn't scheduled a single task in
           // 100 tries or (b) it hasn't finished scheduling after 1000 tries.
           if ((job.numSchedulingAttempts > 100 &&
-               job.unscheduledTasks == job.numTasks) ||
-              job.numSchedulingAttempts > 1000) {
+            job.unscheduledTasks == job.numTasks) ||
+            job.numSchedulingAttempts > 1000) {
             println(("Abandoning job %d (%f cpu %f mem) with %d/%d " +
-                   "remaining tasks, after %d scheduling " +
-                   "attempts.").format(job.id,
-                                       job.cpusPerTask,
-                                       job.memPerTask,
-                                       job.unscheduledTasks,
-                                       job.numTasks,
-                                       job.numSchedulingAttempts))
+              "remaining tasks, after %d scheduling " +
+              "attempts.").format(job.id,
+              job.cpusPerTask,
+              job.memPerTask,
+              job.unscheduledTasks,
+              job.numTasks,
+              job.numSchedulingAttempts))
             numJobsTimedOutScheduling += 1
             jobEventType = "abandoned"
           } else {
@@ -310,21 +326,21 @@ class MesosScheduler(name: String,
         // Do this before we reply to the offer since the allocator may make
         // its next round of offers shortly after we respond to this offer.
         mesosSimulator.log(("After scheduling, %s's pending queue is " +
-                            "empty, canceling outstanding " +
-                            "resource request.").format(name))
+          "empty, canceling outstanding " +
+          "resource request.").format(name))
         mesosSimulator.allocator.cancelOfferRequest(this)
       } else {
         mesosSimulator.log(("%s's pending queue still has %d jobs in it, but " +
-                            "for some reason, they didn't fit into this " +
-                            "offer, so it will patiently wait for more " +
-                            "resource offers.").format(name, pendingQueue.size))
+          "for some reason, they didn't fit into this " +
+          "offer, so it will patiently wait for more " +
+          "resource offers.").format(name, pendingQueue.size))
       }
 
       // Send our response to this offer.
       mesosSimulator.afterDelay(aggThinkTime) {
         mesosSimulator.log(("Waited %f seconds of aggThinkTime, now " +
-                            "responding to offer %d with %d responses after.")
-                           .format(aggThinkTime, offer.id, offerResponse.length))
+          "responding to offer %d with %d responses after.")
+          .format(aggThinkTime, offer.id, offerResponse.length))
         mesosSimulator.allocator.respondToOffer(offer, offerResponse)
       }
       // Done with this offer, see if we have another one to handle.
@@ -339,21 +355,21 @@ class MesosScheduler(name: String,
   override
   def addJob(job: Job) = {
     assert(simulator != null, "This scheduler has not been added to a " +
-                              "simulator yet.")
-      simulator.log("========================================================")
-      simulator.log("addJOB: CellState total usage: %fcpus (%.1f%s), %fmem (%.1f%s)."
-                    .format(simulator.cellState.totalOccupiedCpus,
-                            simulator.cellState.totalOccupiedCpus /
-                              simulator.cellState.totalCpus * 100.0,
-                            "%",
-                            simulator.cellState.totalOccupiedMem,
-                            simulator.cellState.totalOccupiedMem /
-                              simulator.cellState.totalMem * 100.0,
-                            "%"))
+      "simulator yet.")
+    simulator.log("========================================================")
+    simulator.log("addJOB: CellState total usage: %fcpus (%.1f%s), %fmem (%.1f%s)."
+      .format(simulator.cellState.totalOccupiedCpus,
+        simulator.cellState.totalOccupiedCpus /
+          simulator.cellState.totalCpus * 100.0,
+        "%",
+        simulator.cellState.totalOccupiedMem,
+        simulator.cellState.totalOccupiedMem /
+          simulator.cellState.totalMem * 100.0,
+        "%"))
     super.addJob(job)
     pendingQueue.enqueue(job)
     simulator.log("Enqueued job %d of workload type %s."
-                  .format(job.id, job.workloadName))
+      .format(job.id, job.workloadName))
     mesosSimulator.allocator.requestOffer(this)
   }
 }
@@ -385,7 +401,7 @@ class MesosAllocator(constantThinkTime: Double,
 
   def checkRegistered = {
     assert(simulator != null, "You must assign a simulator to a " +
-                              "MesosAllocator before you can use it.")
+      "MesosAllocator before you can use it.")
   }
 
   def getThinkTime: Double = {
@@ -403,7 +419,7 @@ class MesosAllocator(constantThinkTime: Double,
 
   def cancelOfferRequest(needySched: MesosScheduler) = {
     simulator.log("Canceling the outstanding resourceRequest for scheduler %s.".format(
-        needySched.name))
+      needySched.name))
     schedulersRequestingResources -= needySched
   }
 
@@ -440,13 +456,13 @@ class MesosAllocator(constantThinkTime: Double,
     checkRegistered
     simulator.log("========================================================")
     simulator.log(("TOP OF BUILD AND SEND. CellState total occupied: " +
-                   "%fcpus (%.1f%%), %fmem (%.1f%%).")
-                  .format(simulator.cellState.totalOccupiedCpus,
-                          simulator.cellState.totalOccupiedCpus /
-                            simulator.cellState.totalCpus * 100.0,
-                          simulator.cellState.totalOccupiedMem,
-                          simulator.cellState.totalOccupiedMem /
-                            simulator.cellState.totalMem * 100.0))
+      "%fcpus (%.1f%%), %fmem (%.1f%%).")
+      .format(simulator.cellState.totalOccupiedCpus,
+        simulator.cellState.totalOccupiedCpus /
+          simulator.cellState.totalCpus * 100.0,
+        simulator.cellState.totalOccupiedMem,
+        simulator.cellState.totalOccupiedMem /
+          simulator.cellState.totalMem * 100.0))
     // Build and send an offer only if:
     // (a) there are enough resources in cellstate and
     // (b) at least one scheduler wants offers currently
@@ -457,7 +473,7 @@ class MesosAllocator(constantThinkTime: Double,
       simulator.cellState.availableCpus >= minMemOffer) {
       // Use DRF to pick a candidate scheduler to offer resources.
       val sortedSchedulers =
-          drfSortSchedulers(schedulersRequestingResources.toSeq)
+        drfSortSchedulers(schedulersRequestingResources.toSeq)
       sortedSchedulers.headOption.foreach(candidateSched => {
         // Create an offer by taking a snapshot of cell state. We might
         // discard this without sending it if we find that there are
@@ -474,34 +490,34 @@ class MesosAllocator(constantThinkTime: Double,
         // common cell state until we hear back from the scheduler (or time
         // out and rescind the offer).
         val claimDeltas =
-            candidateSched.scheduleAllAvailable(cellState = simulator.cellState,
-                                                locked = true)
+          candidateSched.scheduleAllAvailable(cellState = simulator.cellState,
+            locked = true)
         // Make sure scheduleAllAvailable() did its job.
         assert(simulator.cellState.availableCpus < 0.01 &&
-               simulator.cellState.availableMem < 0.01,
-               ("After scheduleAllAvailable() is called on a cell state " +
-                "that cells state should not have any available resources " +
-                "of any type, but this cell state still has %f cpus and %f " +
-                "memory available").format(simulator.cellState.availableCpus,
-                                           simulator.cellState.availableMem))
+          simulator.cellState.availableMem < 0.01,
+          ("After scheduleAllAvailable() is called on a cell state " +
+            "that cells state should not have any available resources " +
+            "of any type, but this cell state still has %f cpus and %f " +
+            "memory available").format(simulator.cellState.availableCpus,
+            simulator.cellState.availableMem))
         if (!claimDeltas.isEmpty) {
           assert(privCellState.totalLockedCpus !=
-                 simulator.cellState.totalLockedCpus,
-                 "Since some resources were locked and put into a resource " +
-                 "offer, we expect the number of total lockedCpus to now be " +
-                 "different in the private cell state we created than in the" +
-                 "common cell state.")
+            simulator.cellState.totalLockedCpus,
+            "Since some resources were locked and put into a resource " +
+              "offer, we expect the number of total lockedCpus to now be " +
+              "different in the private cell state we created than in the" +
+              "common cell state.")
           offeredDeltas(offer.id) = claimDeltas
 
           val thinkTime = getThinkTime
           simulator.afterDelay(thinkTime) {
             timeSpentAllocating += thinkTime
             simulator.log(("Allocator done thinking, sending offer to %s. " +
-                           "Offer contains private cell state with " +
-                           "%f cpu, %f mem available.")
-                          .format(candidateSched.name,
-                                  offer.cellState.availableCpus,
-                                  offer.cellState.availableMem))
+              "Offer contains private cell state with " +
+              "%f cpu, %f mem available.")
+              .format(candidateSched.name,
+                offer.cellState.availableCpus,
+                offer.cellState.availableMem))
             // Send the offer.
             candidateSched.resourceOffer(offer)
           }
@@ -512,13 +528,13 @@ class MesosAllocator(constantThinkTime: Double,
       if (schedulersRequestingResources.isEmpty)
         reason = "No schedulers currently want offers."
       if (simulator.cellState.availableCpus < minCpuOffer ||
-          simulator.cellState.availableCpus < minMemOffer)
+        simulator.cellState.availableCpus < minMemOffer)
         reason = ("Only %f cpus and %f mem available in common cell state " +
-                  "but min offer size is %f cpus and %f mem.")
-                  .format(simulator.cellState.availableCpus,
-                          simulator.cellState.availableCpus,
-                          minCpuOffer,
-                          minMemOffer)
+          "but min offer size is %f cpus and %f mem.")
+          .format(simulator.cellState.availableCpus,
+            simulator.cellState.availableCpus,
+            minCpuOffer,
+            minMemOffer)
       simulator.log("Not sending an offer after all. %s".format(reason))
     }
   }
@@ -529,52 +545,52 @@ class MesosAllocator(constantThinkTime: Double,
   def respondToOffer(offer: Offer, claimDeltas: Seq[ClaimDelta]) = {
     checkRegistered
     simulator.log(("------Scheduler %s responded to offer %d with " +
-                   "%d claimDeltas.")
-                  .format(offer.scheduler.name, offer.id, claimDeltas.length))
+      "%d claimDeltas.")
+      .format(offer.scheduler.name, offer.id, claimDeltas.length))
 
     // Look up, unapply, & discard the saved deltas associated with the offerid.
     // This will cause the framework to stop being charged for the resources that
     // were locked while he made his scheduling decision.
     assert(offeredDeltas.contains(offer.id),
-           "Allocator received response to offer that is not on record.")
+      "Allocator received response to offer that is not on record.")
     offeredDeltas.remove(offer.id).foreach(savedDeltas => {
       savedDeltas.foreach(_.unApply(cellState = simulator.cellState,
-                                    locked = true))
+        locked = true))
     })
-      simulator.log("========================================================")
-      simulator.log("AFTER UNAPPLYING SAVED DELTAS")
-      simulator.log("CellState total usage: %fcpus (%.1f%s), %fmem (%.1f%s)."
-                    .format(simulator.cellState.totalOccupiedCpus,
-                            simulator.cellState.totalOccupiedCpus /
-                              simulator.cellState.totalCpus * 100.0,
-                            "%",
-                            simulator.cellState.totalOccupiedMem,
-                            simulator.cellState.totalOccupiedMem /
-                              simulator.cellState.totalMem * 100.0,
-                            "%"))
+    simulator.log("========================================================")
+    simulator.log("AFTER UNAPPLYING SAVED DELTAS")
+    simulator.log("CellState total usage: %fcpus (%.1f%s), %fmem (%.1f%s)."
+      .format(simulator.cellState.totalOccupiedCpus,
+        simulator.cellState.totalOccupiedCpus /
+          simulator.cellState.totalCpus * 100.0,
+        "%",
+        simulator.cellState.totalOccupiedMem,
+        simulator.cellState.totalOccupiedMem /
+          simulator.cellState.totalMem * 100.0,
+        "%"))
     simulator.log("Committing all %d deltas that were part of response %d "
-                  .format(claimDeltas.length, offer.id))
+      .format(claimDeltas.length, offer.id))
     // commit() all deltas that were part of the offer response, don't use
     // the option of having cell state create the end events for us since we
     // want to add code to the end event that triggers another resource offer.
     if (claimDeltas.length > 0) {
       val commitResult = simulator.cellState.commit(claimDeltas, false)
       assert(commitResult.conflictedDeltas.length == 0,
-             "Expecting no conflicts, but there were %d."
-             .format(commitResult.conflictedDeltas.length))
+        "Expecting no conflicts, but there were %d."
+          .format(commitResult.conflictedDeltas.length))
 
       // Create end events for all tasks committed.
       commitResult.committedDeltas.foreach(delta => {
         simulator.afterDelay(delta.duration) {
           delta.unApply(simulator.cellState)
           simulator.log(("A task started by scheduler %s finished. " +
-                         "Freeing %f cpus, %f mem. Available: %f cpus, %f " +
-                         "mem. Also, triggering a new batched offer round.")
-                       .format(delta.scheduler.name,
-                               delta.cpus,
-                               delta.mem,
-                               simulator.cellState.availableCpus,
-                               simulator.cellState.availableMem))
+            "Freeing %f cpus, %f mem. Available: %f cpus, %f " +
+            "mem. Also, triggering a new batched offer round.")
+            .format(delta.scheduler.name,
+              delta.cpus,
+              delta.mem,
+              simulator.cellState.availableCpus,
+              simulator.cellState.availableMem))
           schedBuildAndSendOffer()
         }
       })
@@ -588,16 +604,16 @@ class MesosAllocator(constantThinkTime: Double,
   def drfSortSchedulers(schedulers: Seq[MesosScheduler]): Seq[MesosScheduler] = {
     val schedulerDominantShares = schedulers.map(scheduler => {
       val shareOfCpus =
-          simulator.cellState.occupiedCpus.getOrElse(scheduler.name, 0.0)
+        simulator.cellState.occupiedCpus.getOrElse(scheduler.name, 0.0)
       val shareOfMem =
-          simulator.cellState.occupiedMem.getOrElse(scheduler.name, 0.0)
+        simulator.cellState.occupiedMem.getOrElse(scheduler.name, 0.0)
       val domShare = math.max(shareOfCpus / simulator.cellState.totalCpus,
-                              shareOfMem / simulator.cellState.totalMem)
+        shareOfMem / simulator.cellState.totalMem)
       var nameOfDomShare = ""
       if (shareOfCpus > shareOfMem) nameOfDomShare = "cpus"
       else nameOfDomShare = "mem"
       simulator.log("%s's dominant share is %s (%f%s)."
-                    .format(scheduler.name, nameOfDomShare, domShare, "%"))
+        .format(scheduler.name, nameOfDomShare, domShare, "%"))
       (scheduler, domShare)
     })
     schedulerDominantShares.sortBy(_._2).map(_._1)
