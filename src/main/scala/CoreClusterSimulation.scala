@@ -841,6 +841,8 @@ class CellState(val numMachines: Int,
            memPerMachine + 0.000001)
     allocatedCpusPerMachine(machineID) -= cpus
     allocatedMemPerMachine(machineID) -= mem
+    //TODO : Metemos la llamada a apagar máquinas
+    simulator.powerOff.powerOff(this, machineID)
   }
 
   /**
