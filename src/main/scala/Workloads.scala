@@ -40,7 +40,7 @@ object Workloads {
    */
   val exampleCellStateDesc = new CellStateDesc(numMachines = 100,
     cpusPerMachine = 4,
-    memPerMachine = 16)
+    memPerMachine = 8)
 
 
   /**
@@ -49,14 +49,14 @@ object Workloads {
    */
   val exampleWorkloadGeneratorBatch =
     new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 10.0,
+      initAvgJobInterarrivalTime = 200.0,
       avgTasksPerJob = 100.0,
       avgJobDuration = (100.0),
       avgCpusPerTask = 1.0,
       avgMemPerTask = 2.0)
   val exampleWorkloadGeneratorService =
     new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-      initAvgJobInterarrivalTime = 20.0,
+      initAvgJobInterarrivalTime = 400.0,
       avgTasksPerJob = 10.0,
       avgJobDuration = (500.0),
       avgCpusPerTask = 1.0,
