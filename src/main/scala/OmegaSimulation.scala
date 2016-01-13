@@ -26,6 +26,9 @@
 
 package ClusterSchedulingSimulation
 
+import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
+import efficiency.pick_cellstate_resources.CellStateResourcesPicker
+
 import collection.mutable.HashMap
 import collection.mutable.ListBuffer
 
@@ -44,7 +47,9 @@ class OmegaSimulatorDesc(
                    cellStateDesc: CellStateDesc,
                    workloads: Seq[Workload],
                    prefillWorkloads: Seq[Workload],
-                   logging: Boolean = false): ClusterSimulator = {
+                   logging: Boolean = false,
+                   cellStateResourcesSorter: CellStateResourcesSorter,
+                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator = {
     assert(blackListPercent >= 0.0 && blackListPercent <= 1.0)
     var schedulers = HashMap[String, OmegaScheduler]()
     // Create schedulers according to experiment parameters.
@@ -91,7 +96,9 @@ class OmegaSimulatorDesc(
                        workloadToSchedulerMap,
                        workloads,
                        prefillWorkloads,
-                       logging)
+                       logging,
+      cellStateResourcesSorter = cellStateResourcesSorter,
+      cellStateResourcesPicker = cellStateResourcesPicker)
   }
 }
 
@@ -113,14 +120,18 @@ class OmegaSimulator(cellState: CellState,
                      workloads: Seq[Workload],
                      prefillWorkloads: Seq[Workload],
                      logging: Boolean = false,
-                     monitorUtilization: Boolean = true)
+                     monitorUtilization: Boolean = true,
+                     cellStateResourcesSorter: CellStateResourcesSorter,
+                     cellStateResourcesPicker: CellStateResourcesPicker)
                     extends ClusterSimulator(cellState,
                                              schedulers,
                                              workloadToSchedulerMap,
                                              workloads,
                                              prefillWorkloads,
                                              logging,
-                                             monitorUtilization) {
+                                             monitorUtilization,
+                      cellStateResourcesSorter = cellStateResourcesSorter,
+                      cellStateResourcesPicker = cellStateResourcesPicker) {
   // Set up a pointer to this simulator in each scheduler.
   schedulers.values.foreach(_.omegaSimulator = this)
 }

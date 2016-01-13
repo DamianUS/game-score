@@ -26,6 +26,9 @@
 
 package ClusterSchedulingSimulation
 
+import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter}
+import efficiency.pick_cellstate_resources.CellStateResourcesPicker
+
 import scala.collection.mutable.HashMap
 
 /* This class and its subclasses are used by factory method
@@ -45,7 +48,9 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
                    cellStateDesc: CellStateDesc,
                    workloads: Seq[Workload],
                    prefillWorkloads: Seq[Workload],
-                   logging: Boolean = false): ClusterSimulator = {
+                   logging: Boolean = false,
+                   cellStateResourcesSorter: CellStateResourcesSorter,
+                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator = {
     var schedulers = HashMap[String, Scheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -85,7 +90,9 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
                          workloadToSchedulerMap,
                          workloads,
                          prefillWorkloads,
-                         logging)
+                         logging,
+      cellStateResourcesSorter = cellStateResourcesSorter,
+      cellStateResourcesPicker = cellStateResourcesPicker)
   }
 }
 

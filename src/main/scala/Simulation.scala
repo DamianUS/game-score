@@ -50,6 +50,8 @@ import java.io.FileOutputStream
 import java.nio.channels.FileChannel
 
 import ca.zmatrix.utils._
+import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, NoSorter, CellStateResourcesSorter}
+import efficiency.pick_cellstate_resources._
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.immutable.NumericRange
@@ -379,6 +381,15 @@ object Simulation {
     val runMesos = false
     val runOmega = false
 
+    //All sorting and picking policies
+    val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter);
+    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicPicker, BasicPickerCandidate, BasicReversePicker, BasicReversePickerCandidate);
+
+
+    //Default sorting and picking policies
+    val defaultSortingPolicy = List[CellStateResourcesSorter](NoSorter);
+    val defaultPickingPolicy = List[CellStateResourcesPicker](RandomPicker);
+
     val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
     // val constantRange = fullConstantRange
@@ -398,6 +409,8 @@ object Simulation {
     val sweepCL = false
     val sweepPickiness = false
     val sweepLambda = false
+    val sweepSorting = false
+    val sweepPicking = false
 
     var sweepDimensions = collection.mutable.ListBuffer[String]()
     if (sweepC)
@@ -410,6 +423,10 @@ object Simulation {
       sweepDimensions += "Pickiness"
     if (sweepLambda)
       sweepDimensions += "Lambda"
+    if (sweepSorting)
+      sweepDimensions += "Sorting"
+    if (sweepPicking)
+      sweepDimensions += "Picking"
 
     val formatter = new java.text.SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
     val dateTimeStamp = formatter.format(new java.util.Date)
@@ -462,7 +479,9 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy)
             }
 
             if (sweepCL) {
@@ -483,7 +502,9 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy)
             }
 
             if (sweepL) {
@@ -504,7 +525,9 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy)
             }
 
             if (sweepPickiness) {
@@ -525,7 +548,9 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy)
             }
 
             if (sweepLambda) {
@@ -547,7 +572,9 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy)
             }
           }
         }
@@ -571,7 +598,9 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy)
       }
 
       if (sweepCL) {
@@ -588,7 +617,9 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy)
       }
 
       if (sweepL) {
@@ -605,7 +636,9 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy)
       }
 
       if (sweepPickiness) {
@@ -622,7 +655,9 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy)
       }
 
       if (sweepLambda) {
@@ -640,7 +675,9 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy)
       }
     }
 
@@ -668,7 +705,9 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy)
           }
 
           if (sweepCL) {
@@ -686,7 +725,9 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy)
           }
 
           if (sweepL) {
@@ -704,7 +745,9 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy)
           }
 
           if (sweepPickiness) {
@@ -722,7 +765,9 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy)
           }
 
           if (sweepLambda) {
@@ -741,7 +786,9 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy)
           }
         }
       }

@@ -24,6 +24,8 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+import efficiency.ordering_cellstate_resources_policies.{NoSorter, CellStateResourcesSorter}
+import efficiency.pick_cellstate_resources.{RandomPicker, CellStateResourcesPicker}
 import org.scalatest.FunSuite
 
 import ClusterSchedulingSimulation.Workload
@@ -62,6 +64,8 @@ class SimulatorsTestSuite extends FunSuite {
     var workload = new Workload("unif")
     val numJobs = 4 // Don't change this unless you update the
                     // hand calculations used in assert()-s below.
+    val defaultSortingPolicy = NoSorter;
+    val defaultPickingPolicy = RandomPicker
 
     (1 to numJobs).foreach(i => {
       workload.addJob(new Job(id = i,
@@ -93,7 +97,9 @@ class SimulatorsTestSuite extends FunSuite {
         List(workload),
         List(),
         logging = true,
-        monitorUtilization = false)
+        monitorUtilization = false,
+      cellStateResourcesSorter = defaultSortingPolicy,
+      cellStateResourcesPicker = defaultPickingPolicy)
 
     assert(monolithicSimulator.schedulers.size == 1)
     assert(monolithicSimulator.workloadToSchedulerMap.size == 1)
@@ -115,7 +121,8 @@ class SimulatorsTestSuite extends FunSuite {
     var workload = new Workload("unif")
     val numJobs = 4 // Don't change this unless you update the
                     // hand calculations used in assert()-s below.
-
+    val defaultSortingPolicy = NoSorter;
+    val defaultPickingPolicy = RandomPicker
     workload = new Workload("unif")
     (1 to numJobs).foreach(i => {
       workload.addJob(Job(id = i,
@@ -144,7 +151,9 @@ class SimulatorsTestSuite extends FunSuite {
           List(workload),
           List(),
           logging = true,
-          monitorUtilization = false)
+          monitorUtilization = false,
+      cellStateResourcesSorter = defaultSortingPolicy,
+      cellStateResourcesPicker = defaultPickingPolicy)
 
     monolithicSimulator.run()
 
@@ -178,7 +187,8 @@ class SimulatorsTestSuite extends FunSuite {
     println("\n\n\n=====================")
     println("Testing Mesos simulator functionality.")
     println("=====================\n\n")
-
+    val defaultSortingPolicy = NoSorter;
+    val defaultPickingPolicy = RandomPicker
     var workload = new Workload("unif")
     val numJobs = 40 
     (1 to numJobs).foreach(i => {
@@ -219,7 +229,9 @@ class SimulatorsTestSuite extends FunSuite {
           List(),
           mesosDRFAllocator,
           logging = true,
-          monitorUtilization = false)
+          monitorUtilization = false,
+          cellStateResourcesSorter = defaultSortingPolicy,
+          cellStateResourcesPicker = defaultPickingPolicy)
 
     mesosSimulator.run()
     assert(mesosSimulator.agendaSize == 0, ("Mesos Agenda should have been " +
@@ -266,7 +278,8 @@ class SimulatorsTestSuite extends FunSuite {
                         workloadName = workload.name,
                         cpusPerTask = 1.0,
                         memPerTask = 1.0))
-
+    val defaultSortingPolicy = NoSorter;
+    val defaultPickingPolicy = RandomPicker
     // Create an Omega scheduler.
     val scheduler = new OmegaScheduler(name = "omega_test_sched",
                                        constantThinkTimes = Map("unif" -> 1),
@@ -287,7 +300,9 @@ class SimulatorsTestSuite extends FunSuite {
           List(workload),
           List(),
           logging = true,
-          monitorUtilization = false)
+          monitorUtilization = false,
+      cellStateResourcesSorter = defaultSortingPolicy,
+      cellStateResourcesPicker = defaultPickingPolicy)
 
     // Create a private copy of cellstate.
     val privateCellState = commonCellState.copy
@@ -380,6 +395,8 @@ class SimulatorsTestSuite extends FunSuite {
     println("===========\nomegaSchedulerTest\n==========")
     println("\nRunning cellstate flow test.")
     var workload = new Workload("unif")
+    val defaultSortingPolicy = NoSorter;
+    val defaultPickingPolicy = RandomPicker
     workload.addJob(Job(id = 1,
                              submitted = 1.0,
                              numTasks = 1,
@@ -404,7 +421,9 @@ class SimulatorsTestSuite extends FunSuite {
                                             List(workload),
                                             List(),
                                             logging = true,
-                                            monitorUtilization = false)
+                                            monitorUtilization = false,
+      cellStateResourcesSorter = defaultSortingPolicy,
+      cellStateResourcesPicker = defaultPickingPolicy)
 
     // The job should be scheduled as soon as it is added to the scheduler.
     println("adding a job to scheduler.")
@@ -419,6 +438,8 @@ class SimulatorsTestSuite extends FunSuite {
     println("\nRunning cellstate run w/ single scheduler test.")
     // Set up a workload with 40 jobs, each with 1 task.
     var workload = new Workload("unif")
+    val defaultSortingPolicy = NoSorter;
+    val defaultPickingPolicy = RandomPicker
     val numJobs = 40 
     (1 to numJobs).foreach(i => {
       workload.addJob(Job(id = i,
@@ -450,7 +471,9 @@ class SimulatorsTestSuite extends FunSuite {
           List(workload),
           List(),
           logging = true,
-          monitorUtilization = false)
+          monitorUtilization = false,
+      cellStateResourcesSorter = defaultSortingPolicy,
+      cellStateResourcesPicker = defaultPickingPolicy)
 
     omegaSimulator.run()
     // Each job is scheduled two seconds after it arrives since all jobs

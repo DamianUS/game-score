@@ -26,6 +26,9 @@
 
 package ClusterSchedulingSimulation
 
+import efficiency.ordering_cellstate_resources_policies.{NoSorter, BasicLoadSorter, CellStateResourcesSorter}
+import efficiency.pick_cellstate_resources._
+
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.IndexedSeq
 import scala.collection.mutable.ListBuffer
@@ -119,7 +122,9 @@ abstract class ClusterSimulatorDesc(val runTime: Double) {
                    cellStateDesc: CellStateDesc,
                    workloads: Seq[Workload],
                    prefillWorkloads: Seq[Workload],
-                   logging: Boolean = false): ClusterSimulator
+                   logging: Boolean = false,
+                   cellStateResourcesSorter: CellStateResourcesSorter,
+                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator
 }
 
 /**
@@ -140,7 +145,9 @@ class ClusterSimulator(val cellState: CellState,
                        prefillWorkloads: Seq[Workload],
                        logging: Boolean = false,
                        monitorUtilization: Boolean = true,
-                       monitoringPeriod: Double = 1.0)
+                       monitoringPeriod: Double = 1.0,
+                       cellStateResourcesSorter: CellStateResourcesSorter,
+                       cellStateResourcesPicker: CellStateResourcesPicker)
                       extends Simulator(logging) {
   assert(schedulers.size > 0, "At least one scheduler must be provided to" +
                               "scheduler constructor.")
@@ -152,6 +159,8 @@ class ClusterSimulator(val cellState: CellState,
                        "%s, that is not registered").format(schedulerName))
     })
   })
+  val sorter = cellStateResourcesSorter
+  val picker = cellStateResourcesPicker
   // Set up a pointer to this simulator in the cellstate.
   cellState.simulator = this
   // Set up a pointer to this simulator in each scheduler.
@@ -496,58 +505,33 @@ abstract class Scheduler(val name: String,
     val claimDeltas = collection.mutable.ListBuffer[ClaimDelta]()
 
     // Cache candidate pools in this scheduler for performance improvements.
-    val candidatePool =
+    var candidatePool =
         candidatePoolCache.getOrElseUpdate(cellState.numMachines,
                                            Array.range(0, cellState.numMachines))
 
     var numRemainingTasks = job.unscheduledTasks
-    var remainingCandidates =
-        math.max(0, cellState.numMachines - numMachinesToBlackList).toInt
+    var remainingCandidates = math.max(0, cellState.numMachines - numMachinesToBlackList).toInt
     while(numRemainingTasks > 0 && remainingCandidates > 0) {
-      //TODO: La estrategia de elegir una máquina random debe sustituirse
-      // Pick a random machine out of the remaining pool, i.e., out of the set
-      // of machineIDs in the first remainingCandidate slots of the candidate
-      // pool.
-      val candidateIndex = randomNumberGenerator.nextInt(remainingCandidates)
-      val currMachID = candidatePool(candidateIndex)
-
-      // If one of this job's tasks will fit on this machine, then assign
-      // to it by creating a claimDelta and leave it in the candidate pool.
-      if (cellState.availableCpusPerMachine(currMachID) >= job.cpusPerTask &&
-          cellState.availableMemPerMachine(currMachID) >= job.memPerTask) {
+      simulator.sorter.orderResources(cellState)
+      val pickResult = simulator.picker.pickResource(cellState, job, candidatePool, remainingCandidates);
+      remainingCandidates = pickResult._3
+      candidatePool = pickResult._4
+      failedFindVictimAttempts += pickResult._2
+      if(pickResult._1 > -1){
+        val currMachID = pickResult._1
         assert(currMachID >= 0 && currMachID < cellState.machineSeqNums.length)
         val claimDelta = new ClaimDelta(this,
-                                        currMachID,
-                                        cellState.machineSeqNums(currMachID),
-                                        job.taskDuration,
-                                        job.cpusPerTask,
-                                        job.memPerTask)
+          currMachID,
+          cellState.machineSeqNums(currMachID),
+          job.taskDuration,
+          job.cpusPerTask,
+          job.memPerTask)
         claimDelta.apply(cellState = cellState, locked = false)
         claimDeltas += claimDelta
         numRemainingTasks -= 1
-      } else {
-        failedFindVictimAttempts += 1
-        // Move the chosen candidate to the end of the range of
-        // remainingCandidates so that we won't choose it again after we
-        // decrement remainingCandidates. Do this by swapping it with the
-        // machineID currently at position (remainingCandidates - 1)
-        candidatePool(candidateIndex) = candidatePool(remainingCandidates - 1)
-        candidatePool(remainingCandidates - 1) = currMachID
-        remainingCandidates -= 1
-        // simulator.log(
-        //     ("%s in scheduling algorithm, tried machine %d, but " +
-        //      "%f cpus and %f mem are required, and it only " +
-        //      "has %f cpus and %f mem available.")
-        //      .format(name,
-        //              currMachID,
-        //              job.cpusPerTask,
-        //              job.memPerTask,
-        //              cellState.availableCpusPerMachine(currMachID),
-        //              cellState.availableMemPerMachine(currMachID)))
       }
     }
     return claimDeltas
-
   }
 
   def jobQueueSize: Long = pendingQueue.size

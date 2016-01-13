@@ -26,6 +26,9 @@
 
 package ClusterSchedulingSimulation
 
+import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
+import efficiency.pick_cellstate_resources.CellStateResourcesPicker
+
 import collection.mutable.HashMap
 import collection.mutable.ListBuffer
 
@@ -43,7 +46,9 @@ class MesosSimulatorDesc(
                    cellStateDesc: CellStateDesc,
                    workloads: Seq[Workload],
                    prefillWorkloads: Seq[Workload],
-                   logging: Boolean = false): ClusterSimulator = {
+                   logging: Boolean = false,
+                   cellStateResourcesSorter: CellStateResourcesSorter,
+                   cellStateResourcesPicker: CellStateResourcesPicker): ClusterSimulator = {
     var schedulers = HashMap[String, MesosScheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -90,7 +95,9 @@ class MesosSimulatorDesc(
                        workloads,
                        prefillWorkloads,
                        allocator,
-                       logging)
+                       logging,
+                      cellStateResourcesSorter = cellStateResourcesSorter,
+                      cellStateResourcesPicker = cellStateResourcesPicker)
   }
 }
 
@@ -101,14 +108,18 @@ class MesosSimulator(cellState: CellState,
                      prefillWorkloads: Seq[Workload],
                      var allocator: MesosAllocator,
                      logging: Boolean = false,
-                     monitorUtilization: Boolean = true)
+                     monitorUtilization: Boolean = true,
+                     cellStateResourcesSorter: CellStateResourcesSorter,
+                     cellStateResourcesPicker: CellStateResourcesPicker)
                     extends ClusterSimulator(cellState,
                                              schedulers,
                                              workloadToSchedulerMap,
                                              workloads,
                                              prefillWorkloads,
                                              logging,
-                                             monitorUtilization) {
+                                             monitorUtilization,
+                                              cellStateResourcesSorter = cellStateResourcesSorter,
+                                              cellStateResourcesPicker = cellStateResourcesPicker) {
   assert(cellState.conflictMode.equals("resource-fit"),
          "Mesos requires cellstate to be set up with resource-fit conflictMode")
   // Set up a pointer to this simulator in the allocator.
