@@ -178,7 +178,7 @@ class MonolithicScheduler(name: String,
         if (job.unscheduledTasks > 0) {
           //TODO: Buen sitio para la lógica de encender
           if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
-            simulator.powerOn.powerOn(simulator.cellState, job)
+            simulator.powerOn.powerOn(simulator.cellState, job, "monolithic")
           }
           simulator.log(("Job %s didn't fully schedule, %d / %d tasks remain " +
             "(shape: %f cpus, %f mem). Putting it " +

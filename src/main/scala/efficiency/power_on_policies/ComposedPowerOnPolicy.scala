@@ -1,0 +1,20 @@
+package efficiency.power_on_policies
+
+import ClusterSchedulingSimulation.{CellState, Job}
+import efficiency.power_on_policies.action.PowerOnAction
+import efficiency.power_on_policies.decision.PowerOnDecision
+
+import scala.util.control.Breaks
+
+/**
+ * Created by dfernandez on 13/1/16.
+ */
+class ComposedPowerOnPolicy(action : PowerOnAction, decision : PowerOnDecision) extends PowerOnPolicy{
+
+  override var powerOnAction: PowerOnAction = action
+  override var powerOnDecisionPolicy: PowerOnDecision = decision
+
+  override def getName(): String = {
+    ("Composed Power on Policy with decision: %s and action: %s").format(powerOnDecisionPolicy.getName(), powerOnAction.getName())
+  }
+}

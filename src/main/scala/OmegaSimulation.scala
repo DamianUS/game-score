@@ -223,6 +223,9 @@ class OmegaScheduler(name: String,
       // Schedule the job in private cellstate.
       assert(job.unscheduledTasks > 0)
       val claimDeltas = scheduleJob(job, privateCellState)
+      // TODO : No puedo usar Commit result, así que...
+      var commitedDelta = Seq[ClaimDelta]()
+      var conflictedDelta = Seq[ClaimDelta]()
       simulator.log(("Job %d (%s) finished %f seconds of scheduling " +
         "thinktime; now trying to claim resources for %d " +
         "tasks with %f cpus and %f mem each.")
@@ -238,6 +241,8 @@ class OmegaScheduler(name: String,
         omegaSimulator.log("Submitting a transaction for %d tasks for job %d."
           .format(claimDeltas.length, job.id))
         val commitResult = omegaSimulator.cellState.commit(claimDeltas, true)
+        commitedDelta = commitResult.committedDeltas
+        conflictedDelta = commitResult.conflictedDeltas
         job.unscheduledTasks -= commitResult.committedDeltas.length
         omegaSimulator.log("%d tasks successfully committed for job %d."
           .format(commitResult.committedDeltas.length, job.id))
@@ -279,7 +284,7 @@ class OmegaScheduler(name: String,
       if (job.unscheduledTasks > 0) {
         //TODO: Buen sitio para la lógica de encender
         if(omegaSimulator.cellState.numberOfMachinesOn < omegaSimulator.cellState.numMachines){
-          simulator.powerOn.powerOn(omegaSimulator.cellState, job)
+          simulator.powerOn.powerOn(omegaSimulator.cellState, job, "omega", commitedDelta, conflictedDelta)
         }
         // Give up on a job if (a) it hasn't scheduled a single task in
         // 100 tries or (b) it hasn't finished scheduling after 1000 tries.

@@ -195,6 +195,11 @@ class MesosScheduler(name: String,
     handleNextResourceOffer()
   }
 
+  // We define this method to because mesosallocator needs to know hoy many resources must power on depending on job's needs
+  def nextJob() : Job = {
+    pendingQueue(0);
+  }
+
   def handleNextResourceOffer(): Unit = {
     // We essentially synchronize access to this scheduling logic
     // via the scheduling variable. We aren't protecting this from real
@@ -209,8 +214,6 @@ class MesosScheduler(name: String,
       // TODO(andyk): add an efficient method to CellState that allows us to
       //              check the largest slice of available resources to decode
       //              if we should keep trying to schedule or not.
-      // TODO: Poner una precondición (do-while?) para que si no hay recursos disponibles
-      // pero sí apagados, encienda antes de salir
       while (offer.cellState.availableCpus > 0.000001 &&
         offer.cellState.availableMem > 0.000001 &&
         !pendingQueue.isEmpty) {
@@ -270,16 +273,16 @@ class MesosScheduler(name: String,
         var jobEventType = "" // Set this conditionally below; used in logging.
         // If job is only partially scheduled, put it back in the pendingQueue.
         if (job.unscheduledTasks > 0) {
-          //TODO: Buen sitio para la lógica de encender
-          if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
-            simulator.powerOn.powerOn(simulator.cellState, job)
-          }
           mesosSimulator.log(("Job %d is [still] only partially scheduled, " +
             "(%d out of %d its tasks remain unscheduled) so " +
             "putting it back in the queue.")
             .format(job.id,
               job.unscheduledTasks,
               job.numTasks))
+          //TODO: Buen sitio para la lógica de encender.
+          if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+            simulator.powerOn.powerOn(simulator.cellState, job, "mesos")
+          }
           // Give up on a job if (a) it hasn't scheduled a single task in
           // 100 tries or (b) it hasn't finished scheduling after 1000 tries.
           if ((job.numSchedulingAttempts > 100 &&
@@ -529,6 +532,11 @@ class MesosAllocator(constantThinkTime: Double,
         reason = "No schedulers currently want offers."
       if (simulator.cellState.availableCpus < minCpuOffer ||
         simulator.cellState.availableCpus < minMemOffer)
+        //TODO: Decidir si prescindir de esto o no. Sólo sirve para el caso en el que se encuentre todas las máquinas apagadas
+        if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+          val nextScheduler = drfSortSchedulers(schedulersRequestingResources.toSeq)(0)
+          simulator.powerOn.powerOn(simulator.cellState, nextScheduler.nextJob(), "mesos")
+        }
         reason = ("Only %f cpus and %f mem available in common cell state " +
           "but min offer size is %f cpus and %f mem.")
           .format(simulator.cellState.availableCpus,

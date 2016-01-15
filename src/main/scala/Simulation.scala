@@ -53,7 +53,9 @@ import ca.zmatrix.utils._
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, NoSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.{PowerOffPolicy, NoPowerOffPolicy}
-import efficiency.power_on_policies.{NoPowerOnPolicy, PowerOnPolicy}
+import efficiency.power_on_policies.action.DefaultPowerOnAction
+import efficiency.power_on_policies.decision.DefaultPowerOnDecision
+import efficiency.power_on_policies.{ComposedPowerOnPolicy, NoPowerOnPolicy, PowerOnPolicy}
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.immutable.NumericRange
@@ -393,7 +395,7 @@ object Simulation {
     //Default sorting and picking policies
     val defaultSortingPolicy = List[CellStateResourcesSorter](NoSorter)
     val defaultPickingPolicy = List[CellStateResourcesPicker](RandomPicker)
-    val defaultPowerOnPolicy = List[PowerOnPolicy](NoPowerOnPolicy)
+    val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, DefaultPowerOnDecision))
     val defaultPowerOffPolicy = List[PowerOffPolicy](NoPowerOffPolicy)
 
 

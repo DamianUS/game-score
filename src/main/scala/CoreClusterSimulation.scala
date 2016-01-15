@@ -422,6 +422,8 @@ abstract class Scheduler(val name: String,
   var perWorkloadWastedTimeScheduling = HashMap[String, Double]()
   val randomNumberGenerator = new util.Random(Seed())
 
+
+
   override
   def toString = {
     name
@@ -692,6 +694,10 @@ class CellState(val numMachines: Int,
     machinePowerState(machineID) == 1
   }
 
+  def isMachineOff(machineID: Int) : Boolean = {
+    machinePowerState(machineID) == 0
+  }
+
   def numberOfMachinesOn = machinePowerState.toSeq.filter(_ == 1).length
   def numberOfMachinesOff = machinePowerState.toSeq.filter(_ == 0).length
   def numberOfMachinesTurningOn = machinePowerState.toSeq.filter(_ == 3).length
@@ -891,7 +897,6 @@ class CellState(val numMachines: Int,
     var rollback = false // Track if we need to rollback changes.
     var appliedDeltas = collection.mutable.ListBuffer[ClaimDelta]()
     var conflictDeltas = collection.mutable.ListBuffer[ClaimDelta]()
-
     def commitNonConflictingDeltas: Unit = {
       deltas.foreach(d => {
         if (causesConflict(d)) {
@@ -943,7 +948,6 @@ class CellState(val numMachines: Int,
                              appliedDelta.mem,
                              availableCpus,
                              availableMem))
-        //TODO: Candidato a decidir si apagar máquinas
       }
     })
   }
