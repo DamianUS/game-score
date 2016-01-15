@@ -12,15 +12,15 @@ object DefaultPowerOnAction extends PowerOnAction{
     var machinesToPowerOn = 0
     val machinesNeeded = Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt)
     if(cellState.numberOfMachinesOff >= machinesNeeded){
-      cellState.simulator.log(("There are enough machines turned off, turning on %i machines on %s policy").format(machinesNeeded, getName()))
+      cellState.simulator.log(("There are enough machines turned off, turning on %i machines on %s policy").format(machinesNeeded, name))
       machinesToPowerOn = machinesNeeded
     }
     else if(cellState.numberOfMachinesOff > 0){
-      cellState.simulator.log(("There are not enough machines turned off, turning on %i machines on %s policy").format(cellState.numberOfMachinesOff, getName()))
+      cellState.simulator.log(("There are not enough machines turned off, turning on %i machines on %s policy").format(cellState.numberOfMachinesOff, name))
       machinesToPowerOn = cellState.numberOfMachinesOff
     }
     else{
-      cellState.simulator.log(("All machines are on, cant turn on any machines on %s policy").format(getName()))
+      cellState.simulator.log(("All machines are on, cant turn on any machines on %s policy").format(name))
     }
     val loop = new Breaks;
     loop.breakable {
@@ -34,8 +34,8 @@ object DefaultPowerOnAction extends PowerOnAction{
         }
       }
     }
-    assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %i machines to turn on after powering on machines").format(getName(), machinesToPowerOn))
+    assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %i machines to turn on after powering on machines").format(name, machinesToPowerOn))
   }
 
-  override def getName(): String = "default-power-on-action"
+  override val name: String = "default-power-on-action"
 }

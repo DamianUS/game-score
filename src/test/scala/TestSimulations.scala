@@ -24,35 +24,18 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import efficiency.ordering_cellstate_resources_policies.{NoSorter, CellStateResourcesSorter}
-import efficiency.pick_cellstate_resources.{RandomPicker, CellStateResourcesPicker}
-import efficiency.power_off_policies.NoPowerOffPolicy
-import efficiency.power_on_policies.NoPowerOnPolicy
+import ClusterSchedulingSimulation.{CellState, ClaimDelta, ClusterSimulator, Job, MesosAllocator, MesosScheduler, MesosSimulator, MonolithicScheduler, OmegaScheduler, OmegaSimulator, PrefillPbbTraceWorkloadGenerator, UniformWorkloadGenerator, Workload}
+import efficiency.ordering_cellstate_resources_policies.NoSorter
+import efficiency.pick_cellstate_resources.RandomPicker
+import efficiency.power_off_policies.ComposedPowerOffPolicy
+import efficiency.power_off_policies.action.DefaultPowerOffAction
+import efficiency.power_off_policies.decision.NoPowerOffDecision
+import efficiency.power_on_policies.ComposedPowerOnPolicy
+import efficiency.power_on_policies.action.DefaultPowerOnAction
+import efficiency.power_on_policies.decision.NoPowerOnDecision
 import org.scalatest.FunSuite
 
-import ClusterSchedulingSimulation.Workload
-import ClusterSchedulingSimulation.WorkloadDesc
-import ClusterSchedulingSimulation.Job
-import ClusterSchedulingSimulation.UniformWorkloadGenerator
-import ClusterSchedulingSimulation.CellState
-
-import ClusterSchedulingSimulation.ClusterSimulator
-import ClusterSchedulingSimulation.MonolithicScheduler
-
-import ClusterSchedulingSimulation.MesosSimulator
-import ClusterSchedulingSimulation.MesosScheduler
-import ClusterSchedulingSimulation.MesosAllocator
-
-import ClusterSchedulingSimulation.ClaimDelta
-import ClusterSchedulingSimulation.OmegaSimulator
-import ClusterSchedulingSimulation.OmegaScheduler
-
-import ClusterSchedulingSimulation.PrefillPbbTraceWorkloadGenerator
-import ClusterSchedulingSimulation.InterarrivalTimeTraceExpExpWLGenerator
-
-import collection.mutable.HashMap
-import collection.mutable.ListBuffer
-import sys.process._
+import scala.sys.process._
 
 class SimulatorsTestSuite extends FunSuite {
   /**
@@ -68,8 +51,8 @@ class SimulatorsTestSuite extends FunSuite {
     // hand calculations used in assert()-s below.
     val defaultSortingPolicy = NoSorter
     val defaultPickingPolicy = RandomPicker
-    val defaultPowerOnPolicy = NoPowerOnPolicy
-    val defaultPowerOffPolicy = NoPowerOffPolicy
+    val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
+    val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
 
     (1 to numJobs).foreach(i => {
       workload.addJob(new Job(id = i,
@@ -124,8 +107,8 @@ class SimulatorsTestSuite extends FunSuite {
   }
 
   test("testStats") {
-    val defaultPowerOnPolicy = NoPowerOnPolicy
-    val defaultPowerOffPolicy = NoPowerOffPolicy
+    val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
+    val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
     var workload = new Workload("unif")
     val numJobs = 4 // Don't change this unless you update the
     // hand calculations used in assert()-s below.
@@ -194,8 +177,8 @@ class SimulatorsTestSuite extends FunSuite {
   // The following test exercises functionality that is not yet implemented,
   // so we currently expect it to fail.
   test("mesosSimulatorSingleSchedulerZeroResourceJobsTest") {
-    val defaultPowerOnPolicy = NoPowerOnPolicy
-    val defaultPowerOffPolicy = NoPowerOffPolicy
+    val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
+    val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
     println("\n\n\n=====================")
     println("Testing Mesos simulator functionality.")
     println("=====================\n\n")
@@ -279,8 +262,8 @@ class SimulatorsTestSuite extends FunSuite {
    * Omega simulator tests.
    */
   test("omegaSimulatorCellStateSyncApplyDeltaAndCommitTest") {
-    val defaultPowerOnPolicy = NoPowerOnPolicy
-    val defaultPowerOffPolicy = NoPowerOffPolicy
+    val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
+    val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
     println("\n\n\n=====================")
     println("omegaSimulatorCellStateSyncApplyDeltaAndCommitTest")
     println("=====================\n\n")
@@ -410,8 +393,8 @@ class SimulatorsTestSuite extends FunSuite {
   }
 
   test("omegaSchedulerTest") {
-    val defaultPowerOnPolicy = NoPowerOnPolicy
-    val defaultPowerOffPolicy = NoPowerOffPolicy
+    val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
+    val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
     println("===========\nomegaSchedulerTest\n==========")
     println("\nRunning cellstate flow test.")
     var workload = new Workload("unif")
@@ -458,8 +441,8 @@ class SimulatorsTestSuite extends FunSuite {
   test("omegaSimulatorRunWithSingleSchedulerTest") {
     println("===========\nomegaSimulatorRunWithSingleSchedulerTest\n===========")
     println("\nRunning cellstate run w/ single scheduler test.")
-    val defaultPowerOnPolicy = NoPowerOnPolicy
-    val defaultPowerOffPolicy = NoPowerOffPolicy
+    val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
+    val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
     // Set up a workload with 40 jobs, each with 1 task.
     var workload = new Workload("unif")
     val defaultSortingPolicy = NoSorter;

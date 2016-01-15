@@ -24,41 +24,22 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ClusterSchedulingSimulation.Seed
-import ClusterSchedulingSimulation.ClusterSimulator
-import ClusterSchedulingSimulation.ExpExpExpWorkloadGenerator
-import ClusterSchedulingSimulation.Experiment
-import ClusterSchedulingSimulation.Job
-import ClusterSchedulingSimulation.SchedulerDesc
-import ClusterSchedulingSimulation.Workload
-import ClusterSchedulingSimulation.WorkloadDesc
-
-import ClusterSchedulingSimulation.Workloads._
-
-import ClusterSchedulingSimulation.MonolithicScheduler
-import ClusterSchedulingSimulation.MonolithicSimulatorDesc
-
-import ClusterSchedulingSimulation.MesosSchedulerDesc
-import ClusterSchedulingSimulation.MesosSimulatorDesc
-
-import ClusterSchedulingSimulation.OmegaSchedulerDesc
-import ClusterSchedulingSimulation.OmegaSimulatorDesc
-
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.{File, FileInputStream, FileOutputStream}
 import java.nio.channels.FileChannel
 
+import ClusterSchedulingSimulation.{ExpExpExpWorkloadGenerator, Experiment, MesosSchedulerDesc, MesosSimulatorDesc, MonolithicSimulatorDesc, OmegaSchedulerDesc, OmegaSimulatorDesc, SchedulerDesc, Seed, WorkloadDesc}
+import ClusterSchedulingSimulation.Workloads._
 import ca.zmatrix.utils._
-import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, NoSorter, CellStateResourcesSorter}
+import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
-import efficiency.power_off_policies.{PowerOffPolicy, NoPowerOffPolicy}
+import efficiency.power_off_policies.action.DefaultPowerOffAction
+import efficiency.power_off_policies.decision.NoPowerOffDecision
+import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
 import efficiency.power_on_policies.action.DefaultPowerOnAction
-import efficiency.power_on_policies.decision.DefaultPowerOnDecision
-import efficiency.power_on_policies.{ComposedPowerOnPolicy, NoPowerOnPolicy, PowerOnPolicy}
+import efficiency.power_on_policies.decision.NoPowerOnDecision
+import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
 
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.immutable.NumericRange
 
 object Simulation {
   def main(args: Array[String]) {
@@ -388,15 +369,15 @@ object Simulation {
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
     val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicPicker, BasicPickerCandidate, BasicReversePicker, BasicReversePickerCandidate)
-    val powerOnPolicies = List[PowerOnPolicy](NoPowerOnPolicy)
-    val powerOffPolicies = List[PowerOffPolicy](NoPowerOffPolicy)
+    val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
+    val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
 
 
     //Default sorting and picking policies
     val defaultSortingPolicy = List[CellStateResourcesSorter](NoSorter)
     val defaultPickingPolicy = List[CellStateResourcesPicker](RandomPicker)
-    val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, DefaultPowerOnDecision))
-    val defaultPowerOffPolicy = List[PowerOffPolicy](NoPowerOffPolicy)
+    val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
+    val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
 
 
     val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)

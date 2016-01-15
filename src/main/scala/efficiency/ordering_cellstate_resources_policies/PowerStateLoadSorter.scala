@@ -26,7 +26,5 @@ object PowerStateLoadSorter extends CellStateResourcesSorter{
     // Now keys should be ordered by load
     cellstate.machinesLoad = ordered.keys.toArray
   }
-  override def getName(): String = {
-    "power-load-sorter"
-  }
+  override val name: String = "power-load-sorter"
 }

@@ -20,7 +20,5 @@ object BasicLoadSorter extends CellStateResourcesSorter{
     // Now keys should be ordered by load
     cellstate.machinesLoad = ordered.keys.toArray
   }
-  override def getName(): String = {
-    "basic-load-sorter"
-  }
+  override val name: String = "basic-load-sorter"
 }

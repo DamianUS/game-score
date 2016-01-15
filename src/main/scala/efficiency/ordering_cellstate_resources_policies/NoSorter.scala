@@ -17,7 +17,5 @@ object NoSorter extends CellStateResourcesSorter{
     cellstate.machinesLoad = load
   }
 
-  override def getName(): String = {
-    "no-sorter"
-  }
+  override val name: String = "no-sorter"
 }

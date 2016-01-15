@@ -20,7 +20,7 @@ object BasicReversePicker extends CellStateResourcesPicker{
       for( i <- cellState.machinesLoad.length-1 to 0 by -1){
         if (cellState.availableCpusPerMachine(cellState.machinesLoad(i)) >= job.cpusPerTask && cellState.availableMemPerMachine(cellState.machinesLoad(i)) >= job.memPerTask) {
           machineID=cellState.machinesLoad(i)
-          assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+getName())
+          assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+name)
           loop.break;
         }
         else{
@@ -32,7 +32,5 @@ object BasicReversePicker extends CellStateResourcesPicker{
     }
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePool)
   }
-  override def getName(): String = {
-    "basic-reverse-picker"
-  }
+  override val name: String = "basic-reverse-picker"
 }

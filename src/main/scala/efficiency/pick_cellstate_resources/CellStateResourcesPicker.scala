@@ -10,5 +10,5 @@ import scala.collection.mutable.IndexedSeq
 trait CellStateResourcesPicker {
   //Passing the Scheduler as a hook to update / accessing task-independent variables
   def pickResource(cellstate: CellState, job: Job, candidatePool: IndexedSeq[Int], remainingCandidates: Int) : Tuple4[Int, Int, Int, IndexedSeq[Int]]
-  def getName() : String
+  val name : String
 }

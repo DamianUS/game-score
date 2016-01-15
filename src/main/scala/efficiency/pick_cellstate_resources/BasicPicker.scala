@@ -18,7 +18,7 @@ object BasicPicker extends CellStateResourcesPicker{
       for( i <- 0 to cellState.machinesLoad.length-1){
         if (cellState.availableCpusPerMachine(cellState.machinesLoad(i)) >= job.cpusPerTask && cellState.availableMemPerMachine(cellState.machinesLoad(i)) >= job.memPerTask) {
           machineID=cellState.machinesLoad(i)
-          assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+getName())
+          assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+name)
           loop.break;
         }
         else{
@@ -31,7 +31,5 @@ object BasicPicker extends CellStateResourcesPicker{
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePool)
   }
 
-  override def getName(): String = {
-    "basic-picker"
-  }
+  override val name: String = "basic-picker"
 }

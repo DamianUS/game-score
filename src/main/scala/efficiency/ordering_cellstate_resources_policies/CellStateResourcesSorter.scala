@@ -7,5 +7,5 @@ import ClusterSchedulingSimulation.CellState
  */
 trait CellStateResourcesSorter {
   def orderResources(cellstate: CellState)
-  def getName() : String
+  val name: String
 }

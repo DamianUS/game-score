@@ -7,5 +7,5 @@ import ClusterSchedulingSimulation.{ClaimDelta, Job, CellState}
  */
 trait PowerOnDecision {
   def shouldPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]()) : Boolean
-  def getName() : String
+  def name : String
 }

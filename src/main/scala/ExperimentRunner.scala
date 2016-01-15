@@ -196,16 +196,16 @@ class Experiment(
               println("\nSet blackListPercent = %f".format(blackListPercent))
 
               cellStateResourcesPickerList.foreach(cellStateResourcesPicker => {
-                println("\nSet picking strategy "+cellStateResourcesPicker.getName())
+                println("\nSet picking strategy "+cellStateResourcesPicker.name)
 
                 cellStateResourcesSorterList.foreach(cellStateResourcesSorter => {
-                  println ("\nSet picking strategy "+cellStateResourcesSorter.getName())
+                  println ("\nSet picking strategy "+cellStateResourcesSorter.name)
 
                   powerOnPolicies.foreach(powerOnPolicy => {
-                    println("\nSet power on policy "+powerOnPolicy.getName())
+                    println("\nSet power on policy "+powerOnPolicy.name)
 
                     powerOffPolicies.foreach(powerOffPolicy => {
-                      println ("\nSet power off strategy "+powerOffPolicy.getName())
+                      println ("\nSet power off strategy "+powerOffPolicy.name)
 
                       // Make a copy of the workloads that this run of the simulator
                       // will modify by using them to track statistics.

@@ -8,5 +8,5 @@ import ClusterSchedulingSimulation.{CellState, ClaimDelta, Job}
 object NoPowerOnDecision extends PowerOnDecision{
    override def shouldPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Boolean = false
 
-   override def getName(): String = "no-power-on-decision"
+   override val name: String = "no-power-on-decision"
  }
