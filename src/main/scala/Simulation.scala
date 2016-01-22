@@ -33,7 +33,7 @@ import ca.zmatrix.utils._
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.action.DefaultPowerOffAction
-import efficiency.power_off_policies.decision.NoPowerOffDecision
+import efficiency.power_off_policies.decision.deterministic.NoPowerOffDecision
 import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
 import efficiency.power_on_policies.action.DefaultPowerOnAction
 import efficiency.power_on_policies.decision.NoPowerOnDecision

@@ -29,7 +29,7 @@ import efficiency.ordering_cellstate_resources_policies.NoSorter
 import efficiency.pick_cellstate_resources.RandomPicker
 import efficiency.power_off_policies.ComposedPowerOffPolicy
 import efficiency.power_off_policies.action.DefaultPowerOffAction
-import efficiency.power_off_policies.decision.NoPowerOffDecision
+import efficiency.power_off_policies.decision.deterministic.NoPowerOffDecision
 import efficiency.power_on_policies.ComposedPowerOnPolicy
 import efficiency.power_on_policies.action.DefaultPowerOnAction
 import efficiency.power_on_policies.decision.NoPowerOnDecision

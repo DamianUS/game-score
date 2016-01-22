@@ -31,6 +31,7 @@ import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.PowerOffPolicy
 import efficiency.power_on_policies.PowerOnPolicy
 
+import scala.collection.mutable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.IndexedSeq
 import scala.collection.mutable.ListBuffer
@@ -421,6 +422,7 @@ abstract class Scheduler(val name: String,
   var perWorkloadUsefulTimeScheduling = HashMap[String, Double]()
   var perWorkloadWastedTimeScheduling = HashMap[String, Double]()
   val randomNumberGenerator = new util.Random(Seed())
+  val pastJobs = new mutable.HashMap[Long, Tuple2[Double, Job]]()
 
 
 
@@ -446,6 +448,7 @@ abstract class Scheduler(val name: String,
     perWorkloadWastedTimeScheduling(job.workloadName) =
         perWorkloadWastedTimeScheduling.getOrElse(job.workloadName,0.0)
     job.lastEnqueued = simulator.currentTime
+    pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job.copy()))
   }
 
   /**

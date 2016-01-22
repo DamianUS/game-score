@@ -1,6 +1,7 @@
-package efficiency.power_off_policies.decision
+package efficiency.power_off_policies.decision.deterministic
 
 import ClusterSchedulingSimulation.CellState
+import efficiency.power_off_policies.decision.PowerOffDecision
 
 /**
  * Created by dfernandez on 15/1/16.
