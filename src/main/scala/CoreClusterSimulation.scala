@@ -422,7 +422,7 @@ abstract class Scheduler(val name: String,
   var perWorkloadUsefulTimeScheduling = HashMap[String, Double]()
   var perWorkloadWastedTimeScheduling = HashMap[String, Double]()
   val randomNumberGenerator = new util.Random(Seed())
-  val pastJobs = new mutable.HashMap[Long, Tuple2[Double, Job]]()
+  var pastJobs = new mutable.LinkedHashMap[Long, Tuple2[Double, Job]]()
 
 
 
@@ -544,6 +544,11 @@ abstract class Scheduler(val name: String,
       }
     }
     return claimDeltas
+  }
+
+  def cleanPastJobs(size: Int): Unit = {
+    if(pastJobs.size > size)
+      pastJobs = pastJobs.slice(pastJobs.size - (size+1), pastJobs.size -1)
   }
 
   def jobQueueSize: Long = pendingQueue.size
