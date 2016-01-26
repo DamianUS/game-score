@@ -22,9 +22,8 @@ object PowerStateLoadSorter extends CellStateResourcesSorter{
         load += (i -> 2.0)
       }
     }
-    val ordered = collection.mutable.LinkedHashMap(load.toList.sortWith( (x,y) => x._2 > y._2):_*)
     // Now keys should be ordered by load
-    cellstate.machinesLoad = ordered.keys.toArray
+    cellstate.machinesLoad = load.toSeq.sortBy(_._2).map(_._1).toArray
   }
   override val name: String = "power-load-sorter"
 }

@@ -29,7 +29,7 @@ package ClusterSchedulingSimulation
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
 import efficiency.power_off_policies.PowerOffPolicy
-import efficiency.power_on_policies.{PowerOnPolicy, NoPowerOnPolicy}
+import efficiency.power_on_policies.{PowerOnPolicy}
 
 import scala.collection.mutable.HashMap
 

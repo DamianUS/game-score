@@ -31,7 +31,7 @@ import efficiency.power_off_policies.ComposedPowerOffPolicy
 import efficiency.power_off_policies.action.DefaultPowerOffAction
 import efficiency.power_off_policies.decision.deterministic.NoPowerOffDecision
 import efficiency.power_on_policies.ComposedPowerOnPolicy
-import efficiency.power_on_policies.action.DefaultPowerOnAction
+import efficiency.power_on_policies.action.unsatisfied.DefaultPowerOnAction
 import efficiency.power_on_policies.decision.NoPowerOnDecision
 import org.scalatest.FunSuite
 

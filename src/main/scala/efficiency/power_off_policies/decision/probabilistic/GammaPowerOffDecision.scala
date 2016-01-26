@@ -16,35 +16,30 @@ class GammaPowerOffDecision(threshold : Double, windowSize: Int) extends PowerOf
     var memAvg = 0.0
     var cpuAvg = 0.0
     var allPastTuples = Seq[Tuple2[Double, Job]]()
-    val interArrival = Seq[Double]()
-    val memConsumed = Seq[Double]()
-    val cpuConsumed = Seq[Double]()
+    var interArrival = Seq[Double]()
+    var memConsumed = Seq[Double]()
+    var cpuConsumed = Seq[Double]()
     cellState.simulator.schedulers.map(_._2).foreach(_.cleanPastJobs(windowSize+1))
-    val multipleListTuples = cellState.simulator.schedulers.map(_._2).map(_.pastJobs).map(_.values).map(_.toSeq)
-    /*    for (tuples <- multipleListTuples){
-          for (tuple <- tuples){
-            var time = tuple._1
-            var job = tuple._2
-          }
-        }*/
-    for(tuples <- multipleListTuples){
-      allPastTuples :+ tuples
+    var pastJobsMaps = Map[Long, Tuple2[Double, Job]]()
+    for (mapElement <- cellState.simulator.schedulers.map(_._2).map(_.pastJobs)){
+      pastJobsMaps = pastJobsMaps ++ mapElement
     }
+    allPastTuples = allPastTuples ++ pastJobsMaps.map(_._2).toSeq
     allPastTuples.sortBy(_._1)
     if(allPastTuples.length >= windowSize+1){
       allPastTuples = allPastTuples.slice(allPastTuples.length-(windowSize+2), allPastTuples.length-1)
     }
     for(i <- 1 to allPastTuples.length-1){
-      interArrival :+ (allPastTuples(i)._1 - allPastTuples(i-1)._1)
-      memConsumed :+ allPastTuples(i)._2.numTasks*allPastTuples(i)._2.memPerTask
-      cpuConsumed :+ allPastTuples(i)._2.numTasks*allPastTuples(i)._2.cpusPerTask
+      interArrival = interArrival :+ (allPastTuples(i)._1 - allPastTuples(i-1)._1)
+      memConsumed = memConsumed :+ allPastTuples(i)._2.numTasks*allPastTuples(i)._2.memPerTask
+      cpuConsumed = cpuConsumed :+ allPastTuples(i)._2.numTasks*allPastTuples(i)._2.cpusPerTask
     }
     interArrivalAvg = interArrival.sum / interArrival.length
     memAvg = memConsumed.sum / memConsumed.length
     cpuAvg = cpuConsumed.sum / cpuConsumed.length
     if(interArrivalAvg > 0.0 && memAvg > 0.0 && cpuAvg > 0.0){
-      var alphaCpu = cellState.availableCpus / cpuAvg
-      var alphaMem = cellState.availableMem / memAvg
+      val alphaCpu = cellState.availableCpus / cpuAvg
+      val alphaMem = cellState.availableMem / memAvg
       val dist = new GammaDistributionImpl((alphaCpu+alphaMem/2), interArrivalAvg)
       val prob = dist.cumulativeProbability(ts)
       should = prob <= threshold

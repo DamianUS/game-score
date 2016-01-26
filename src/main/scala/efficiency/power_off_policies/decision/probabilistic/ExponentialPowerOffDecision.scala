@@ -1,8 +1,11 @@
 package efficiency.power_off_policies.decision.probabilistic
 
-import ClusterSchedulingSimulation.CellState
+import ClusterSchedulingSimulation.{Job, CellState}
 import efficiency.power_off_policies.decision.PowerOffDecision
 import org.apache.commons.math.distribution.{ExponentialDistributionImpl, ExponentialDistribution}
+
+import scala.collection.mutable
+import scala.collection.mutable.ListBuffer
 
 /**
  * Created by dfernandez on 22/1/16.
@@ -13,29 +16,21 @@ class ExponentialPowerOffDecision(threshold : Double, windowSize: Int) extends P
     val ts = 130.0
     var should = false
     var avg = 0.0
-    var allPastTimes = Seq[Double]()
-    val interArrival = Seq[Double]()
+    var allPastTimes = ListBuffer[Double]()
+    var interArrival = Seq[Double]()
     cellState.simulator.schedulers.map(_._2).foreach(_.cleanPastJobs(windowSize+1))
-    val multipleListTuples = cellState.simulator.schedulers.map(_._2).map(_.pastJobs).map(_.values).map(_.toSeq)
-    /*    for (tuples <- multipleListTuples){
-          for (tuple <- tuples){
-            var time = tuple._1
-            var job = tuple._2
-          }
-        }*/
-    for(tuples <- multipleListTuples){
-      val times = tuples.map(_._1)
-      if(times.length > 0){
-        allPastTimes :+ times
-      }
-      //val jobs = tuples.map(_._2)
+    var pastJobsMaps = Map[Long, Tuple2[Double, Job]]()
+
+    for (mapElement <- cellState.simulator.schedulers.map(_._2).map(_.pastJobs)){
+      pastJobsMaps = pastJobsMaps ++ mapElement
     }
+    allPastTimes = allPastTimes ++ pastJobsMaps.map(_._2).map(_._1).toSeq
     allPastTimes.sorted
     if(allPastTimes.length >= windowSize+1){
       allPastTimes = allPastTimes.slice(allPastTimes.length-(windowSize+2), allPastTimes.length-1)
     }
     for( i <- 1 to allPastTimes.length-1){
-      interArrival :+ (allPastTimes(i) - allPastTimes(i-1))
+      interArrival = interArrival :+ (allPastTimes(i) - allPastTimes(i-1))
     }
     avg = interArrival.sum / interArrival.length
     if(avg > 0.0){

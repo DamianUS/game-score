@@ -706,6 +706,7 @@ class CellState(val numMachines: Int,
     machinePowerState(machineID) == 0
   }
 
+  //FIXME: Probar a iniciar el estado e ir modificando estos números en los cambios de estado para mejorar la eficiencia
   def numberOfMachinesOn = machinePowerState.toSeq.filter(_ == 1).length
   def numberOfMachinesOff = machinePowerState.toSeq.filter(_ == 0).length
   def numberOfMachinesTurningOn = machinePowerState.toSeq.filter(_ == 3).length
@@ -721,7 +722,9 @@ class CellState(val numMachines: Int,
   def powerOnMachine(machineID: Int) = {
     if(machinePowerState(machineID)==0 || machinePowerState(machineID)==2){
       machinePowerState(machineID) = 3
-      powerOns(machineID) :+ simulator.currentTime
+      if(powerOns(machineID) == null)
+        powerOns(machineID) = mutable.Seq[Double]()
+      powerOns(machineID) = powerOns(machineID) :+ simulator.currentTime
       simulator.afterDelay(powerOnTime){
         machinePowerState(machineID) = 1
       }
@@ -731,7 +734,9 @@ class CellState(val numMachines: Int,
   def powerOffMachine(machineID: Int) = {
     if(machinePowerState(machineID)==1 || machinePowerState(machineID)==3){
       machinePowerState(machineID) = 2
-      powerOffs(machineID) :+ simulator.currentTime
+      if(powerOffs(machineID) == null)
+        powerOffs(machineID) = mutable.Seq[Double]()
+      powerOffs(machineID) = powerOffs(machineID) :+ simulator.currentTime
       simulator.afterDelay(powerOffTime){
         machinePowerState(machineID) = 0
       }

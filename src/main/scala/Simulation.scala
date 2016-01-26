@@ -30,13 +30,15 @@ import java.nio.channels.FileChannel
 import ClusterSchedulingSimulation.{ExpExpExpWorkloadGenerator, Experiment, MesosSchedulerDesc, MesosSimulatorDesc, MonolithicSimulatorDesc, OmegaSchedulerDesc, OmegaSimulatorDesc, SchedulerDesc, Seed, WorkloadDesc}
 import ClusterSchedulingSimulation.Workloads._
 import ca.zmatrix.utils._
-import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
+import efficiency.ordering_cellstate_resources_policies.{PowerStateLoadSorter, BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.action.DefaultPowerOffAction
-import efficiency.power_off_policies.decision.deterministic.NoPowerOffDecision
+import efficiency.power_off_policies.decision.deterministic.{AlwzPowerOffDecision, NoPowerOffDecision}
+import efficiency.power_off_policies.decision.probabilistic.{RandomPowerOffDecision, GammaPowerOffDecision, ExponentialPowerOffDecision}
 import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
-import efficiency.power_on_policies.action.DefaultPowerOnAction
-import efficiency.power_on_policies.decision.NoPowerOnDecision
+import efficiency.power_on_policies.action.margin.PowerOnMarginPercAvailableAction
+import efficiency.power_on_policies.action.unsatisfied.DefaultPowerOnAction
+import efficiency.power_on_policies.decision.{MarginPowerOnDecision, NoPowerOnDecision}
 import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
 
 import scala.collection.mutable.ArrayBuffer
@@ -374,10 +376,10 @@ object Simulation {
 
 
     //Default sorting and picking policies
-    val defaultSortingPolicy = List[CellStateResourcesSorter](NoSorter)
-    val defaultPickingPolicy = List[CellStateResourcesPicker](RandomPicker)
-    val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
-    val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
+    val defaultSortingPolicy = List[CellStateResourcesSorter](PowerStateLoadSorter)
+    val defaultPickingPolicy = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
+    val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.2), new MarginPowerOnDecision(0.2)))
+    val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision))
 
 
     val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
