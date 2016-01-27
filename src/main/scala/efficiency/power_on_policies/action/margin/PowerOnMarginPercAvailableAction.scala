@@ -17,11 +17,11 @@ class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) exten
     val machinesNeeded = numMachinesNeeded(cellState, job)
     assert(machinesNeeded >= 0, ("The number of machines that should be powered on is lesser than 0 in %s policy").format(name))
     if(cellState.numberOfMachinesOff >= machinesNeeded){
-      cellState.simulator.log(("There are enough machines turned off, turning on %i machines on %s policy").format(machinesNeeded, name))
+      cellState.simulator.log(("There are enough machines turned off, turning on %d machines on %s policy").format(machinesNeeded, name))
       machinesToPowerOn = machinesNeeded
     }
     else if(cellState.numberOfMachinesOff > 0){
-      cellState.simulator.log(("There are not enough machines turned off, turning on %i machines on %s policy").format(cellState.numberOfMachinesOff, name))
+      cellState.simulator.log(("There are not enough machines turned off, turning on %d machines on %s policy").format(cellState.numberOfMachinesOff, name))
       machinesToPowerOn = cellState.numberOfMachinesOff
     }
     else{
@@ -39,15 +39,28 @@ class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) exten
         }
       }
     }
-    assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %i machines to turn on after powering on machines").format(name, machinesToPowerOn))
+    assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %d machines to turn on after powering on machines").format(name, machinesToPowerOn))
   }
 
   override val name: String = "power-on-percentage-resources-free-margin-action"
 
   def numMachinesNeeded(cellState: CellState, job: Job): Int = {
-    val machinesCpuNeeded = Math.max(0, ((resourcesPercentageMargin * cellState.numberOfMachinesOn * cellState.cpusPerMachine - (cellState.availableCpus - job.cpusStillNeeded))/cellState.cpusPerMachine).ceil.toInt)
-    val machinesMemNeeded = Math.max(0, ((resourcesPercentageMargin * cellState.numberOfMachinesOn * cellState.memPerMachine - (cellState.availableMem - job.memStillNeeded))/cellState.memPerMachine).ceil.toInt)
-    Math.max(machinesCpuNeeded, machinesMemNeeded)
+    var machinesNeeded = 0
+    if(job.unscheduledTasks > 0){
+      val machinesCpuUnsatisfied = (job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt
+      val machinesMemUnsatisfied = (job.memStillNeeded / cellState.memPerMachine).ceil.toInt
+      val machinesMargin = (resourcesPercentageMargin * (cellState.numberOfMachinesOn+Math.max(machinesCpuUnsatisfied, machinesMemUnsatisfied))).ceil.toInt
+      machinesNeeded = Math.max(machinesCpuUnsatisfied, machinesMemUnsatisfied) + machinesMargin
+    }
+    else{
+      val cpuAvailablePerc = cellState.availableCpus / cellState.onCpus
+      val memAvailablePerc = cellState.availableMem / cellState.onMem
+      if(Math.min(cpuAvailablePerc, memAvailablePerc) < resourcesPercentageMargin){
+        val newMargin = resourcesPercentageMargin - Math.min(cpuAvailablePerc, memAvailablePerc)
+        machinesNeeded = (newMargin * (cellState.numberOfMachinesOn)).ceil.toInt
+      }
+    }
+    machinesNeeded
   }
 }
 

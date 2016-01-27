@@ -279,10 +279,6 @@ class MesosScheduler(name: String,
             .format(job.id,
               job.unscheduledTasks,
               job.numTasks))
-          //TODO: Buen sitio para la lógica de encender.
-          if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
-            simulator.powerOn.powerOn(simulator.cellState, job, "mesos")
-          }
           // Give up on a job if (a) it hasn't scheduled a single task in
           // 100 tries or (b) it hasn't finished scheduling after 1000 tries.
           if ((job.numSchedulingAttempts > 100 &&
@@ -307,6 +303,10 @@ class MesosScheduler(name: String,
         } else {
           // All tasks in job scheduled so not putting it back in pendingQueue.
           jobEventType = "fully-scheduled"
+        }
+        //TODO: Buen sitio para la lógica de encender.
+        if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+          simulator.powerOn.powerOn(simulator.cellState, job, "mesos")
         }
         if (!jobEventType.equals("")) {
           // Print some stats that we can use to generate CDFs of the job

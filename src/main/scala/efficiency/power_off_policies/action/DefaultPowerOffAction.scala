@@ -8,14 +8,14 @@ import scala.util.control.Breaks
  * Created by dfernandez on 15/1/16.
  */
 object DefaultPowerOffAction extends PowerOffAction{
-  override def powerOff(cellState: CellState, machineId: Int): Unit = {
-    assert(cellState.machinePowerState(machineId) == 1, ("The machine with ID %i is not powered on when arriving to power off policy: %s").format(machineId, name))
-    if(cellState.allocatedCpusPerMachine(machineId) == 0.0 && cellState.allocatedMemPerMachine(machineId) == 0.0) {
-      cellState.powerOffMachine(machineId)
-      cellState.simulator.log(("Shutting down the machine with machine ID : %i in the power off policy : %s").format(machineId, name))
+  override def powerOff(cellState: CellState, machineID: Int): Unit = {
+    assert(cellState.isMachineOn(machineID), ("The machine with ID %d is not powered on when arriving to power off policy: %s").format(machineID, name))
+    if(cellState.allocatedCpusPerMachine(machineID) == 0.0 && cellState.allocatedMemPerMachine(machineID) == 0.0) {
+      cellState.powerOffMachine(machineID)
+      cellState.simulator.log(("Shutting down the machine with machine ID : %d in the power off policy : %s").format(machineID, name))
     }
     else{
-      cellState.simulator.log(("Can not shut down the machine with machine ID : %i in the power off policy : %s because it has allocated %f cpus and %f mem").format(machineId, name, cellState.allocatedCpusPerMachine(machineId), cellState.allocatedMemPerMachine(machineId)))
+      cellState.simulator.log(("Can not shut down the machine with machine ID : %d in the power off policy : %s because it has allocated %f cpus and %f mem").format(machineID, name, cellState.allocatedCpusPerMachine(machineID), cellState.allocatedMemPerMachine(machineID)))
     }
   }
 

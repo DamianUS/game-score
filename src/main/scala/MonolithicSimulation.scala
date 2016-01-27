@@ -176,10 +176,6 @@ class MonolithicScheduler(name: String,
         var jobEventType = "" // Set this conditionally below; used in logging.
         // If the job isn't yet fully scheduled, put it back in the queue.
         if (job.unscheduledTasks > 0) {
-          //TODO: Buen sitio para la lógica de encender
-          if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
-            simulator.powerOn.powerOn(simulator.cellState, job, "monolithic")
-          }
           simulator.log(("Job %s didn't fully schedule, %d / %d tasks remain " +
             "(shape: %f cpus, %f mem). Putting it " +
             "back in the queue").format(job.id,
@@ -210,6 +206,10 @@ class MonolithicScheduler(name: String,
         } else {
           // All tasks in job scheduled so don't put it back in pendingQueue.
           jobEventType = "fully-scheduled"
+        }
+        //TODO: Buen sitio para la lógica de encender
+        if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+          simulator.powerOn.powerOn(simulator.cellState, job, "monolithic")
         }
         if (!jobEventType.equals("")) {
           // println("%s %s %d %s %d %d %f"

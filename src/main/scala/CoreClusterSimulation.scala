@@ -283,11 +283,24 @@ class ClusterSimulator(val cellState: CellState,
   // (i.e. while they are offered as part of a Mesos resource-offer).
   def avgCpuLocked: Double = sumCpuLocked / numMonitoringMeasurements
   def avgMemLocked: Double = sumMemLocked / numMonitoringMeasurements
+  def avgCpuOn: Double = (sumMachinesOn / numMonitoringMeasurements) * cellState.cpusPerMachine
+  def avgMemOn: Double = (sumMachinesOn / numMonitoringMeasurements) * cellState.memPerMachine
+  def avgCpuOff: Double = (sumMachinesOff / numMonitoringMeasurements) * cellState.cpusPerMachine
+  def avgMemOff: Double = (sumMachinesOff / numMonitoringMeasurements) * cellState.memPerMachine
+  def avgCpuTurningOff: Double = (sumMachinesTurningOff / numMonitoringMeasurements) * cellState.cpusPerMachine
+  def avgMemTurningOff: Double = (sumMachinesTurningOff / numMonitoringMeasurements) * cellState.memPerMachine
+  def avgCpuTurningOn: Double = (sumMachinesTurningOn / numMonitoringMeasurements) * cellState.cpusPerMachine
+  def avgMemTurningOn: Double = (sumMachinesTurningOn / numMonitoringMeasurements) * cellState.memPerMachine
   var sumCpuUtilization: Double = 0.0
   var sumMemUtilization: Double = 0.0
   var sumCpuLocked: Double = 0.0
   var sumMemLocked: Double = 0.0
   var numMonitoringMeasurements: Long = 0
+  var sumMachinesOn = 0
+  var sumMachinesOff = 0
+  var sumMachinesTurningOn = 0
+  var sumMachinesTurningOff = 0
+  var totalMachinePowerStates = Seq[Array[Int]]()
 
   def measureUtilization: Unit = {
     numMonitoringMeasurements += 1
@@ -295,6 +308,11 @@ class ClusterSimulator(val cellState: CellState,
     sumMemUtilization += cellState.totalOccupiedMem
     sumCpuLocked += cellState.totalLockedCpus
     sumMemLocked += cellState.totalLockedMem
+    sumMachinesOn += cellState.numberOfMachinesOn
+    sumMachinesOff += cellState.numberOfMachinesOff
+    sumMachinesTurningOff += cellState.numberOfMachinesTurningOff
+    sumMachinesTurningOn += cellState.numberOfMachinesTurningOn
+    totalMachinePowerStates = totalMachinePowerStates :+ cellState.machinePowerState
     log("Avg cpu utilization (adding measurement %d of %f): %f."
         .format(numMonitoringMeasurements,
                 cellState.totalOccupiedCpus,
@@ -732,6 +750,7 @@ class CellState(val numMachines: Int,
   }
 
   def powerOffMachine(machineID: Int) = {
+    assert(allocatedCpusPerMachine(machineID) == 0.0 && allocatedMemPerMachine(machineID) == 0.0, ("Intentando apagar una máquina en uso con ID %d ").format(machineID))
     if(machinePowerState(machineID)==1 || machinePowerState(machineID)==3){
       machinePowerState(machineID) = 2
       if(powerOffs(machineID) == null)

@@ -15,15 +15,15 @@ class PowerOnMarginFixedMachinesAction(numMachinesMargin : Int) extends PowerOnA
     var machinesToPowerOn = 0
     val machinesNeeded = Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt) + numMachinesMargin
     if (cellState.numberOfMachinesOff >= machinesNeeded) {
-      cellState.simulator.log(("There are enough machines turned off, turning on %i machines on %s policy").format(machinesNeeded + numMachinesMargin, name))
+      cellState.simulator.log(("There are enough machines turned off, turning on %d machines on %s policy").format(machinesNeeded + numMachinesMargin, name))
       machinesToPowerOn = machinesNeeded
     }
     else if (cellState.numberOfMachinesOff > 0) {
-      cellState.simulator.log(("There are not enough machines turned off, turning on %i machines on %s policy").format(cellState.numberOfMachinesOff, name))
+      cellState.simulator.log(("There are not enough machines turned off, turning on %d machines on %s policy").format(cellState.numberOfMachinesOff, name))
       machinesToPowerOn = cellState.numberOfMachinesOff
     }
     else {
-      cellState.simulator.log(("All machines are on, cant turn on any machines on %s policy").format(name))
+      cellState.simulator.log(("All machines are on, cant turn on any machines on %d policy").format(name))
     }
     val loop = new Breaks;
     loop.breakable {
@@ -37,7 +37,7 @@ class PowerOnMarginFixedMachinesAction(numMachinesMargin : Int) extends PowerOnA
         }
       }
     }
-    assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %i machines to turn on after powering on machines").format(name, machinesToPowerOn))
+    assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %d machines to turn on after powering on machines").format(name, machinesToPowerOn))
   }
 
   override val name: String = "power-on-fixed-machines-margin-action"

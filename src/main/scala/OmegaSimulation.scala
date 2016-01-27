@@ -282,10 +282,6 @@ class OmegaScheduler(name: String,
       var jobEventType = "" // Set this conditionally below; used in logging.
       // If the job isn't yet fully scheduled, put it back in the queue.
       if (job.unscheduledTasks > 0) {
-        //TODO: Buen sitio para la lógica de encender
-        if(omegaSimulator.cellState.numberOfMachinesOn < omegaSimulator.cellState.numMachines){
-          simulator.powerOn.powerOn(omegaSimulator.cellState, job, "omega", commitedDelta, conflictedDelta)
-        }
         // Give up on a job if (a) it hasn't scheduled a single task in
         // 100 tries or (b) it hasn't finished scheduling after 1000 tries.
         if ((job.numSchedulingAttempts > 100 &&
@@ -312,6 +308,10 @@ class OmegaScheduler(name: String,
       } else {
         // All tasks in job scheduled so don't put it back in pendingQueue.
         jobEventType = "fully-scheduled"
+      }
+      //TODO: Buen sitio para la lógica de encender
+      if(omegaSimulator.cellState.numberOfMachinesOn < omegaSimulator.cellState.numMachines){
+        simulator.powerOn.powerOn(omegaSimulator.cellState, job, "omega", commitedDelta, conflictedDelta)
       }
       if (!jobEventType.equals("")) {
         // println("%s %s %d %s %d %d %f"

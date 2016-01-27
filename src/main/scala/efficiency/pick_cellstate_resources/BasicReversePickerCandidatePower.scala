@@ -17,7 +17,7 @@ object BasicReversePickerCandidatePower extends CellStateResourcesPicker{
     var remainingCandidatesVar= remainingCandidates
     val loop = new Breaks;
     loop.breakable {
-      for(i <- cellState.numberOfMachinesOn-1 to 0 by -1){
+      for(i <- remainingCandidatesVar-1 to 0 by -1){
         if (cellState.availableCpusPerMachine(cellState.machinesLoad(i)) >= job.cpusPerTask && cellState.availableMemPerMachine(cellState.machinesLoad(i)) >= job.memPerTask) {
           machineID=cellState.machinesLoad(i)
           assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+name)
@@ -29,6 +29,9 @@ object BasicReversePickerCandidatePower extends CellStateResourcesPicker{
         }
 
       }
+    }
+    if(machineID == -1){
+      assert(remainingCandidatesVar == 0, ("No ha encontrado un candidato en %s y sin embargo dice que hay candidatos aún disponibles").format(name))
     }
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePool)
   }
