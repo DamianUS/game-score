@@ -33,9 +33,11 @@ import ca.zmatrix.utils._
 import efficiency.ordering_cellstate_resources_policies.{PowerStateLoadSorter, BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.action.DefaultPowerOffAction
+import efficiency.power_off_policies.decision.deterministic.load.LoadMaxPowerOffDecision
+import efficiency.power_off_policies.decision.{PowerOffDecision, CombinedPowerOffDecision}
 import efficiency.power_off_policies.decision.deterministic.security_margin.FreeCapacityMinMarginPowerOffDecision
 import efficiency.power_off_policies.decision.deterministic.{AlwzPowerOffDecision, NoPowerOffDecision}
-import efficiency.power_off_policies.decision.probabilistic.{RandomPowerOffDecision, GammaPowerOffDecision, ExponentialPowerOffDecision}
+import efficiency.power_off_policies.decision.probabilistic._
 import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
 import efficiency.power_on_policies.action.margin.PowerOnMarginPercAvailableAction
 import efficiency.power_on_policies.action.unsatisfied.DefaultPowerOnAction
@@ -209,7 +211,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 // 1 Day
+    val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
         globalRunTime)
@@ -379,8 +381,20 @@ object Simulation {
     //Default sorting and picking policies
     val defaultSortingPolicy = List[CellStateResourcesSorter](PowerStateLoadSorter)
     val defaultPickingPolicy = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
+
+
+    //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
     val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, DefaultPowerOnDecision))
-    val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(0.9, 25)))
+
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new LoadMaxPowerOffDecision(0.2)))
+    val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, RandomPowerOffDecision))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(0.000000000001, 25)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(0.999, 0.01, 25)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(0.6, 25)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaFreePowerOffDecision(0.00000001, 25)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(0.00000000000000000000000001, 25)))
+
 
 
     val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)

@@ -1,28 +1,28 @@
 /**
- * Copyright (c) 2013, Regents of the University of California
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and the
- * following disclaimer in the documentation and/or other materials provided with
- * the distribution.  Neither the name of the University of California, Berkeley
- * nor the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.  THIS
- * SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+  * Copyright (c) 2013, Regents of the University of California
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *
+  * Redistributions of source code must retain the above copyright notice, this
+  * list of conditions and the following disclaimer.  Redistributions in binary
+  * form must reproduce the above copyright notice, this list of conditions and the
+  * following disclaimer in the documentation and/or other materials provided with
+  * the distribution.  Neither the name of the University of California, Berkeley
+  * nor the names of its contributors may be used to endorse or promote products
+  * derived from this software without specific prior written permission.  THIS
+  * SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
 
 package ClusterSchedulingSimulation
 
@@ -38,10 +38,10 @@ import scala.collection.mutable.ListBuffer
 import org.apache.commons.math.distribution.ExponentialDistributionImpl
 
 /**
- * A simple, generic, discrete event simulator. A modified version of the
- * basic discrete event simulator code from Programming In Scala, pg 398,
- * http://www.amazon.com/Programming-Scala-Comprehensive-Step-step/dp/0981531601
- */
+  * A simple, generic, discrete event simulator. A modified version of the
+  * basic discrete event simulator code from Programming In Scala, pg 398,
+  * http://www.amazon.com/Programming-Scala-Comprehensive-Step-step/dp/0981531601
+  */
 abstract class Simulator(logging: Boolean = false){
   type Action = () => Unit
 
@@ -81,12 +81,12 @@ abstract class Simulator(logging: Boolean = false){
   }
 
   /**
-   * Run the simulation for {@code runTime} virtual (i.e., simulated)
-   * seconds or until {@code wallClockTimeout} seconds of execution
-   * time elapses.
-   * @return true if simulation ran till runTime or completion, and false
-   *         if simulation timed out.
-   */
+    * Run the simulation for {@code runTime} virtual (i.e., simulated)
+    * seconds or until {@code wallClockTimeout} seconds of execution
+    * time elapses.
+    * @return true if simulation ran till runTime or completion, and false
+    *         if simulation timed out.
+    */
   def run(runTime:Option[Double] = None,
           wallClockTimeout:Option[Double] = None): Boolean = {
     afterDelay(0) {
@@ -98,7 +98,7 @@ abstract class Simulator(logging: Boolean = false){
       val currWallTime = java.util.Calendar.getInstance().getTimeInMillis()
       if (wallClockTimeout.exists((currWallTime - startWallTime) / 1000.0 > _ )) {
         println("Execution timed out after %f seconds, ending simulation now."
-                .format((currWallTime - startWallTime) / 1000.0))
+          .format((currWallTime - startWallTime) / 1000.0))
         true
       } else {
         false
@@ -133,16 +133,16 @@ abstract class ClusterSimulatorDesc(val runTime: Double) {
 }
 
 /**
- * A simulator to compare different cluster scheduling architectures
- * (single agent, dynamically partitioned,and replicated state), based
- * on a set of input parameters that define the schedulers being used
- * and the workload being played.
- * @param schedulers A Map from schedulerName to Scheduler, should 
- *       exactly one entry for each scheduler that is registered with
- *       this simulator.
- * @param workloadToSchedulerMap A map from workloadName to Seq[SchedulerName].
- *       Used to determine which scheduler each job is assigned.
- */
+  * A simulator to compare different cluster scheduling architectures
+  * (single agent, dynamically partitioned,and replicated state), based
+  * on a set of input parameters that define the schedulers being used
+  * and the workload being played.
+  * @param schedulers A Map from schedulerName to Scheduler, should
+  *       exactly one entry for each scheduler that is registered with
+  *       this simulator.
+  * @param workloadToSchedulerMap A map from workloadName to Seq[SchedulerName].
+  *       Used to determine which scheduler each job is assigned.
+  */
 class ClusterSimulator(val cellState: CellState,
                        val schedulers: Map[String, Scheduler],
                        val workloadToSchedulerMap: Map[String, Seq[String]],
@@ -155,15 +155,15 @@ class ClusterSimulator(val cellState: CellState,
                        cellStateResourcesPicker: CellStateResourcesPicker,
                        powerOnPolicy: PowerOnPolicy,
                        powerOffPolicy: PowerOffPolicy)
-                      extends Simulator(logging) {
+  extends Simulator(logging) {
   assert(schedulers.size > 0, "At least one scheduler must be provided to" +
-                              "scheduler constructor.")
+    "scheduler constructor.")
   assert(workloadToSchedulerMap.size > 0, "No workload->scheduler map setup.")
   workloadToSchedulerMap.values.foreach(schedulerNameSeq => {
     schedulerNameSeq.foreach(schedulerName => {
       val contains: Boolean = schedulers.contains(schedulerName)
       assert(contains, ("Workload-Scheduler map points to a scheduler, " +
-                       "%s, that is not registered").format(schedulerName))
+        "%s, that is not registered").format(schedulerName))
     })
   })
   val sorter = cellStateResourcesSorter
@@ -176,31 +176,31 @@ class ClusterSimulator(val cellState: CellState,
   schedulers.values.foreach(_.simulator = this)
 
   class PrefillScheduler
-      extends Scheduler(name = "prefillScheduler",
-                        constantThinkTimes = Map[String, Double](),
-                        perTaskThinkTimes = Map[String, Double](),
-                        numMachinesToBlackList = 0) {}
+    extends Scheduler(name = "prefillScheduler",
+      constantThinkTimes = Map[String, Double](),
+      perTaskThinkTimes = Map[String, Double](),
+      numMachinesToBlackList = 0) {}
   private val prefillScheduler = new PrefillScheduler
   prefillScheduler.simulator = this
   // Prefill jobs that exist at the beginning of the simulation.
   // Setting these up is similar to loading jobs that are part
   // of the simulation run; they need to be scheduled onto machines
   println("Prefilling cell-state with %d workloads."
-          .format(prefillWorkloads.length))
+    .format(prefillWorkloads.length))
   prefillWorkloads.foreach(workload => {
     println("Prefilling cell-state with %d jobs from workload %s."
-            .format(workload.numJobs, workload.name))
+      .format(workload.numJobs, workload.name))
     var i = 0
     workload.getJobs.foreach(job => {
       i += 1
       // println("Prefilling %d %s job id - %d."
       //         .format(i, workload.name, job.id))
       if (job.cpusPerTask > cellState.cpusPerMachine ||
-          job.memPerTask > cellState.memPerMachine) {
+        job.memPerTask > cellState.memPerMachine) {
         println(("IGNORING A JOB REQUIRING %f CPU & %f MEM PER TASK " +
-                 "BECAUSE machines only have %f cpu / %f mem.")
-                .format(job.cpusPerTask, job.memPerTask,
-                        cellState.cpusPerMachine, cellState.memPerMachine))
+          "BECAUSE machines only have %f cpu / %f mem.")
+          .format(job.cpusPerTask, job.memPerTask,
+            cellState.cpusPerMachine, cellState.memPerMachine))
       } else {
         val claimDeltas = prefillScheduler.scheduleJob(job, cellState)
         // assert(job.numTasks == claimDeltas.length,
@@ -208,11 +208,11 @@ class ClusterSimulator(val cellState: CellState,
         cellState.scheduleEndEvents(claimDeltas)
 
         log(("After prefill, common cell state now has %.2f%% (%.2f) " +
-             "cpus and %.2f%% (%.2f) mem occupied.")
-             .format(cellState.totalOccupiedCpus / cellState.totalCpus * 100.0,
-                     cellState.totalOccupiedCpus,
-                     cellState.totalOccupiedMem / cellState.totalMem * 100.0,
-                     cellState.totalOccupiedMem))
+          "cpus and %.2f%% (%.2f) mem occupied.")
+          .format(cellState.totalOccupiedCpus / cellState.totalCpus * 100.0,
+            cellState.totalOccupiedCpus,
+            cellState.totalOccupiedMem / cellState.totalMem * 100.0,
+            cellState.totalOccupiedMem))
       }
     })
   })
@@ -224,9 +224,9 @@ class ClusterSimulator(val cellState: CellState,
       val scheduler = getSchedulerForWorkloadName(job.workloadName)
       if (scheduler == None) {
         log(("Warning, skipping a job fom a workload type (%s) that has " +
-            "not been mapped to any registered schedulers. Please update " +
-            "a mapping for this scheduler via the workloadSchedulerMap param.")
-            .format(job.workloadName))
+          "not been mapped to any registered schedulers. Please update " +
+          "a mapping for this scheduler via the workloadSchedulerMap param.")
+          .format(job.workloadName))
         numSkipped += 1
       } else {
         // Schedule the task to get submitted to its scheduler at its
@@ -241,15 +241,15 @@ class ClusterSimulator(val cellState: CellState,
         //                job.id,
         //                job.cpusPerTask * job.numTasks,
         //                job.memPerTask * job.numTasks))
-        if (job.cpusPerTask * job.numTasks > cellState.totalCpus + 0.000001 || 
-            job.memPerTask * job.numTasks > cellState.totalMem + 0.000001) {
+        if (job.cpusPerTask * job.numTasks > cellState.totalCpus + 0.000001 ||
+          job.memPerTask * job.numTasks > cellState.totalMem + 0.000001) {
           println(("WARNING: The cell (%f cpus, %f mem) is not big enough " +
-                  "to hold job id %d all at once which requires %f cpus " +
-                  "and %f mem in total.").format(cellState.totalCpus,
-                                                 cellState.totalMem,
-                                                 job.id,
-                                                 job.cpusPerTask * job.numTasks,
-                                                 job.memPerTask * job.numTasks))
+            "to hold job id %d all at once which requires %f cpus " +
+            "and %f mem in total.").format(cellState.totalCpus,
+            cellState.totalMem,
+            job.id,
+            job.cpusPerTask * job.numTasks,
+            job.memPerTask * job.numTasks))
         }
         afterDelay(job.submitted - currentTime) {
           scheduler.foreach(_.addJob(job))
@@ -258,7 +258,7 @@ class ClusterSimulator(val cellState: CellState,
       }
     })
     println("Loaded %d jobs from workload %s, and skipped %d.".format(
-        numLoaded, workload.name, numSkipped))
+      numLoaded, workload.name, numSkipped))
   })
   var roundRobinCounter = 0
   // If more than one scheduler is assigned a workload, round robin across them.
@@ -291,6 +291,9 @@ class ClusterSimulator(val cellState: CellState,
   def avgMemTurningOff: Double = (sumMachinesTurningOff / numMonitoringMeasurements) * cellState.memPerMachine
   def avgCpuTurningOn: Double = (sumMachinesTurningOn / numMonitoringMeasurements) * cellState.cpusPerMachine
   def avgMemTurningOn: Double = (sumMachinesTurningOn / numMonitoringMeasurements) * cellState.memPerMachine
+  def avgMachinesOccupied: Double = (sumMachinesOccupied.toDouble / numMonitoringMeasurements.toDouble)
+  def avgMachinesOn: Double = (sumMachinesOn.toDouble / numMonitoringMeasurements.toDouble)
+
   var sumCpuUtilization: Double = 0.0
   var sumMemUtilization: Double = 0.0
   var sumCpuLocked: Double = 0.0
@@ -301,6 +304,56 @@ class ClusterSimulator(val cellState: CellState,
   var sumMachinesTurningOn = 0
   var sumMachinesTurningOff = 0
   var totalMachinePowerStates = Seq[Array[Int]]()
+  var sumMachinesOccupied = 0
+
+
+  val runtime = 86400 * 30
+  val powerPerCpuOn = 108
+  val powerPerCpuIdle = 50
+  val powerTurnedOff = 5
+  val powerBooting = 110
+  val powerShutting = 110
+
+  def totalEnergyConsumed : Double = {
+    val energyOn = (sumCpuUtilization.toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuOn * runtime
+    val energyIdle = ( ((sumMachinesOn * cellState.cpusPerMachine) - (sumCpuUtilization)).toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuIdle * runtime
+    val energyOff = (sumMachinesOff.toDouble / numMonitoringMeasurements.toDouble) * powerTurnedOff * runtime
+    val energyTurnOn = (sumMachinesTurningOn.toDouble / numMonitoringMeasurements.toDouble) * powerBooting * runtime
+    val energyTurnOff = (sumMachinesTurningOff.toDouble / numMonitoringMeasurements.toDouble) * powerShutting * runtime
+    energyOn + energyIdle + energyOff + energyTurnOff + energyTurnOn
+  }
+
+  def totalCurrentEnergyConsumed : Double = {
+    val energyOn = (sumCpuUtilization.toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuOn * runtime
+    val energyIdle = ( ((cellState.numMachines * cellState.cpusPerMachine * numMonitoringMeasurements) - (sumCpuUtilization)).toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuIdle * runtime
+    energyOn + energyIdle
+  }
+
+  def totalPowerOffNumber : Int =   {
+    cellState.powerOffs.filter(_ != null).map(_.length).sum
+  }
+
+  def totalPowerOnNumber : Int =   {
+    cellState.powerOns.filter(_ != null).map(_.length).sum
+  }
+
+  def totalEnergySaved : Double = {
+    totalCurrentEnergyConsumed - totalEnergyConsumed
+  }
+
+  def percEnergyConsumedVsCurrent : Double = {
+    totalEnergyConsumed / totalCurrentEnergyConsumed
+  }
+
+  def secondsWastedPerKwhSaved : Double = {
+    var totalSecondsWasted = 0.0
+    schedulers.map(_._2).foreach(totalSecondsWasted += _.totalWastedTimeSchedulingPowering)
+    totalSecondsWasted / (totalEnergySaved / 3600000)
+  }
+
+  def kwhSavedPerShutting : Double = {
+    (totalEnergySaved / 3600000) / totalPowerOffNumber
+  }
 
   def measureUtilization: Unit = {
     numMonitoringMeasurements += 1
@@ -312,11 +365,12 @@ class ClusterSimulator(val cellState: CellState,
     sumMachinesOff += cellState.numberOfMachinesOff
     sumMachinesTurningOff += cellState.numberOfMachinesTurningOff
     sumMachinesTurningOn += cellState.numberOfMachinesTurningOn
-    totalMachinePowerStates = totalMachinePowerStates :+ cellState.machinePowerState
+    sumMachinesOccupied += cellState.numMachinesOccupied
+    //totalMachinePowerStates = totalMachinePowerStates :+ cellState.machinePowerState
     log("Avg cpu utilization (adding measurement %d of %f): %f."
-        .format(numMonitoringMeasurements,
-                cellState.totalOccupiedCpus,
-                avgCpuUtilization))
+      .format(numMonitoringMeasurements,
+        cellState.totalOccupiedCpus,
+        avgCpuUtilization))
     //Temporary: print utilization throughout the day.
     // if (numMonitoringMeasurements % 1000 == 0) {
     //   println("%f - Current cluster utilization: %f %f cpu , %f %f mem"
@@ -350,8 +404,8 @@ class ClusterSimulator(val cellState: CellState,
     assert(currentTime == 0.0, "currentTime must be 0 at simulator run time.")
     schedulers.values.foreach(scheduler => {
       assert(scheduler.jobQueueSize == 0,
-             "Schedulers are not allowed to have jobs in their " +
-             "queues when we run the simulator.")
+        "Schedulers are not allowed to have jobs in their " +
+          "queues when we run the simulator.")
     })
     // Optionally, start the utilization monitoring loop.
     if (monitorUtilization) {
@@ -368,30 +422,30 @@ class SchedulerDesc(val name: String,
                     val perTaskThinkTimes: Map[String, Double])
 
 /**
- * A Scheduler maintains {@code Job}s submitted to it in a queue, and
- * attempts to match those jobs with resources by making "job scheduling
- * decisions", which take a certain amount of "scheduling time".
- * A simulator is responsible for interacting with a Scheduler, e.g.,
- * by deciding which workload types should be assigned to which scheduler.
- * A Scheduler must accept Jobs associated with any workload type (workloads
- * are identified by name), though it can do whatever it wants with those
- * jobs, include, optionally, dropping them on the floor, or handling jobs
- * from different workloads differently, which concretely, means taking
- * a different amount of "scheuduling time" to schedule jobs from different
- * workloads.
- *
- * @param simulator The simulator this scheduler is running inside of.
- * @param name Unique name that this scheduler is known by for the purposes
- *        of jobs being assigned to.
- * @param contstantThinkTimes Map from workloadNames to constant times,
- *        in seconds, this scheduler uses to schedule each job.
- * @param perTaskThinkTimes Map from workloadNames to times, in seconds,
- *        this scheduler uses to schedule each task that is assigned to
- *        a scheduler of that name.
- * @param numMachineToBlackList a positive number representing how many
- *        machines (chosen randomly) this scheduler should ignore when
- *        making scheduling decisions.
- */
+  * A Scheduler maintains {@code Job}s submitted to it in a queue, and
+  * attempts to match those jobs with resources by making "job scheduling
+  * decisions", which take a certain amount of "scheduling time".
+  * A simulator is responsible for interacting with a Scheduler, e.g.,
+  * by deciding which workload types should be assigned to which scheduler.
+  * A Scheduler must accept Jobs associated with any workload type (workloads
+  * are identified by name), though it can do whatever it wants with those
+  * jobs, include, optionally, dropping them on the floor, or handling jobs
+  * from different workloads differently, which concretely, means taking
+  * a different amount of "scheuduling time" to schedule jobs from different
+  * workloads.
+  *
+  * @param simulator The simulator this scheduler is running inside of.
+  * @param name Unique name that this scheduler is known by for the purposes
+  *        of jobs being assigned to.
+  * @param contstantThinkTimes Map from workloadNames to constant times,
+  *        in seconds, this scheduler uses to schedule each job.
+  * @param perTaskThinkTimes Map from workloadNames to times, in seconds,
+  *        this scheduler uses to schedule each task that is assigned to
+  *        a scheduler of that name.
+  * @param numMachineToBlackList a positive number representing how many
+  *        machines (chosen randomly) this scheduler should ignore when
+  *        making scheduling decisions.
+  */
 abstract class Scheduler(val name: String,
                          constantThinkTimes: Map[String, Double],
                          perTaskThinkTimes: Map[String, Double],
@@ -420,7 +474,7 @@ abstract class Scheduler(val name: String,
   var numSuccessfulTaskTransactions: Int = 0
   var numFailedTaskTransactions: Int = 0
   var numNoResourcesFoundSchedulingAttempts: Int = 0
-  // When trying to place a task, count the number of machines we look at 
+  // When trying to place a task, count the number of machines we look at
   // that the task doesn't fit on. This is a sort of wasted work that
   // causes the simulation to go slow.
   var failedFindVictimAttempts: Int = 0
@@ -430,19 +484,21 @@ abstract class Scheduler(val name: String,
   val candidatePoolCache = HashMap[Int, IndexedSeq[Int]]()
   var totalUsefulTimeScheduling = 0.0 // in seconds
   var totalWastedTimeScheduling = 0.0 // in seconds
+  var totalWastedTimeSchedulingPowering = 0.0 // in seconds
   var firstAttemptUsefulTimeScheduling = 0.0 // in seconds
   var firstAttemptWastedTimeScheduling = 0.0 // in seconds
   var dailyUsefulTimeScheduling = HashMap[Int, Double]()
   var dailyWastedTimeScheduling = HashMap[Int, Double]()
+  var dailyWastedTimeSchedulingPowering = HashMap[Int, Double]()
+
   // Also track the time, in seconds, spent scheduling broken out by
   // workload type. Note that all Schedulers (even, e.g., SinglePath
   // schedulers) can handle jobs from multiple workload generators.
   var perWorkloadUsefulTimeScheduling = HashMap[String, Double]()
   var perWorkloadWastedTimeScheduling = HashMap[String, Double]()
+  var perWorkloadWastedTimeSchedulingPowering = HashMap[String, Double]()
   val randomNumberGenerator = new util.Random(Seed())
-  var pastJobs = new mutable.LinkedHashMap[Long, Tuple2[Double, Job]]()
-
-
+  var pastJobs = new mutable.LinkedHashMap[Long, Tuple3[Double, Job, Boolean]]()
 
   override
   def toString = {
@@ -451,7 +507,7 @@ abstract class Scheduler(val name: String,
 
   def checkRegistered = {
     assert(simulator != null, "You must assign a simulator to a " +
-                              "Scheduler before you can use it.")
+      "Scheduler before you can use it.")
   }
 
 
@@ -462,20 +518,20 @@ abstract class Scheduler(val name: String,
     // that workload type for this scheduler, even if this scheduler never
     // actually gets a chance to schedule a job of that type.
     perWorkloadUsefulTimeScheduling(job.workloadName) =
-        perWorkloadUsefulTimeScheduling.getOrElse(job.workloadName,0.0)
+      perWorkloadUsefulTimeScheduling.getOrElse(job.workloadName,0.0)
     perWorkloadWastedTimeScheduling(job.workloadName) =
-        perWorkloadWastedTimeScheduling.getOrElse(job.workloadName,0.0)
+      perWorkloadWastedTimeScheduling.getOrElse(job.workloadName,0.0)
     job.lastEnqueued = simulator.currentTime
-    pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job.copy()))
+    pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job.copy(), false))
   }
 
   /**
-   * Creates and applies ClaimDeltas for all available resources in the
-   * provided {@code cellState}. This is intended to leave no resources
-   * free in cellState, thus it doesn't use minCpu or minMem because that
-   * could lead to leaving fragmentation. I haven't thought through 
-   * very carefully if floating point math could cause a problem here.
-   */
+    * Creates and applies ClaimDeltas for all available resources in the
+    * provided {@code cellState}. This is intended to leave no resources
+    * free in cellState, thus it doesn't use minCpu or minMem because that
+    * could lead to leaving fragmentation. I haven't thought through
+    * very carefully if floating point math could cause a problem here.
+    */
   def scheduleAllAvailable(cellState: CellState,
                            locked: Boolean): Seq[ClaimDelta]  = {
     val claimDeltas = collection.mutable.ListBuffer[ClaimDelta]()
@@ -489,11 +545,11 @@ abstract class Scheduler(val name: String,
         //             since we want to represent offered resources, not
         //             tasks with these deltas.
         val claimDelta = new ClaimDelta(this,
-                                        mID,
-                                        cellState.machineSeqNums(mID),
-                                        -1.0,
-                                        cpusAvail,
-                                        memAvail)
+          mID,
+          cellState.machineSeqNums(mID),
+          -1.0,
+          cpusAvail,
+          memAvail)
         claimDelta.apply(cellState, locked)
         claimDeltas += claimDelta
       }
@@ -502,42 +558,42 @@ abstract class Scheduler(val name: String,
   }
 
   /**
-   * Given a job and a cellstate, find machines that the tasks of the
-   * job will fit into, and allocate the resources on that machine to
-   * those tasks, accounting those resoures to this scheduler, modifying
-   * the provided cellstate (by calling apply() on the created deltas).
-   *
-   * Implements the following randomized first fit scheduling algorithm:
-   * while(more machines in candidate pool and more tasks to schedule):
-   *   candidateMachine = random machine in pool
-   *   if(candidate machine can hold at least one of this jobs tasks):
-   *     create a delta assigning the task to that machine
-   *   else:
-   *     remove from candidate pool
-   *
-   * @param  machineBlackList an array of of machineIDs that should be
-   *                          ignored when scheduling (i.e. tasks will
-   *                          not be scheduled on any of them).
-   *
-   * @return List of deltas, one per task, so that the transactions can
-   *         be played on some other cellstate if desired.
-   */
+    * Given a job and a cellstate, find machines that the tasks of the
+    * job will fit into, and allocate the resources on that machine to
+    * those tasks, accounting those resoures to this scheduler, modifying
+    * the provided cellstate (by calling apply() on the created deltas).
+    *
+    * Implements the following randomized first fit scheduling algorithm:
+    * while(more machines in candidate pool and more tasks to schedule):
+    *   candidateMachine = random machine in pool
+    *   if(candidate machine can hold at least one of this jobs tasks):
+    *     create a delta assigning the task to that machine
+    *   else:
+    *     remove from candidate pool
+    *
+    * @param  machineBlackList an array of of machineIDs that should be
+    *                          ignored when scheduling (i.e. tasks will
+    *                          not be scheduled on any of them).
+    *
+    * @return List of deltas, one per task, so that the transactions can
+    *         be played on some other cellstate if desired.
+    */
   def scheduleJob(job: Job,
                   cellState: CellState): Seq[ClaimDelta] = {
     assert(simulator != null)
     assert(cellState != null)
     assert(job.cpusPerTask <= cellState.cpusPerMachine,
-           "Looking for machine with %f cpus, but machines only have %f cpus."
-           .format(job.cpusPerTask, cellState.cpusPerMachine))
+      "Looking for machine with %f cpus, but machines only have %f cpus."
+        .format(job.cpusPerTask, cellState.cpusPerMachine))
     assert(job.memPerTask <= cellState.memPerMachine,
-           "Looking for machine with %f mem, but machines only have %f mem."
-           .format(job.memPerTask, cellState.memPerMachine))
+      "Looking for machine with %f mem, but machines only have %f mem."
+        .format(job.memPerTask, cellState.memPerMachine))
     val claimDeltas = collection.mutable.ListBuffer[ClaimDelta]()
 
     // Cache candidate pools in this scheduler for performance improvements.
     var candidatePool =
-        candidatePoolCache.getOrElseUpdate(cellState.numberOfMachinesOn,
-                                           Array.range(0, cellState.numMachines))
+      candidatePoolCache.getOrElseUpdate(cellState.numberOfMachinesOn,
+        Array.range(0, cellState.numMachines))
 
     var numRemainingTasks = job.unscheduledTasks
     var remainingCandidates = math.max(0, cellState.numberOfMachinesOn - numMachinesToBlackList).toInt
@@ -573,7 +629,7 @@ abstract class Scheduler(val name: String,
 
   def isMultiPath: Boolean =
     constantThinkTimes.values.toSet.size > 1 ||
-    perTaskThinkTimes.values.toSet.size > 1
+      perTaskThinkTimes.values.toSet.size > 1
 
   def addDailyTimeScheduling(counter: HashMap[Int, Double],
                              timeScheduling: Double) = {
@@ -586,7 +642,7 @@ abstract class Scheduler(val name: String,
                                  timeScheduling: Double,
                                  isFirstSchedAttempt: Boolean): Unit = {
     assert(simulator != null, "This scheduler has not been added to a " +
-                              "simulator yet.")
+      "simulator yet.")
     // Scheduler level stats.
     totalUsefulTimeScheduling += timeScheduling
     addDailyTimeScheduling(dailyUsefulTimeScheduling, timeScheduling)
@@ -594,14 +650,33 @@ abstract class Scheduler(val name: String,
       firstAttemptUsefulTimeScheduling += timeScheduling
     }
     simulator.log("Recorded %f seconds of %s useful think time, total now: %f."
-                  .format(timeScheduling, name, totalUsefulTimeScheduling))
+      .format(timeScheduling, name, totalUsefulTimeScheduling))
     // Job/workload level stats.
     job.usefulTimeScheduling += timeScheduling
     simulator.log("Recorded %f seconds of job %s useful think time, total now: %f."
-                  .format(timeScheduling, job.id, simulator.workloads.filter(_.name == job.workloadName).head.totalJobUsefulThinkTimes))
+      .format(timeScheduling, job.id, simulator.workloads.filter(_.name == job.workloadName).head.totalJobUsefulThinkTimes))
     // Also track per-path (i.e., per workload) scheduling times
     perWorkloadUsefulTimeScheduling(job.workloadName) =
-        perWorkloadUsefulTimeScheduling.getOrElse(job.workloadName,0.0) +
+      perWorkloadUsefulTimeScheduling.getOrElse(job.workloadName,0.0) +
+        timeScheduling
+  }
+
+  def recordWastedTimeSchedulingPowering(job: Job,
+                                 timeScheduling: Double): Unit = {
+    assert(simulator != null, "This scheduler has not been added to a " +
+      "simulator yet.")
+    // Scheduler level stats.
+    totalWastedTimeSchedulingPowering += timeScheduling
+    addDailyTimeScheduling(dailyWastedTimeSchedulingPowering, timeScheduling)
+    simulator.log("Recorded %f seconds of %s wasted think time because of machines are turned off, total now: %f."
+      .format(timeScheduling, name, totalWastedTimeSchedulingPowering))
+    // Job/workload level stats.
+    job.wastedTimeSchedulingPowering += timeScheduling
+    simulator.log("Recorded %f seconds of job %s wasted think time because of machines are turned off, total now: %f."
+      .format(timeScheduling, job.id, simulator.workloads.filter(_.name == job.workloadName).head.totalJobWastedThinkTimesPowering))
+    // Also track per-path (i.e., per workload) scheduling times
+    perWorkloadWastedTimeSchedulingPowering(job.workloadName) =
+      perWorkloadWastedTimeSchedulingPowering.getOrElse(job.workloadName,0.0) +
         timeScheduling
   }
 
@@ -609,7 +684,7 @@ abstract class Scheduler(val name: String,
                                  timeScheduling: Double,
                                  isFirstSchedAttempt: Boolean): Unit = {
     assert(simulator != null, "This scheduler has not been added to a " +
-                              "simulator yet.")
+      "simulator yet.")
     // Scheduler level stats.
     totalWastedTimeScheduling += timeScheduling
     addDailyTimeScheduling(dailyWastedTimeScheduling, timeScheduling)
@@ -620,21 +695,21 @@ abstract class Scheduler(val name: String,
     job.wastedTimeScheduling += timeScheduling
     // Also track per-path (i.e., per workload) scheduling times
     perWorkloadWastedTimeScheduling(job.workloadName) =
-        perWorkloadWastedTimeScheduling.getOrElse(job.workloadName,0.0) +
+      perWorkloadWastedTimeScheduling.getOrElse(job.workloadName,0.0) +
         timeScheduling
   }
 
   /**
-   * Computes the time, in seconds, this scheduler requires to make
-   * a scheduling decision for {@code job}.
-   *
-   * @param job the job to determine this schedulers think time for
-   */
+    * Computes the time, in seconds, this scheduler requires to make
+    * a scheduling decision for {@code job}.
+    *
+    * @param job the job to determine this schedulers think time for
+    */
   def getThinkTime(job: Job): Double = {
     assert(constantThinkTimes.contains(job.workloadName))
     assert(perTaskThinkTimes.contains(job.workloadName))
     constantThinkTimes(job.workloadName) +
-        perTaskThinkTimes(job.workloadName) * job.unscheduledTasks.toFloat
+      perTaskThinkTimes(job.workloadName) * job.unscheduledTasks.toFloat
   }
 }
 
@@ -645,10 +720,10 @@ class ClaimDelta(val scheduler: Scheduler,
                  val cpus: Double,
                  val mem: Double) {
   /**
-   * Claim {@code cpus} and {@code mem} from {@code cellState}.
-   * Increments the sequenceNum of the machine with ID referenced
-   * by machineID.
-   */
+    * Claim {@code cpus} and {@code mem} from {@code cellState}.
+    * Increments the sequenceNum of the machine with ID referenced
+    * by machineID.
+    */
   def apply(cellState: CellState, locked: Boolean): Unit = {
     cellState.assignResources(scheduler, machineID, cpus, mem, locked)
     // Mark that the machine has changed, used for testing for conflicts
@@ -670,16 +745,16 @@ class CellState(val numMachines: Int,
                 val memPerMachine: Double,
                 val conflictMode: String,
                 val transactionMode: String,
-                 val powerOnTime : Double = 30.0,
-                 val powerOffTime : Double = 10.0) {
+                val powerOnTime : Double = 30.0,
+                val powerOffTime : Double = 10.0) {
   assert(conflictMode.equals("resource-fit") ||
-         conflictMode.equals("sequence-numbers"),
-         "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
-         "but it was %s.".format(conflictMode))
+    conflictMode.equals("sequence-numbers"),
+    "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
+      "but it was %s.".format(conflictMode))
   assert(transactionMode.equals("all-or-nothing") ||
-         transactionMode.equals("incremental"),
-         "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
-         "but it was %s.".format(conflictMode))
+    transactionMode.equals("incremental"),
+    "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
+      "but it was %s.".format(conflictMode))
   var simulator: ClusterSimulator = null
   // An array where value at position k is the total cpus that have been
   // allocated for machine k.
@@ -724,11 +799,10 @@ class CellState(val numMachines: Int,
     machinePowerState(machineID) == 0
   }
 
-  //FIXME: Probar a iniciar el estado e ir modificando estos números en los cambios de estado para mejorar la eficiencia
-  def numberOfMachinesOn = machinePowerState.toSeq.filter(_ == 1).length
-  def numberOfMachinesOff = machinePowerState.toSeq.filter(_ == 0).length
-  def numberOfMachinesTurningOn = machinePowerState.toSeq.filter(_ == 3).length
-  def numberOfMachinesTurningOff = machinePowerState.toSeq.filter(_ == 2).length
+  var numberOfMachinesOn = numMachines
+  var numberOfMachinesOff = 0
+  var numberOfMachinesTurningOn = 0
+  var numberOfMachinesTurningOff = 0
 
   def totalCpus = numMachines * cpusPerMachine
   def totalMem = numMachines * memPerMachine
@@ -736,51 +810,71 @@ class CellState(val numMachines: Int,
   def onMem = numberOfMachinesOn * memPerMachine
   def availableCpus = onCpus - (totalOccupiedCpus + totalLockedCpus)
   def availableMem = onMem - (totalOccupiedMem + totalLockedMem)
+  def numMachinesOccupied: Int = {
+    // FIXME: Teniendo en cuenta que una task siempre va a necesitar tanto CPU como RAM, con contar el número de máquinas que tienen cpus ocupados es suficiente
+    allocatedCpusPerMachine.count(_ > 0.0)
+  }
 
   def powerOnMachine(machineID: Int) = {
     if(machinePowerState(machineID)==0 || machinePowerState(machineID)==2){
+      if(machinePowerState(machineID)==0)
+        numberOfMachinesOff -= 1
+      else if (machinePowerState(machineID)==2)
+        numberOfMachinesTurningOff -= 1
       machinePowerState(machineID) = 3
+      numberOfMachinesTurningOn += 1
       if(powerOns(machineID) == null)
         powerOns(machineID) = mutable.Seq[Double]()
       powerOns(machineID) = powerOns(machineID) :+ simulator.currentTime
       simulator.afterDelay(powerOnTime){
+        numberOfMachinesTurningOn -= 1
         machinePowerState(machineID) = 1
+        numberOfMachinesOn += 1
       }
     }
+    assert(numberOfMachinesOff + numberOfMachinesOn + numberOfMachinesTurningOn + numberOfMachinesTurningOff == numMachines, "El número de máquinas no es correcto tras encender una máquina")
   }
 
   def powerOffMachine(machineID: Int) = {
     assert(allocatedCpusPerMachine(machineID) == 0.0 && allocatedMemPerMachine(machineID) == 0.0, ("Intentando apagar una máquina en uso con ID %d ").format(machineID))
     if(machinePowerState(machineID)==1 || machinePowerState(machineID)==3){
+      if(machinePowerState(machineID)==1)
+        numberOfMachinesOn -= 1
+      else if (machinePowerState(machineID)==3)
+        numberOfMachinesTurningOn -= 1
       machinePowerState(machineID) = 2
+      numberOfMachinesTurningOff += 1
       if(powerOffs(machineID) == null)
         powerOffs(machineID) = mutable.Seq[Double]()
       powerOffs(machineID) = powerOffs(machineID) :+ simulator.currentTime
       simulator.afterDelay(powerOffTime){
+        numberOfMachinesTurningOff -= 1
         machinePowerState(machineID) = 0
+        numberOfMachinesOff += 1
       }
     }
+    assert(numberOfMachinesOff + numberOfMachinesOn + numberOfMachinesTurningOn + numberOfMachinesTurningOff == numMachines, "El número de máquinas no es correcto tras apagar una máquina")
   }
 
   // Convenience methods to see how many cpus/mem are available on a machine.
   def availableCpusPerMachine(machineID: Int) = {
     assert(machineID <= allocatedCpusPerMachine.length - 1,
-           "There is no machine with ID %d.".format(machineID))
+      "There is no machine with ID %d.".format(machineID))
     cpusPerMachine - allocatedCpusPerMachine(machineID)
   }
   def availableMemPerMachine(machineID: Int) = {
     assert(machineID <= allocatedMemPerMachine.length - 1,
-           "There is no machine with ID %d.".format(machineID))
+      "There is no machine with ID %d.".format(machineID))
     memPerMachine - allocatedMemPerMachine(machineID)
   }
 
   /**
-   * Allocate resources on a machine to a scheduler.
-   *
-   * @param locked  Mark these resources as being pessimistically locked
-   *                (i.e. while they are offered as part of a Mesos
-   *                resource-offer).
-   */
+    * Allocate resources on a machine to a scheduler.
+    *
+    * @param locked  Mark these resources as being pessimistically locked
+    *                (i.e. while they are offered as part of a Mesos
+    *                resource-offer).
+    */
   def assignResources(scheduler: Scheduler,
                       machineID: Int,
                       cpus: Double,
@@ -813,23 +907,23 @@ class CellState(val numMachines: Int,
 
     // Also track the per machine resources available.
     assert(availableCpusPerMachine(machineID) >= cpus,
-           ("Scheduler %s (%d) tried to claim %f cpus on machine %d in cell " +
-            "state %d, but it only has %f unallocated cpus right now.")
-           .format(scheduler.name,
-                   scheduler.hashCode,
-                   cpus,
-                   machineID,
-                   hashCode(),
-                   availableCpusPerMachine(machineID)))
-    assert(availableMemPerMachine(machineID) >= mem, 
-           ("Scheduler %s (%d) tried to claim %f mem on machine %d in cell " +
-            "state %d, but it only has %f mem unallocated right now.")
-           .format(scheduler.name,
-                   scheduler.hashCode,
-                   mem,
-                   machineID,
-                   hashCode(),
-                   availableMemPerMachine(machineID)))
+      ("Scheduler %s (%d) tried to claim %f cpus on machine %d in cell " +
+        "state %d, but it only has %f unallocated cpus right now.")
+        .format(scheduler.name,
+          scheduler.hashCode,
+          cpus,
+          machineID,
+          hashCode(),
+          availableCpusPerMachine(machineID)))
+    assert(availableMemPerMachine(machineID) >= mem,
+      ("Scheduler %s (%d) tried to claim %f mem on machine %d in cell " +
+        "state %d, but it only has %f mem unallocated right now.")
+        .format(scheduler.name,
+          scheduler.hashCode,
+          mem,
+          machineID,
+          hashCode(),
+          availableMemPerMachine(machineID)))
     allocatedCpusPerMachine(machineID) += cpus
     allocatedMemPerMachine(machineID) += mem
   }
@@ -844,13 +938,13 @@ class CellState(val numMachines: Int,
       assert(lockedCpus.contains(scheduler.name))
       val safeToFreeCpus: Boolean = lockedCpus(scheduler.name) >= (cpus - 0.001)
       assert(safeToFreeCpus,
-             "%s tried to free %f cpus, but was only occupying %f."
-             .format(scheduler.name, cpus, lockedCpus(scheduler.name)))
+        "%s tried to free %f cpus, but was only occupying %f."
+          .format(scheduler.name, cpus, lockedCpus(scheduler.name)))
       assert(lockedMem.contains(scheduler.name))
       val safeToFreeMem: Boolean = lockedMem(scheduler.name) >= (mem - 0.001)
       assert(safeToFreeMem,
-             "%s tried to free %f mem, but was only occupying %f."
-             .format(scheduler.name, mem, lockedMem(scheduler.name)))
+        "%s tried to free %f mem, but was only occupying %f."
+          .format(scheduler.name, mem, lockedMem(scheduler.name)))
       lockedCpus(scheduler.name) = lockedCpus(scheduler.name) - cpus
       lockedMem(scheduler.name) = lockedMem(scheduler.name) - mem
       totalLockedCpus -= cpus
@@ -859,13 +953,13 @@ class CellState(val numMachines: Int,
       assert(occupiedCpus.contains(scheduler.name))
       val safeToFreeCpus: Boolean = occupiedCpus(scheduler.name) >= (cpus - 0.001)
       assert(safeToFreeCpus,
-             "%s tried to free %f cpus, but was only occupying %f."
-             .format(scheduler.name, cpus, occupiedCpus(scheduler.name)))
+        "%s tried to free %f cpus, but was only occupying %f."
+          .format(scheduler.name, cpus, occupiedCpus(scheduler.name)))
       assert(occupiedMem.contains(scheduler.name))
       val safeToFreeMem: Boolean = occupiedMem(scheduler.name) >= (mem - 0.001)
       assert(safeToFreeMem,
-             "%s tried to free %f mem, but was only occupying %f."
-             .format(scheduler.name, mem, occupiedMem(scheduler.name)))
+        "%s tried to free %f mem, but was only occupying %f."
+          .format(scheduler.name, mem, occupiedMem(scheduler.name)))
       occupiedCpus(scheduler.name) = occupiedCpus(scheduler.name) - cpus
       occupiedMem(scheduler.name) = occupiedMem(scheduler.name) - mem
       totalOccupiedCpus -= cpus
@@ -874,9 +968,9 @@ class CellState(val numMachines: Int,
 
     // Also track the per machine resources available.
     assert(availableCpusPerMachine(machineID) + cpus <=
-           cpusPerMachine + 0.000001)
+      cpusPerMachine + 0.000001)
     assert(availableMemPerMachine(machineID) + mem <=
-           memPerMachine + 0.000001)
+      memPerMachine + 0.000001)
     allocatedCpusPerMachine(machineID) -= cpus
     allocatedMemPerMachine(machineID) -= mem
     //TODO : Metemos la llamada a apagar máquinas
@@ -884,29 +978,29 @@ class CellState(val numMachines: Int,
   }
 
   /**
-   * Return a copy of this cell state in its current state.
-   */
+    * Return a copy of this cell state in its current state.
+    */
   def copy: CellState = {
     val newCellState = new CellState(numMachines,
-                                     cpusPerMachine,
-                                     memPerMachine,
-                                     conflictMode,
-                                     transactionMode)
+      cpusPerMachine,
+      memPerMachine,
+      conflictMode,
+      transactionMode)
     Array.copy(src = allocatedCpusPerMachine,
-               srcPos = 0,
-               dest = newCellState.allocatedCpusPerMachine,
-               destPos = 0,
-               length = numMachines)
+      srcPos = 0,
+      dest = newCellState.allocatedCpusPerMachine,
+      destPos = 0,
+      length = numMachines)
     Array.copy(src = allocatedMemPerMachine,
-               srcPos = 0,
-               dest = newCellState.allocatedMemPerMachine,
-               destPos = 0,
-               length = numMachines)
-    Array.copy(src = machineSeqNums, 
-               srcPos = 0,
-               dest = newCellState.machineSeqNums,
-               destPos = 0,
-               length = numMachines)
+      srcPos = 0,
+      dest = newCellState.allocatedMemPerMachine,
+      destPos = 0,
+      length = numMachines)
+    Array.copy(src = machineSeqNums,
+      srcPos = 0,
+      dest = newCellState.machineSeqNums,
+      destPos = 0,
+      length = numMachines)
     newCellState.occupiedCpus ++= occupiedCpus
     newCellState.occupiedMem ++= occupiedMem
     newCellState.lockedCpus ++= lockedCpus
@@ -922,8 +1016,8 @@ class CellState(val numMachines: Int,
                           conflictedDeltas: Seq[ClaimDelta])
 
   /**
-   *  Attempt to play the list of deltas, return any that conflicted.
-   */
+    *  Attempt to play the list of deltas, return any that conflicted.
+    */
   def commit(deltas: Seq[ClaimDelta],
              scheduleEndEvent: Boolean = false): CommitResult = {
     var rollback = false // Track if we need to rollback changes.
@@ -933,13 +1027,13 @@ class CellState(val numMachines: Int,
       deltas.foreach(d => {
         if (causesConflict(d)) {
           simulator.log("delta (%s mach-%d seqNum-%d) caused a conflict."
-                        .format(d.scheduler, d.machineID, d.machineSeqNum))
+            .format(d.scheduler, d.machineID, d.machineSeqNum))
           conflictDeltas += d
           if (transactionMode == "all-or-nothing") {
             rollback = true
             return
           } else if (transactionMode == "incremental") {
-            
+
           } else {
             sys.error("Invalid transactionMode.")
           }
@@ -959,8 +1053,8 @@ class CellState(val numMachines: Int,
         appliedDeltas -= d
       })
     }
-    
-    if (scheduleEndEvent) { 
+
+    if (scheduleEndEvent) {
       scheduleEndEvents(appliedDeltas)
     }
     new CommitResult(appliedDeltas, conflictDeltas)
@@ -974,32 +1068,32 @@ class CellState(val numMachines: Int,
       simulator.afterDelay(appliedDelta.duration) {
         appliedDelta.unApply(simulator.cellState)
         simulator.log(("A task started by scheduler %s finished. " +
-                       "Freeing %f cpus, %f mem. Available: %f cpus, %f mem.")
-                     .format(appliedDelta.scheduler.name,
-                             appliedDelta.cpus,
-                             appliedDelta.mem,
-                             availableCpus,
-                             availableMem))
+          "Freeing %f cpus, %f mem. Available: %f cpus, %f mem.")
+          .format(appliedDelta.scheduler.name,
+            appliedDelta.cpus,
+            appliedDelta.mem,
+            availableCpus,
+            availableMem))
       }
     })
   }
 
   /**
-   * Tests if this delta causes a transaction conflict.
-   * Different test scheme is used depending on conflictMode.
-   */
+    * Tests if this delta causes a transaction conflict.
+    * Different test scheme is used depending on conflictMode.
+    */
   def causesConflict(delta: ClaimDelta): Boolean = {
     conflictMode match {
       case "sequence-numbers" => {
         // Use machine sequence numbers to test for conflicts.
         if (delta.machineSeqNum != machineSeqNums(delta.machineID)) {
           simulator.log("Sequence-number conflict occurred " +
-                        "(sched-%s, mach-%d, seq-num-%d, cpus-%f, mem-%f)."
-                        .format(delta.scheduler,
-                                delta.machineID,
-                                delta.machineSeqNum,
-                                delta.cpus,
-                                delta.mem))
+            "(sched-%s, mach-%d, seq-num-%d, cpus-%f, mem-%f)."
+              .format(delta.scheduler,
+                delta.machineID,
+                delta.machineSeqNum,
+                delta.cpus,
+                delta.mem))
           true
         } else {
           false
@@ -1008,14 +1102,14 @@ class CellState(val numMachines: Int,
       case "resource-fit" => {
         // Check if the machine is currently short of resources,
         // regardless of whether sequence nums have changed.
-        if (availableCpusPerMachine(delta.machineID) < delta.cpus || 
-            availableMemPerMachine(delta.machineID) <  delta.mem) {
+        if (availableCpusPerMachine(delta.machineID) < delta.cpus ||
+          availableMemPerMachine(delta.machineID) <  delta.mem) {
           simulator.log("Resource-aware conflict occurred " +
-                        "(sched-%s, mach-%d, cpus-%f, mem-%f)."
-                        .format(delta.scheduler,
-                                delta.machineID,
-                                delta.cpus,
-                                delta.mem))
+            "(sched-%s, mach-%d, cpus-%f, mem-%f)."
+              .format(delta.scheduler,
+                delta.machineID,
+                delta.cpus,
+                delta.mem))
           true
         } else {
           false
@@ -1027,13 +1121,13 @@ class CellState(val numMachines: Int,
       }
     }
   }
-} 
+}
 
 /**
- * @param submitted   the time the job was submitted in seconds
- * @param cpus        number of cpus required by this job
- * @param ram         amount of ram, in GB, required by this job
- */
+  * @param submitted   the time the job was submitted in seconds
+  * @param cpus        number of cpus required by this job
+  * @param ram         amount of ram, in GB, required by this job
+  */
 case class Job(id: Long,
                submitted: Double,
                numTasks: Int,
@@ -1060,6 +1154,8 @@ case class Job(id: Long,
   var numTaskSchedulingAttempts: Long = 0
   var usefulTimeScheduling: Double = 0.0
   var wastedTimeScheduling: Double = 0.0
+  var wastedTimeSchedulingPowering: Double = 0.0
+  var turnOnRequests: Seq[Double] = Seq[Double]()
 
   def cpusStillNeeded: Double = cpusPerTask * unscheduledTasks
   def memStillNeeded: Double = memPerTask * unscheduledTasks
@@ -1074,7 +1170,7 @@ case class Job(id: Long,
       val maxTasksThatWillFitByCpu = math.round(cpusChoppedToTaskSize / cpusPerTask)
       val maxTasksThatWillFitByMem = math.round(memChoppedToTaskSize / memPerTask)
       val maxTasksThatWillFit = math.min(maxTasksThatWillFitByCpu,
-                                         maxTasksThatWillFitByMem)
+        maxTasksThatWillFitByMem)
       math.min(unscheduledTasks, maxTasksThatWillFit.toInt)
     }
   }
@@ -1092,12 +1188,12 @@ case class Job(id: Long,
 }
 
 /**
- * A class that holds a list of jobs, each of which is used to record
- * statistics during a run of the simulator.
- *
- * Keep track of avgJobInterarrivalTime for easy reference later when
- * ExperimentRunner wants to record it in experiment result protos.
- */
+  * A class that holds a list of jobs, each of which is used to record
+  * statistics during a run of the simulator.
+  *
+  * Keep track of avgJobInterarrivalTime for easy reference later when
+  * ExperimentRunner wants to record it in experiment result protos.
+  */
 class Workload(val name: String,
                private val jobs: ListBuffer[Job] = ListBuffer()) {
   def getJobs: Seq[Job] = jobs.toSeq
@@ -1122,6 +1218,7 @@ class Workload(val name: String,
 
   def totalJobUsefulThinkTimes: Double = jobs.map(_.usefulTimeScheduling).sum
   def totalJobWastedThinkTimes: Double = jobs.map(_.wastedTimeScheduling).sum
+  def totalJobWastedThinkTimesPowering: Double = jobs.map(_.wastedTimeSchedulingPowering).sum
 
   def avgJobInterarrivalTime: Double = {
     val submittedTimesArray = new Array[Double](jobs.length)
@@ -1183,15 +1280,15 @@ class Workload(val name: String,
     if (scheduled.length > 0) {
       val queueTimesArray = new Array[Double](scheduled.length)
       scheduled.map(_.timeInQueueTillFirstScheduled)
-               .copyToArray(queueTimesArray)
+        .copyToArray(queueTimesArray)
       util.Sorting.quickSort(queueTimesArray)
       val result =
-          queueTimesArray(((queueTimesArray.length-1) * percentile).toInt)
+        queueTimesArray(((queueTimesArray.length-1) * percentile).toInt)
       println(("Looking up job queue time till first scheduled " +
-               "percentile value at position %d of %d: %f.")
-              .format(((queueTimesArray.length) * percentile).toInt,
-                      queueTimesArray.length,
-                      result))
+        "percentile value at position %d of %d: %f.")
+        .format(((queueTimesArray.length) * percentile).toInt,
+          queueTimesArray.length,
+          result))
       result
     } else {
       -1.0
@@ -1204,14 +1301,14 @@ class Workload(val name: String,
     if (scheduled.length > 0) {
       val queueTimesArray = new Array[Double](scheduled.length)
       scheduled.map(_.timeInQueueTillFullyScheduled)
-               .copyToArray(queueTimesArray)
+        .copyToArray(queueTimesArray)
       util.Sorting.quickSort(queueTimesArray)
       val result = queueTimesArray(((queueTimesArray.length-1) * 0.9).toInt)
       println(("Looking up job queue time till fully scheduled " +
-               "percentile value at position %d of %d: %f.")
-              .format(((queueTimesArray.length) * percentile).toInt,
-                      queueTimesArray.length,
-                      result))
+        "percentile value at position %d of %d: %f.")
+        .format(((queueTimesArray.length) * percentile).toInt,
+          queueTimesArray.length,
+          result))
       result
     } else {
       -1.0
@@ -1221,10 +1318,10 @@ class Workload(val name: String,
   def numSchedulingAttemptsPercentile(percentile: Double): Double = {
     assert(percentile <= 1.0 && percentile >= 0)
     println("largest 200 job scheduling attempt counts: " +
-            jobs.map(_.numSchedulingAttempts)
-                .sorted
-                .takeRight(200)
-                .mkString(","))
+      jobs.map(_.numSchedulingAttempts)
+        .sorted
+        .takeRight(200)
+        .mkString(","))
     val scheduled = jobs.filter(_.numSchedulingAttempts > 0)
     if (scheduled.length > 0) {
       val schedulingAttemptsArray = new Array[Long](scheduled.length)
@@ -1232,10 +1329,10 @@ class Workload(val name: String,
       util.Sorting.quickSort(schedulingAttemptsArray)
       val result = schedulingAttemptsArray(((schedulingAttemptsArray.length-1) * 0.9).toInt)
       println(("Looking up num job scheduling attempts " +
-               "percentile value at position %d of %d: %d.")
-              .format(((schedulingAttemptsArray.length) * percentile).toInt,
-                      schedulingAttemptsArray.length,
-                      result))
+        "percentile value at position %d of %d: %d.")
+        .format(((schedulingAttemptsArray.length) * percentile).toInt,
+          schedulingAttemptsArray.length,
+          result))
       result
     } else {
       -1.0
@@ -1245,10 +1342,10 @@ class Workload(val name: String,
   def numTaskSchedulingAttemptsPercentile(percentile: Double): Double = {
     assert(percentile <= 1.0 && percentile >= 0)
     println("largest 200 task scheduling attempt counts: " +
-            jobs.map(_.numTaskSchedulingAttempts)
-                .sorted
-                .takeRight(200)
-                .mkString(","))
+      jobs.map(_.numTaskSchedulingAttempts)
+        .sorted
+        .takeRight(200)
+        .mkString(","))
     val scheduled = jobs.filter(_.numTaskSchedulingAttempts > 0)
     if (scheduled.length > 0) {
       val taskSchedulingAttemptsArray = new Array[Long](scheduled.length)
@@ -1256,10 +1353,10 @@ class Workload(val name: String,
       util.Sorting.quickSort(taskSchedulingAttemptsArray)
       val result = taskSchedulingAttemptsArray(((taskSchedulingAttemptsArray.length-1) * 0.9).toInt)
       println(("Looking up num task scheduling attempts " +
-               "percentile value at position %d of %d: %d.")
-              .format(((taskSchedulingAttemptsArray.length) * percentile).toInt,
-                      taskSchedulingAttemptsArray.length,
-                      result))
+        "percentile value at position %d of %d: %d.")
+        .format(((taskSchedulingAttemptsArray.length) * percentile).toInt,
+          taskSchedulingAttemptsArray.length,
+          result))
       result
     } else {
       -1.0
@@ -1273,12 +1370,12 @@ case class WorkloadDesc(cell: String,
                         workloadGenerators: List[WorkloadGenerator],
                         cellStateDesc: CellStateDesc,
                         prefillWorkloadGenerators: List[WorkloadGenerator] =
-                            List[WorkloadGenerator]()) {
+                        List[WorkloadGenerator]()) {
   assert(!cell.contains(" "), "Cell names cannot have spaces in them.")
   assert(!assignmentPolicy.contains(" "),
-         "Assignment policies cannot have spaces in them.")
+    "Assignment policies cannot have spaces in them.")
   assert(prefillWorkloadGenerators.length ==
-         prefillWorkloadGenerators.map(_.workloadName).toSet.size)
+    prefillWorkloadGenerators.map(_.workloadName).toSet.size)
 }
 
 object UniqueIDGenerator {
@@ -1290,33 +1387,33 @@ object UniqueIDGenerator {
 }
 
 /**
- * A threadsafe Workload factory.
- */
+  * A threadsafe Workload factory.
+  */
 trait WorkloadGenerator {
   val workloadName: String
   /**
-   * Generate a workload using this workloadGenerator's parameters
-   * The timestamps of the jobs in this workload should fall in the range
-   * [0, timeWindow].
-   *
-   * @param maxCpus The maximum number of cpus that the workload returned
-   *                can contain.
-   * @param maxMem The maximum amount of mem that the workload returned
-   *                can contain.
-   * @param updatedAvgJobInterarrivalTime if non-None, then the interarrival
-   *                                      times of jobs in the workload returned
-   *                                      will be approximately this value.
-   */
+    * Generate a workload using this workloadGenerator's parameters
+    * The timestamps of the jobs in this workload should fall in the range
+    * [0, timeWindow].
+    *
+    * @param maxCpus The maximum number of cpus that the workload returned
+    *                can contain.
+    * @param maxMem The maximum amount of mem that the workload returned
+    *                can contain.
+    * @param updatedAvgJobInterarrivalTime if non-None, then the interarrival
+    *                                      times of jobs in the workload returned
+    *                                      will be approximately this value.
+    */
   def newWorkload(timeWindow: Double,
                   maxCpus: Option[Double] = None,
                   maxMem: Option[Double] = None,
                   updatedAvgJobInterarrivalTime: Option[Double] = None)
-                 : Workload 
+  : Workload
 }
 
 /**
- * Generates jobs at a uniform rate, of a uniform size.
- */
+  * Generates jobs at a uniform rate, of a uniform size.
+  */
 class UniformWorkloadGenerator(val workloadName: String,
                                initJobInterarrivalTime: Double,
                                tasksPerJob: Int,
@@ -1324,25 +1421,25 @@ class UniformWorkloadGenerator(val workloadName: String,
                                cpusPerTask: Double,
                                memPerTask: Double,
                                isRigid: Boolean = false)
-                              extends WorkloadGenerator {
+  extends WorkloadGenerator {
   def newJob(submissionTime: Double): Job = {
     Job(UniqueIDGenerator.getUniqueID(),
-        submissionTime,
-        tasksPerJob,
-        jobDuration,
-        workloadName,
-        cpusPerTask,
-        memPerTask,
-        isRigid)
+      submissionTime,
+      tasksPerJob,
+      jobDuration,
+      workloadName,
+      cpusPerTask,
+      memPerTask,
+      isRigid)
   }
   def newWorkload(timeWindow: Double,
                   maxCpus: Option[Double] = None,
                   maxMem: Option[Double] = None,
                   updatedAvgJobInterarrivalTime: Option[Double] = None)
-                 : Workload = this.synchronized {
+  : Workload = this.synchronized {
     assert(timeWindow >= 0)
     val jobInterarrivalTime = updatedAvgJobInterarrivalTime
-                              .getOrElse(initJobInterarrivalTime)
+      .getOrElse(initJobInterarrivalTime)
     val workload = new Workload(workloadName)
     var nextJobSubmissionTime = 0.0
     while (nextJobSubmissionTime < timeWindow) {
@@ -1356,27 +1453,27 @@ class UniformWorkloadGenerator(val workloadName: String,
 }
 
 /**
- * A thread-safe Workload factory. Generates workloads with jobs that have
- * interarrival rates, numTasks, and lengths sampled from exponential
- * distributions. Assumes that all tasks in a job are identical
- * (and so no per-task data is required).
- * @param workloadName the name that will be assigned to Workloads produced by
- *                     this factory, and to the tasks they contain.
- * @param initAvgJobInterarrivalTime initial average inter-arrival time in
- *                                   seconds. This can be overriden by passing
- *                                   a non None value for
- *                                   updatedAvgJobInterarrivalTime to
- *                                   newWorkload().
- */
+  * A thread-safe Workload factory. Generates workloads with jobs that have
+  * interarrival rates, numTasks, and lengths sampled from exponential
+  * distributions. Assumes that all tasks in a job are identical
+  * (and so no per-task data is required).
+  * @param workloadName the name that will be assigned to Workloads produced by
+  *                     this factory, and to the tasks they contain.
+  * @param initAvgJobInterarrivalTime initial average inter-arrival time in
+  *                                   seconds. This can be overriden by passing
+  *                                   a non None value for
+  *                                   updatedAvgJobInterarrivalTime to
+  *                                   newWorkload().
+  */
 class ExpExpExpWorkloadGenerator(val workloadName: String,
                                  initAvgJobInterarrivalTime: Double,
                                  avgTasksPerJob: Double,
                                  avgJobDuration: Double,
                                  avgCpusPerTask: Double,
                                  avgMemPerTask: Double)
-                                extends WorkloadGenerator{
+  extends WorkloadGenerator{
   val numTasksGenerator =
-      new ExponentialDistributionImpl(avgTasksPerJob.toFloat)
+    new ExponentialDistributionImpl(avgTasksPerJob.toFloat)
   val durationGenerator = new ExponentialDistributionImpl(avgJobDuration)
 
   def newJob(submissionTime: Double): Job = {
@@ -1385,33 +1482,33 @@ class ExpExpExpWorkloadGenerator(val workloadName: String,
     while (dur <= 0.0)
       dur = durationGenerator.sample()
     Job(UniqueIDGenerator.getUniqueID(),
-        submissionTime,
-        // Use ceil to avoid jobs with 0 tasks.
-        math.ceil(numTasksGenerator.sample().toFloat).toInt,
-        dur,
-        workloadName,
-        avgCpusPerTask,
-        avgMemPerTask)
+      submissionTime,
+      // Use ceil to avoid jobs with 0 tasks.
+      math.ceil(numTasksGenerator.sample().toFloat).toInt,
+      dur,
+      workloadName,
+      avgCpusPerTask,
+      avgMemPerTask)
   }
 
   /**
-   * Synchronized so that Experiments, which can share this WorkloadGenerator,
-   * can safely call newWorkload concurrently.
-   */
+    * Synchronized so that Experiments, which can share this WorkloadGenerator,
+    * can safely call newWorkload concurrently.
+    */
   def newWorkload(timeWindow: Double,
                   maxCpus: Option[Double] = None,
                   maxMem: Option[Double] = None,
                   updatedAvgJobInterarrivalTime: Option[Double] = None)
-                 : Workload = this.synchronized {
+  : Workload = this.synchronized {
     assert(maxCpus == None)
     assert(maxMem == None)
     assert(timeWindow >= 0)
     // Create the job-interarrival-time number generator using the
     // parameter passed in, if any, else use the default parameter.
     val avgJobInterarrivalTime =
-        updatedAvgJobInterarrivalTime.getOrElse(initAvgJobInterarrivalTime)
+      updatedAvgJobInterarrivalTime.getOrElse(initAvgJobInterarrivalTime)
     var interarrivalTimeGenerator =
-        new ExponentialDistributionImpl(avgJobInterarrivalTime)
+      new ExponentialDistributionImpl(avgJobInterarrivalTime)
     val workload = new Workload(workloadName)
     // create a new list of jobs for the experiment runTime window
     // using the current WorkloadGenerator.
@@ -1427,19 +1524,19 @@ class ExpExpExpWorkloadGenerator(val workloadName: String,
 }
 
 /**
- * An object for building and caching emperical distributions
- * from traces. Caches them because they are expensive to build
- * (require reading from disk) and are re-used between different
- * experiments.
- */
+  * An object for building and caching emperical distributions
+  * from traces. Caches them because they are expensive to build
+  * (require reading from disk) and are re-used between different
+  * experiments.
+  */
 object DistCache {
   val distributions =
-      collection.mutable.Map[(String, String), Array[Double]]()
+    collection.mutable.Map[(String, String), Array[Double]]()
 
   def getDistribution(workloadName: String,
                       traceFileName: String): Array[Double] = {
     distributions.getOrElseUpdate((workloadName, traceFileName),
-                                  buildDist(workloadName, traceFileName))
+      buildDist(workloadName, traceFileName))
   }
 
   def buildDist(workloadName: String, traceFileName: String): Array[Double] = {
@@ -1448,7 +1545,7 @@ object DistCache {
     val refDistribution = new Array[Double](1001)
 
     println(("Reading tracefile %s and building distribution of " +
-            "job data points based on it.").format(traceFileName))
+      "job data points based on it.").format(traceFileName))
     val traceSrc = io.Source.fromFile(traceFileName)
     val lines = traceSrc.getLines()
     var realDataSum: Double = 0.0
@@ -1459,22 +1556,22 @@ object DistCache {
       // val cell: Double = parsedLine(1).toDouble
       // val allocationPolicy: String = parsedLine(2)
       val isServiceJob: Boolean = if(parsedLine(2).equals("1")) {true}
-                                  else {false}
+      else {false}
       val dataPoint: Double = parsedLine(3).toDouble
       // Add the job to this workload if its job type is the same as
       // this generator's, which we determine based on workloadName.
       if ((isServiceJob && workloadName.equals("Service")) ||
-          (!isServiceJob && workloadName.equals("Batch"))) {
+        (!isServiceJob && workloadName.equals("Batch"))) {
         dataPoints.append(dataPoint)
         realDataSum += dataPoint
       }
     })
     assert(dataPoints.length > 0,
-           "Trace file must contain at least one data point.")
+      "Trace file must contain at least one data point.")
     println(("Done reading tracefile of %d jobs, average of real data " +
-             "points was %f. Now constructing distribution.")
-            .format(dataPoints.length,
-                    realDataSum/dataPoints.length))
+      "points was %f. Now constructing distribution.")
+      .format(dataPoints.length,
+        realDataSum/dataPoints.length))
     val dataPointsArray = dataPoints.toArray
     util.Sorting.quickSort(dataPointsArray)
     for (i <- 0 to 1000) {
@@ -1492,13 +1589,13 @@ object DistCache {
 }
 
 /**
- * A thread-safe Workload factory. Generates workloads with jobs that have
- * sizes and lengths sampled from exponential distributions. Assumes that
- * all tasks in a job are identical, so no per-task data is required.
- * Generates interarrival times by sampling from an emperical distribution
- * built from a tracefile containing the interarrival times of jobs
- * in a real cluster.
- */
+  * A thread-safe Workload factory. Generates workloads with jobs that have
+  * sizes and lengths sampled from exponential distributions. Assumes that
+  * all tasks in a job are identical, so no per-task data is required.
+  * Generates interarrival times by sampling from an emperical distribution
+  * built from a tracefile containing the interarrival times of jobs
+  * in a real cluster.
+  */
 class InterarrivalTimeTraceExpExpWLGenerator(val workloadName: String,
                                              traceFileName: String,
                                              avgTasksPerJob: Double,
@@ -1507,25 +1604,25 @@ class InterarrivalTimeTraceExpExpWLGenerator(val workloadName: String,
                                              avgMemPerTask: Double,
                                              maxCpusPerTask: Double,
                                              maxMemPerTask: Double)
-                                            extends WorkloadGenerator {
+  extends WorkloadGenerator {
   assert(workloadName.equals("Batch") || workloadName.equals("Service"))
   // Build the distribution from the input trace textfile that we'll
   // use to generate random job interarrival times.
   val interarrivalTimes = new collection.mutable.ListBuffer[Double]()
   var refDistribution: Array[Double] =
-      DistCache.getDistribution(workloadName, traceFileName)
+    DistCache.getDistribution(workloadName, traceFileName)
 
   val numTasksGenerator =
-      new ExponentialDistributionImpl(avgTasksPerJob.toFloat)
+    new ExponentialDistributionImpl(avgTasksPerJob.toFloat)
   val durationGenerator = new ExponentialDistributionImpl(avgJobDuration)
   val cpusPerTaskGenerator =
-      new ExponentialDistributionImpl(avgCpusPerTask)
+    new ExponentialDistributionImpl(avgCpusPerTask)
   val memPerTaskGenerator = new ExponentialDistributionImpl(avgMemPerTask)
   val randomNumberGenerator = new util.Random(Seed())
 
   /**
-   * @param value quantile [0, 1] representing distribution quantile to return.
-   */
+    * @param value quantile [0, 1] representing distribution quantile to return.
+    */
   def getInterarrivalTime(value: Double): Double = {
     // Look up the two closest quantiles and interpolate.
     assert(value >= 0 || value <=1, "value must be >= 0 and <= 1.")
@@ -1536,7 +1633,7 @@ class InterarrivalTimeTraceExpExpWLGenerator(val workloadName: String,
     } else {
       val below = refDistribution(math.floor(rawIndex).toInt)
       val above = refDistribution(math.ceil(rawIndex).toInt)
-      return below + interpAmount * (below + above) 
+      return below + interpAmount * (below + above)
     }
   }
 
@@ -1555,20 +1652,20 @@ class InterarrivalTimeTraceExpExpWLGenerator(val workloadName: String,
       memPerTask = memPerTaskGenerator.sample()
     }
     Job(UniqueIDGenerator.getUniqueID(),
-        submissionTime,
-        // Use ceil to avoid jobs with 0 tasks.
-        math.ceil(numTasksGenerator.sample().toFloat).toInt,
-        dur,
-        workloadName,
-        cpusPerTask,
-        memPerTask)
+      submissionTime,
+      // Use ceil to avoid jobs with 0 tasks.
+      math.ceil(numTasksGenerator.sample().toFloat).toInt,
+      dur,
+      workloadName,
+      cpusPerTask,
+      memPerTask)
   }
 
   def newWorkload(timeWindow: Double,
                   maxCpus: Option[Double] = None,
                   maxMem: Option[Double] = None,
                   updatedAvgJobInterarrivalTime: Option[Double] = None)
-                 : Workload = this.synchronized {
+  : Workload = this.synchronized {
     assert(updatedAvgJobInterarrivalTime == None)
     assert(timeWindow >= 0)
     assert(maxCpus == None)
@@ -1591,12 +1688,12 @@ class InterarrivalTimeTraceExpExpWLGenerator(val workloadName: String,
 }
 
 /**
- * A thread-safe Workload factory. Generates workloads with jobs that have
- * numTasks, duration, and interarrival_time set by sampling from an emperical
- * distribution built from a tracefile containing the interarrival times of
- * jobs in a real cluster. Task shapes are drawn from exponential distibutions.
- * All tasks in a job are identical, so no per-task data is required.
- */
+  * A thread-safe Workload factory. Generates workloads with jobs that have
+  * numTasks, duration, and interarrival_time set by sampling from an emperical
+  * distribution built from a tracefile containing the interarrival times of
+  * jobs in a real cluster. Task shapes are drawn from exponential distibutions.
+  * All tasks in a job are identical, so no per-task data is required.
+  */
 class TraceWLGenerator(val workloadName: String,
                        interarrivalTraceFileName: String,
                        tasksPerJobTraceFileName: String,
@@ -1605,24 +1702,24 @@ class TraceWLGenerator(val workloadName: String,
                        avgMemPerTask: Double,
                        maxCpusPerTask: Double,
                        maxMemPerTask: Double)
-                      extends WorkloadGenerator {
+  extends WorkloadGenerator {
   assert(workloadName.equals("Batch") || workloadName.equals("Service"))
   // Build the distributions from the input trace textfile that we'll
   // use to generate random job interarrival times.
   var interarrivalDist: Array[Double] =
-      DistCache.getDistribution(workloadName, interarrivalTraceFileName)
+    DistCache.getDistribution(workloadName, interarrivalTraceFileName)
   var tasksPerJobDist: Array[Double] =
-      DistCache.getDistribution(workloadName, tasksPerJobTraceFileName)
+    DistCache.getDistribution(workloadName, tasksPerJobTraceFileName)
   var jobDurationDist: Array[Double] =
-      DistCache.getDistribution(workloadName, jobDurationTraceFileName)
+    DistCache.getDistribution(workloadName, jobDurationTraceFileName)
   val cpusPerTaskGenerator =
-      new ExponentialDistributionImpl(avgCpusPerTask)
+    new ExponentialDistributionImpl(avgCpusPerTask)
   val memPerTaskGenerator = new ExponentialDistributionImpl(avgMemPerTask)
   val randomNumberGenerator = new util.Random(Seed())
 
   /**
-   * @param value [0, 1] representing distribution quantile to return.
-   */
+    * @param value [0, 1] representing distribution quantile to return.
+    */
   def getQuantile(empDistribution: Array[Double],
                   value: Double): Double = {
     // Look up the two closest quantiles and interpolate.
@@ -1634,7 +1731,7 @@ class TraceWLGenerator(val workloadName: String,
     } else {
       val below = empDistribution(math.floor(rawIndex).toInt)
       val above = empDistribution(math.ceil(rawIndex).toInt)
-      return below + interpAmount * (below + above) 
+      return below + interpAmount * (below + above)
     }
   }
 
@@ -1645,7 +1742,7 @@ class TraceWLGenerator(val workloadName: String,
       dur = getQuantile(jobDurationDist, randomNumberGenerator.nextFloat)
     // Use ceil to avoid jobs with 0 tasks.
     val numTasks =
-        math.ceil(getQuantile(tasksPerJobDist, randomNumberGenerator.nextFloat).toFloat).toInt
+      math.ceil(getQuantile(tasksPerJobDist, randomNumberGenerator.nextFloat).toFloat).toInt
     assert(numTasks != 0, "Jobs must have at least one task.")
     // Sample until we get task cpu and mem sizes that are small enough.
     var cpusPerTask = cpusPerTaskGenerator.sample()
@@ -1657,19 +1754,19 @@ class TraceWLGenerator(val workloadName: String,
       memPerTask = memPerTaskGenerator.sample()
     }
     Job(UniqueIDGenerator.getUniqueID(),
-        submissionTime,
-        numTasks,
-        dur,
-        workloadName,
-        cpusPerTask,
-        memPerTask)
+      submissionTime,
+      numTasks,
+      dur,
+      workloadName,
+      cpusPerTask,
+      memPerTask)
   }
 
   def newWorkload(timeWindow: Double,
                   maxCpus: Option[Double] = None,
                   maxMem: Option[Double] = None,
                   updatedAvgJobInterarrivalTime: Option[Double] = None)
-                 : Workload = this.synchronized {
+  : Workload = this.synchronized {
     assert(updatedAvgJobInterarrivalTime == None)
     assert(timeWindow >= 0)
     assert(maxCpus == None)
@@ -1698,41 +1795,41 @@ class TraceWLGenerator(val workloadName: String,
 }
 
 /**
- * A thread-safe Workload factory. Generates workloads with jobs that have
- * numTasks, duration, and interarrival_time set by sampling from an emperical
- * distribution built from a tracefile containing the interarrival times of
- * jobs in a real cluster. Task shapes are drawn from empirical distibutions
- * built from a prefill trace file. All tasks in a job are identical, so no
- * per-task data is required.
- */
+  * A thread-safe Workload factory. Generates workloads with jobs that have
+  * numTasks, duration, and interarrival_time set by sampling from an emperical
+  * distribution built from a tracefile containing the interarrival times of
+  * jobs in a real cluster. Task shapes are drawn from empirical distibutions
+  * built from a prefill trace file. All tasks in a job are identical, so no
+  * per-task data is required.
+  */
 class TraceAllWLGenerator(val workloadName: String,
-                       interarrivalTraceFileName: String,
-                       tasksPerJobTraceFileName: String,
-                       jobDurationTraceFileName: String,
-                       prefillTraceFileName: String,
-                       maxCpusPerTask: Double,
-                       maxMemPerTask: Double)
-                      extends WorkloadGenerator {
+                          interarrivalTraceFileName: String,
+                          tasksPerJobTraceFileName: String,
+                          jobDurationTraceFileName: String,
+                          prefillTraceFileName: String,
+                          maxCpusPerTask: Double,
+                          maxMemPerTask: Double)
+  extends WorkloadGenerator {
   assert(workloadName.equals("Batch") || workloadName.equals("Service"))
   // Build the distributions from the input trace textfile that we'll
   // use to generate random job interarrival times.
   var interarrivalDist: Array[Double] =
-      DistCache.getDistribution(workloadName, interarrivalTraceFileName)
+    DistCache.getDistribution(workloadName, interarrivalTraceFileName)
   var tasksPerJobDist: Array[Double] =
-      DistCache.getDistribution(workloadName, tasksPerJobTraceFileName)
+    DistCache.getDistribution(workloadName, tasksPerJobTraceFileName)
   var jobDurationDist: Array[Double] =
-      DistCache.getDistribution(workloadName, jobDurationTraceFileName)
+    DistCache.getDistribution(workloadName, jobDurationTraceFileName)
   val cpusPerTaskDist: Array[Double] =
-      PrefillJobListsCache.getCpusPerTaskDistribution(workloadName,
-                                                      prefillTraceFileName)
+    PrefillJobListsCache.getCpusPerTaskDistribution(workloadName,
+      prefillTraceFileName)
   val memPerTaskDist: Array[Double] =
-      PrefillJobListsCache.getMemPerTaskDistribution(workloadName,
-                                                     prefillTraceFileName)
+    PrefillJobListsCache.getMemPerTaskDistribution(workloadName,
+      prefillTraceFileName)
   val randomNumberGenerator = new util.Random(Seed())
 
   /**
-   * @param value [0, 1] representing distribution quantile to return.
-   */
+    * @param value [0, 1] representing distribution quantile to return.
+    */
   def getQuantile(empDistribution: Array[Double],
                   value: Double): Double = {
     // Look up the two closest quantiles and interpolate.
@@ -1744,7 +1841,7 @@ class TraceAllWLGenerator(val workloadName: String,
     } else {
       val below = empDistribution(math.floor(rawIndex).toInt)
       val above = empDistribution(math.ceil(rawIndex).toInt)
-      return below + interpAmount * (below + above) 
+      return below + interpAmount * (below + above)
     }
   }
 
@@ -1755,37 +1852,37 @@ class TraceAllWLGenerator(val workloadName: String,
       dur = getQuantile(jobDurationDist, randomNumberGenerator.nextFloat)
     // Use ceil to avoid jobs with 0 tasks.
     val numTasks = math.ceil(getQuantile(tasksPerJobDist,
-                             randomNumberGenerator.nextFloat).toFloat).toInt
+      randomNumberGenerator.nextFloat).toFloat).toInt
     assert(numTasks != 0, "Jobs must have at least one task.")
     // Sample from the empirical distribution until we get task
     // cpu and mem sizes that are small enough.
     var cpusPerTask = 0.7 * getQuantile(cpusPerTaskDist,
-                                  randomNumberGenerator.nextFloat).toFloat
+      randomNumberGenerator.nextFloat).toFloat
     while (cpusPerTask >= maxCpusPerTask) {
       cpusPerTask = 0.7 * getQuantile(cpusPerTaskDist,
-                                randomNumberGenerator.nextFloat).toFloat
+        randomNumberGenerator.nextFloat).toFloat
     }
     var memPerTask = 0.7 * getQuantile(memPerTaskDist,
-                                 randomNumberGenerator.nextFloat).toFloat
+      randomNumberGenerator.nextFloat).toFloat
     while (memPerTask >= maxMemPerTask) {
       memPerTask = 0.7 * getQuantile(memPerTaskDist,
-                               randomNumberGenerator.nextFloat).toFloat
+        randomNumberGenerator.nextFloat).toFloat
     }
     // println("cpusPerTask is %f, memPerTask %f.".format(cpusPerTask, memPerTask))
     Job(UniqueIDGenerator.getUniqueID(),
-        submissionTime,
-        numTasks,
-        dur,
-        workloadName,
-        cpusPerTask,
-        memPerTask)
+      submissionTime,
+      numTasks,
+      dur,
+      workloadName,
+      cpusPerTask,
+      memPerTask)
   }
 
   def newWorkload(timeWindow: Double,
                   maxCpus: Option[Double] = None,
                   maxMem: Option[Double] = None,
                   updatedAvgJobInterarrivalTime: Option[Double] = None)
-                 : Workload = this.synchronized {
+  : Workload = this.synchronized {
     assert(timeWindow >= 0)
     assert(maxCpus == None)
     assert(maxMem == None)
@@ -1799,7 +1896,7 @@ class TraceAllWLGenerator(val workloadName: String,
     // create a new list of jobs for the experiment runTime window
     // using the current WorkloadGenerator.
     var nextJobSubmissionTime = getQuantile(interarrivalDist,
-                                            randomNumberGenerator.nextFloat)
+      randomNumberGenerator.nextFloat)
     var numJobs = 0
     while (nextJobSubmissionTime < timeWindow) {
       val job = newJob(nextJobSubmissionTime)
@@ -1810,8 +1907,8 @@ class TraceAllWLGenerator(val workloadName: String,
       // updatedAvgJobInterarrivalTime parameter represents a scaling factor
       // for the value sampled from the distribution.
       nextJobSubmissionTime += updatedAvgJobInterarrivalTime.getOrElse(1.0) *
-                               getQuantile(interarrivalDist,
-                                           randomNumberGenerator.nextFloat)
+        getQuantile(interarrivalDist,
+          randomNumberGenerator.nextFloat)
       numJobs += 1
     }
     assert(numJobs == workload.numJobs)
@@ -1822,11 +1919,11 @@ class TraceAllWLGenerator(val workloadName: String,
 object PrefillJobListsCache {
   // Map from (workloadname, traceFileName) -> list of jobs.
   val jobLists =
-      collection.mutable.Map[(String, String), Iterable[Job]]()
+    collection.mutable.Map[(String, String), Iterable[Job]]()
   val cpusPerTaskDistributions =
-      collection.mutable.Map[String, Array[Double]]()
+    collection.mutable.Map[String, Array[Double]]()
   val memPerTaskDistributions =
-      collection.mutable.Map[String, Array[Double]]()
+    collection.mutable.Map[String, Array[Double]]()
 
   def getOrLoadJobs(workloadName: String,
                     traceFileName: String): Iterable[Job] = {
@@ -1844,7 +1941,7 @@ object PrefillJobListsCache {
         val timestamp: Double = parsedLine(1).toDouble
         val jobID: String = parsedLine(2)
         val isHighPriority: Boolean = if(parsedLine(3).equals("1")) {true}
-                                      else {false}
+        else {false}
         val schedulingClass: Int = parsedLine(4).toInt
         // Label the job according to PBB workload split. SchedulingClass 0 & 1
         // are batch, 2 & 3 are service.
@@ -1855,33 +1952,33 @@ object PrefillJobListsCache {
         // and if we havne't reached the resource size limits of the
         // requested workload.
         if ((isServiceJob && workloadName.equals("PrefillService")) ||
-            (!isServiceJob && workloadName.equals("PrefillBatch")) ||
-            (workloadName.equals("PrefillBatchService"))) {
+          (!isServiceJob && workloadName.equals("PrefillBatch")) ||
+          (workloadName.equals("PrefillBatchService"))) {
           if (parsedLine(0).equals("11")) {
             assert(parsedLine.length == 8, "Found %d fields, expecting %d"
-                                           .format(parsedLine.length ,8))
+              .format(parsedLine.length ,8))
             val numTasks: Int = parsedLine(5).toInt
             val cpusPerJob: Double = parsedLine(6).toDouble
             // The tracefile has memory in bytes, our simulator is in GB.
             val memPerJob: Double = parsedLine(7).toDouble / 1024 / 1024 / 1024
             val newJob = Job(UniqueIDGenerator.getUniqueID(),
-                             0.0, // Submitted
-                             numTasks,
-                             -1, // to be replaced w/ simulator.runTime
-                             workloadName,
-                             cpusPerJob / numTasks,
-                             memPerJob / numTasks)
+              0.0, // Submitted
+              numTasks,
+              -1, // to be replaced w/ simulator.runTime
+              workloadName,
+              cpusPerJob / numTasks,
+              memPerJob / numTasks)
             newJobs(parsedLine(2)) = newJob
-          // Update the job/task duration for jobs that we have end times for.
+            // Update the job/task duration for jobs that we have end times for.
           } else if (parsedLine(0).equals("12")) {
             assert(parsedLine.length == 6, "Found %d fields, expecting %d"
-                                           .format(parsedLine.length ,8))
+              .format(parsedLine.length ,8))
             assert(newJobs.contains(jobID), "Expect to find job %s in newJobs."
-                                            .format(jobID))
+              .format(jobID))
             newJobs(jobID).taskDuration = timestamp
           } else {
             sys.error("Invalid trace event type code %s in tracefile %s"
-                      .format(parsedLine(0), traceFileName))
+              .format(parsedLine(0), traceFileName))
           }
         }
       })
@@ -1897,10 +1994,10 @@ object PrefillJobListsCache {
   }
 
   /**
-   * When we load jobs from a trace file, we fill in the duration for all jobs
-   * that don't have an end event as -1, then we fill in the duration for all
-   * such jobs.
-   */
+    * When we load jobs from a trace file, we fill in the duration for all jobs
+    * that don't have an end event as -1, then we fill in the duration for all
+    * such jobs.
+    */
   def getJobs(workloadName: String,
               traceFileName: String,
               timeWindow: Double): Iterable[Job] = {
@@ -1916,7 +2013,7 @@ object PrefillJobListsCache {
   def buildDist(dataPoints: Array[Double]): Array[Double] = {
     val refDistribution = new Array[Double](1001)
     assert(dataPoints.length > 0,
-           "dataPoints must contain at least one data point.")
+      "dataPoints must contain at least one data point.")
     util.Sorting.quickSort(dataPoints)
     for (i <- 0 to 1000) {
       // Store summary quantiles. 99.9 %tile = length * .999
@@ -1933,9 +2030,9 @@ object PrefillJobListsCache {
     //TODO(andyk): Fix this ugly hack of prepending "Prefill".
     val jobs = getOrLoadJobs("Prefill" + workloadName, traceFileName)
     println("Loaded or retreived %d %s jobs in tracefile %s."
-            .format(jobs.size, "Prefill" + workloadName, traceFileName))
+      .format(jobs.size, "Prefill" + workloadName, traceFileName))
     cpusPerTaskDistributions.getOrElseUpdate(
-        traceFileName, buildDist(jobs.map(_.cpusPerTask).toArray))
+      traceFileName, buildDist(jobs.map(_.cpusPerTask).toArray))
   }
 
   def getMemPerTaskDistribution(workloadName: String,
@@ -1943,36 +2040,36 @@ object PrefillJobListsCache {
     //TODO(andyk): Fix this ugly hack of prepending "Prefill".
     val jobs = getOrLoadJobs("Prefill" + workloadName, traceFileName)
     println("Loaded or retreived %d %s jobs in tracefile %s."
-            .format(jobs.size, "Prefill" + workloadName, traceFileName))
+      .format(jobs.size, "Prefill" + workloadName, traceFileName))
     memPerTaskDistributions.getOrElseUpdate(
-        traceFileName, buildDist(jobs.map(_.memPerTask).toArray))
+      traceFileName, buildDist(jobs.map(_.memPerTask).toArray))
   }
 }
 
 /**
- * Generates a pre-fill workload based on an input trace from a cluster.
- * Given a workloadName, it has hard coded rules to split up jobs
- * in the input file according to the PBB style split based on
- * the jobs' priority level and schedulingClass.
- */
+  * Generates a pre-fill workload based on an input trace from a cluster.
+  * Given a workloadName, it has hard coded rules to split up jobs
+  * in the input file according to the PBB style split based on
+  * the jobs' priority level and schedulingClass.
+  */
 class PrefillPbbTraceWorkloadGenerator(val workloadName: String,
                                        traceFileName: String)
-                                      extends WorkloadGenerator {
+  extends WorkloadGenerator {
   assert(workloadName.equals("PrefillBatch") ||
-         workloadName.equals("PrefillService") ||
-         workloadName.equals("PrefillBatchService"))
+    workloadName.equals("PrefillService") ||
+    workloadName.equals("PrefillBatchService"))
 
   def newWorkload(timeWindow: Double,
                   maxCpus: Option[Double] = None,
                   maxMem: Option[Double] = None,
                   updatedAvgJobInterarrivalTime: Option[Double] = None)
-                 : Workload = this.synchronized {
+  : Workload = this.synchronized {
     assert(updatedAvgJobInterarrivalTime == None)
     assert(timeWindow >= 0)
 
     var joblist = PrefillJobListsCache.getJobs(workloadName,
-                                               traceFileName,
-                                               timeWindow)
+      traceFileName,
+      timeWindow)
     val workload = new Workload(workloadName)
     //TODO(andyk): Make this more functional.
     def reachedMaxCpu(currCpus: Double) = maxCpus.exists(currCpus >= _)
@@ -1988,7 +2085,7 @@ class PrefillPbbTraceWorkloadGenerator(val workloadName: String,
       numMem += nextJob.numTasks * nextJob.memPerTask
       if(reachedMaxCpu(numCpus) || reachedMaxMem(numMem)) {
         println("reachedMaxCpu = %s, reachedMaxMem = %s"
-                .format(reachedMaxCpu(numCpus), reachedMaxMem(numMem)))
+          .format(reachedMaxCpu(numCpus), reachedMaxMem(numMem)))
         iter = Iterator()
       } else {
         // Use copy to be sure we don't share state between runs of the
@@ -1998,8 +2095,8 @@ class PrefillPbbTraceWorkloadGenerator(val workloadName: String,
       }
     }
     println("Returning workload with %f cpus and %f mem in total."
-            .format(workload.getJobs.map(j => {j.numTasks * j.cpusPerTask}).sum,
-                    workload.getJobs.map(j => {j.numTasks * j.memPerTask}).sum))
+      .format(workload.getJobs.map(j => {j.numTasks * j.cpusPerTask}).sum,
+        workload.getJobs.map(j => {j.numTasks * j.memPerTask}).sum))
     workload
   }
 }

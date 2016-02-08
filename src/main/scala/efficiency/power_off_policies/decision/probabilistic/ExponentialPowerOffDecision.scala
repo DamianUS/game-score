@@ -19,13 +19,13 @@ class ExponentialPowerOffDecision(threshold : Double, windowSize: Int) extends P
     var allPastTimes = ListBuffer[Double]()
     var interArrival = Seq[Double]()
     cellState.simulator.schedulers.map(_._2).foreach(_.cleanPastJobs(windowSize+1))
-    var pastJobsMaps = Map[Long, Tuple2[Double, Job]]()
+    var pastJobsMaps = Map[Long, Tuple3[Double, Job, Boolean]]()
 
     for (mapElement <- cellState.simulator.schedulers.map(_._2).map(_.pastJobs)){
       pastJobsMaps = pastJobsMaps ++ mapElement
     }
     allPastTimes = allPastTimes ++ pastJobsMaps.map(_._2).map(_._1).toSeq
-    allPastTimes.sorted
+    allPastTimes = allPastTimes.sorted
     if(allPastTimes.length >= windowSize+1){
       allPastTimes = allPastTimes.slice(allPastTimes.length-(windowSize+2), allPastTimes.length-1)
     }
@@ -34,9 +34,9 @@ class ExponentialPowerOffDecision(threshold : Double, windowSize: Int) extends P
     }
     avg = interArrival.sum / interArrival.length
     if(avg > 0.0){
-      val dist = new ExponentialDistributionImpl(avg)
+      val dist = new ExponentialDistributionImpl(1/avg)
       val prob = dist.cumulativeProbability(ts)
-      should = prob <= threshold
+      should = prob >= threshold
     }
     should
   }

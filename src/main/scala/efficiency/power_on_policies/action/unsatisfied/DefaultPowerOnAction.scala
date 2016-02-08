@@ -11,6 +11,7 @@ import scala.util.control.Breaks
 object DefaultPowerOnAction extends PowerOnAction{
   //FIXME: No tenemos en cuenta ni los conflicted delta ni el modo all or nothing, mejoras más adelante
   override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
+    job.turnOnRequests = job.turnOnRequests :+ cellState.simulator.currentTime
     var machinesToPowerOn = 0
     val machinesNeeded = Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt)
     if (cellState.numberOfMachinesOff >= machinesNeeded) {
@@ -24,6 +25,7 @@ object DefaultPowerOnAction extends PowerOnAction{
     else {
       cellState.simulator.log(("All machines are on, cant turn on any machines on %s policy").format(name))
     }
+    //println(("Encendiendo %d maquinas por petición del job %d con %d tareas restantes del total de %d").format(machinesToPowerOn, job.id, job.unscheduledTasks, job.numTasks))
     val loop = new Breaks;
     loop.breakable {
       for (i <- cellState.machinesLoad.length - 1 to 0 by -1) {

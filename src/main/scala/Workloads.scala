@@ -49,8 +49,8 @@ object Workloads {
    */
   val exampleWorkloadGeneratorBatch =
     new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 200.0,
-      avgTasksPerJob = 100.0,
+      initAvgJobInterarrivalTime = 50.0,
+      avgTasksPerJob = 25.0,
       avgJobDuration = (100.0),
       avgCpusPerTask = 1.0,
       avgMemPerTask = 2.0)

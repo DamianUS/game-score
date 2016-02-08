@@ -1,15 +1,14 @@
 package efficiency.power_off_policies.decision.probabilistic
 
-import ClusterSchedulingSimulation.{Job, CellState}
+import ClusterSchedulingSimulation.{CellState, Job}
 import efficiency.power_off_policies.decision.PowerOffDecision
-import org.apache.commons.math.distribution.{GammaDistributionImpl, ExponentialDistributionImpl}
+import org.apache.commons.math.distribution.{NormalDistributionImpl, GammaDistributionImpl}
 
 /**
  * Created by dfernandez on 22/1/16.
  */
-class GammaPowerOffDecision(threshold : Double, windowSize: Int) extends PowerOffDecision{
+class GammaNormalPowerOffDecision(normalThreshold: Double, threshold : Double, windowSize: Int) extends PowerOffDecision{
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
-    println(("On : %f y ocupadas: %f").format(cellState.numberOfMachinesOn.toDouble/cellState.numMachines, cellState.numMachinesOccupied.toDouble/cellState.numMachines))
     //FIXME: Esto no calcula bien
     //TODO: Calculate Ts
     val ts = 130.0
@@ -17,6 +16,8 @@ class GammaPowerOffDecision(threshold : Double, windowSize: Int) extends PowerOf
     var interArrivalAvg = 0.0
     var memAvg = 0.0
     var cpuAvg = 0.0
+    var memDeviation = 0.0
+    var cpuDeviation = 0.0
     var allPastTuples = Seq[Tuple3[Double, Job, Boolean]]()
     var interArrival = Seq[Double]()
     var memConsumed = Seq[Double]()
@@ -38,17 +39,38 @@ class GammaPowerOffDecision(threshold : Double, windowSize: Int) extends PowerOf
     }
     interArrivalAvg = interArrival.sum / interArrival.length
     memAvg = memConsumed.sum / memConsumed.length
+    memDeviation = stddev(memConsumed)
     cpuAvg = cpuConsumed.sum / cpuConsumed.length
-    if(interArrivalAvg > 0.0 && memAvg > 0.0 && cpuAvg > 0.0){
-      val alphaCpu = cellState.availableCpus / cpuAvg
-      val alphaMem = cellState.availableMem / memAvg
+    cpuDeviation = stddev(cpuConsumed)
+    if(interArrivalAvg > 0.0 && memAvg > 0.0 && cpuAvg > 0.0 && memDeviation > 0.0 && cpuDeviation > 0.0){
+      val alphaCpu = cellState.availableCpus / new NormalDistributionImpl(cpuAvg, cpuDeviation).inverseCumulativeProbability(normalThreshold)
+      val alphaMem = cellState.availableMem / new NormalDistributionImpl(memAvg, memDeviation).inverseCumulativeProbability(normalThreshold)
       //FIXME: en la implementación anterior teníamos un floor de (alphacpu+alphamem) /2 y le sumábamos 1
-      val dist = new GammaDistributionImpl( (alphaCpu+alphaMem)/2, interArrivalAvg)
+      val dist = new GammaDistributionImpl( Math.min(alphaCpu,alphaMem), interArrivalAvg)
       val prob = dist.cumulativeProbability(ts)
       should = prob <= threshold
     }
     should
   }
 
-  override val name: String = "exponential-power-off-decision"
+  def mean[T](item:Traversable[T])(implicit n:Numeric[T]) = {
+    n.toDouble(item.sum) / item.size.toDouble
+  }
+
+  def variance[T](items:Traversable[T])(implicit n:Numeric[T]) : Double = {
+    val itemMean = mean(items)
+    val count = items.size
+    val sumOfSquares = items.foldLeft(0.0d)((total,item)=>{
+      val itemDbl = n.toDouble(item)
+      val square = math.pow(itemDbl - itemMean,2)
+      total + square
+    })
+    sumOfSquares / count.toDouble
+  }
+
+  def stddev[T](items:Traversable[T])(implicit n:Numeric[T]) : Double = {
+    math.sqrt(variance(items))
+  }
+
+  override val name: String = "gamma-normal-power-off-decision"
 }

@@ -1,28 +1,28 @@
 /**
- * Copyright (c) 2013, Regents of the University of California
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and the
- * following disclaimer in the documentation and/or other materials provided with
- * the distribution.  Neither the name of the University of California, Berkeley
- * nor the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.  THIS
- * SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+  * Copyright (c) 2013, Regents of the University of California
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *
+  * Redistributions of source code must retain the above copyright notice, this
+  * list of conditions and the following disclaimer.  Redistributions in binary
+  * form must reproduce the above copyright notice, this list of conditions and the
+  * following disclaimer in the documentation and/or other materials provided with
+  * the distribution.  Neither the name of the University of California, Berkeley
+  * nor the names of its contributors may be used to endorse or promote products
+  * derived from this software without specific prior written permission.  THIS
+  * SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
 
 package ClusterSchedulingSimulation
 
@@ -31,7 +31,9 @@ import efficiency.pick_cellstate_resources.CellStateResourcesPicker
 import efficiency.power_off_policies.PowerOffPolicy
 import efficiency.power_on_policies.{PowerOnPolicy}
 
+import scala.collection.mutable
 import scala.collection.mutable.HashMap
+
 
 /* This class and its subclasses are used by factory method
  * ClusterSimulator.newScheduler() to determine which type of Simulator
@@ -62,9 +64,9 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
       // are for this scheduler, then apply them before
       // registering it.
       var constantThinkTimes = HashMap[String, Double](
-          schedDesc.constantThinkTimes.toSeq: _*)
+        schedDesc.constantThinkTimes.toSeq: _*)
       var perTaskThinkTimes = HashMap[String, Double](
-          schedDesc.perTaskThinkTimes.toSeq: _*)
+        schedDesc.perTaskThinkTimes.toSeq: _*)
       var newBlackListPercent = 0.0
       if (schedulerWorkloadsToSweepOver
         .contains(schedDesc.name)) {
@@ -131,13 +133,13 @@ class MonolithicScheduler(name: String,
   }
 
   /**
-   * Checks to see if there is currently a job in this scheduler's job queue.
-   * If there is, and this scheduler is not currently scheduling a job, then
-   * pop that job off of the queue and "begin scheduling it". Scheduling a
-   * job consists of setting this scheduler's state to scheduling = true, and
-   * adding a finishSchedulingJobAction to the simulators event queue by
-   * calling afterDelay().
-   */
+    * Checks to see if there is currently a job in this scheduler's job queue.
+    * If there is, and this scheduler is not currently scheduling a job, then
+    * pop that job off of the queue and "begin scheduling it". Scheduling a
+    * job consists of setting this scheduler's state to scheduling = true, and
+    * adding a finishSchedulingJobAction to the simulators event queue by
+    * calling afterDelay().
+    */
   def scheduleNextJobAction(): Unit = {
     assert(simulator != null, "This scheduler has not been added to a " +
       "simulator yet.")
@@ -176,6 +178,7 @@ class MonolithicScheduler(name: String,
         var jobEventType = "" // Set this conditionally below; used in logging.
         // If the job isn't yet fully scheduled, put it back in the queue.
         if (job.unscheduledTasks > 0) {
+          //println(("LLega el job %d con %d tareas restantes sin schedulear del total %d").format(job.id, job.unscheduledTasks, job.numTasks))
           simulator.log(("Job %s didn't fully schedule, %d / %d tasks remain " +
             "(shape: %f cpus, %f mem). Putting it " +
             "back in the queue").format(job.id,
@@ -199,13 +202,27 @@ class MonolithicScheduler(name: String,
             numJobsTimedOutScheduling += 1
             jobEventType = "abandoned"
           } else {
-            simulator.afterDelay(1) {
-              addJob(job)
+            //FIXME: Tenemos que tener en cuenta las máquinas que se están encendiendo?
+            if((simulator.cellState.numberOfMachinesOn) < simulator.cellState.numMachines && simulator.powerOn.powerOnDecisionPolicy.shouldPowerOn(simulator.cellState, job, "monolithic")){
+              recordWastedTimeSchedulingPowering(job, simulator.cellState.powerOnTime/4+0.1)
+              simulator.afterDelay(simulator.cellState.powerOnTime/4+0.1) {
+                addJob(job)
+              }
+            }
+            else{
+              simulator.afterDelay(1) {
+                addJob(job)
+              }
             }
           }
         } else {
           // All tasks in job scheduled so don't put it back in pendingQueue.
           jobEventType = "fully-scheduled"
+          if(pastJobs.get(job.id).nonEmpty){
+            val tuple = pastJobs.get(job.id).get
+            val newTuple = new Tuple3[Double, Job, Boolean](tuple._1, tuple._2, true)
+            pastJobs += (job.id -> newTuple)
+          }
         }
         //TODO: Buen sitio para la lógica de encender
         if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
