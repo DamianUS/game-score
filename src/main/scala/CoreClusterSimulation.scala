@@ -351,6 +351,12 @@ class ClusterSimulator(val cellState: CellState,
     totalSecondsWasted / (totalEnergySaved / 3600000)
   }
 
+  def totalSecondsWasted : Double = {
+    var totalSecondsWasted = 0.0
+    schedulers.map(_._2).foreach(totalSecondsWasted += _.totalWastedTimeSchedulingPowering)
+    totalSecondsWasted
+  }
+
   def kwhSavedPerShutting : Double = {
     (totalEnergySaved / 3600000) / totalPowerOffNumber
   }
@@ -498,7 +504,8 @@ abstract class Scheduler(val name: String,
   var perWorkloadWastedTimeScheduling = HashMap[String, Double]()
   var perWorkloadWastedTimeSchedulingPowering = HashMap[String, Double]()
   val randomNumberGenerator = new util.Random(Seed())
-  var pastJobs = new mutable.LinkedHashMap[Long, Tuple3[Double, Job, Boolean]]()
+  //var pastJobs = new mutable.LinkedHashMap[Long, Tuple3[Double, Job, Boolean]]()
+  var pastJobs= new mutable.LinkedHashMap[Long, Tuple2[Double, Job]]()
 
   override
   def toString = {
@@ -522,7 +529,8 @@ abstract class Scheduler(val name: String,
     perWorkloadWastedTimeScheduling(job.workloadName) =
       perWorkloadWastedTimeScheduling.getOrElse(job.workloadName,0.0)
     job.lastEnqueued = simulator.currentTime
-    pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job.copy(), false))
+    //pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job.copy(), false))
+    pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job))
   }
 
   /**

@@ -18,12 +18,12 @@ class GammaNormalPowerOffDecision(normalThreshold: Double, threshold : Double, w
     var cpuAvg = 0.0
     var memDeviation = 0.0
     var cpuDeviation = 0.0
-    var allPastTuples = Seq[Tuple3[Double, Job, Boolean]]()
+    var allPastTuples = Seq[Tuple2[Double, Job]]()
     var interArrival = Seq[Double]()
     var memConsumed = Seq[Double]()
     var cpuConsumed = Seq[Double]()
     cellState.simulator.schedulers.map(_._2).foreach(_.cleanPastJobs(windowSize+1))
-    var pastJobsMaps = Map[Long, Tuple3[Double, Job, Boolean]]()
+    var pastJobsMaps = Map[Long, Tuple2[Double, Job]]()
     for (mapElement <- cellState.simulator.schedulers.map(_._2).map(_.pastJobs)){
       pastJobsMaps = pastJobsMaps ++ mapElement
     }
@@ -49,6 +49,10 @@ class GammaNormalPowerOffDecision(normalThreshold: Double, threshold : Double, w
       val dist = new GammaDistributionImpl( Math.min(alphaCpu,alphaMem), interArrivalAvg)
       val prob = dist.cumulativeProbability(ts)
       should = prob <= threshold
+      /*if(should)
+        println(("La política : %s decide apagar con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
+      else
+        println(("La política : %s decide no apagar con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))*/
     }
     should
   }

@@ -17,12 +17,12 @@ class GammaPowerOffDecision(threshold : Double, windowSize: Int) extends PowerOf
     var interArrivalAvg = 0.0
     var memAvg = 0.0
     var cpuAvg = 0.0
-    var allPastTuples = Seq[Tuple3[Double, Job, Boolean]]()
+    var allPastTuples = Seq[Tuple2[Double, Job]]()
     var interArrival = Seq[Double]()
     var memConsumed = Seq[Double]()
     var cpuConsumed = Seq[Double]()
     cellState.simulator.schedulers.map(_._2).foreach(_.cleanPastJobs(windowSize+1))
-    var pastJobsMaps = Map[Long, Tuple3[Double, Job, Boolean]]()
+    var pastJobsMaps = Map[Long, Tuple2[Double, Job]]()
     for (mapElement <- cellState.simulator.schedulers.map(_._2).map(_.pastJobs)){
       pastJobsMaps = pastJobsMaps ++ mapElement
     }

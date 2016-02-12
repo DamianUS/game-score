@@ -19,7 +19,7 @@ class ExponentialPowerOffDecision(threshold : Double, windowSize: Int) extends P
     var allPastTimes = ListBuffer[Double]()
     var interArrival = Seq[Double]()
     cellState.simulator.schedulers.map(_._2).foreach(_.cleanPastJobs(windowSize+1))
-    var pastJobsMaps = Map[Long, Tuple3[Double, Job, Boolean]]()
+    var pastJobsMaps = Map[Long, Tuple2[Double, Job]]()
 
     for (mapElement <- cellState.simulator.schedulers.map(_._2).map(_.pastJobs)){
       pastJobsMaps = pastJobsMaps ++ mapElement

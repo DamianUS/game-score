@@ -218,11 +218,6 @@ class MonolithicScheduler(name: String,
         } else {
           // All tasks in job scheduled so don't put it back in pendingQueue.
           jobEventType = "fully-scheduled"
-          if(pastJobs.get(job.id).nonEmpty){
-            val tuple = pastJobs.get(job.id).get
-            val newTuple = new Tuple3[Double, Job, Boolean](tuple._1, tuple._2, true)
-            pastJobs += (job.id -> newTuple)
-          }
         }
         //TODO: Buen sitio para la lógica de encender
         if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
