@@ -26,6 +26,7 @@
 
 package ClusterSchedulingSimulation
 
+import efficiency.DistributionCache
 import efficiency.ordering_cellstate_resources_policies.{NoSorter, BasicLoadSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.PowerOffPolicy
@@ -84,6 +85,7 @@ abstract class Simulator(logging: Boolean = false){
     * Run the simulation for {@code runTime} virtual (i.e., simulated)
     * seconds or until {@code wallClockTimeout} seconds of execution
     * time elapses.
+ *
     * @return true if simulation ran till runTime or completion, and false
     *         if simulation timed out.
     */
@@ -137,6 +139,7 @@ abstract class ClusterSimulatorDesc(val runTime: Double) {
   * (single agent, dynamically partitioned,and replicated state), based
   * on a set of input parameters that define the schedulers being used
   * and the workload being played.
+ *
   * @param schedulers A Map from schedulerName to Scheduler, should
   *       exactly one entry for each scheduler that is registered with
   *       this simulator.
@@ -530,7 +533,13 @@ abstract class Scheduler(val name: String,
       perWorkloadWastedTimeScheduling.getOrElse(job.workloadName,0.0)
     job.lastEnqueued = simulator.currentTime
     //pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job.copy(), false))
-    pastJobs.getOrElseUpdate(job.id, (simulator.currentTime, job))
+    pastJobs.getOrElseUpdate(job.id, addPastJob(job))
+  }
+
+  def addPastJob(job : Job): Tuple2[Double, Job] = {
+    val tuple = (simulator.currentTime, job)
+    DistributionCache.addCacheJob(tuple)
+    tuple
   }
 
   /**
@@ -582,7 +591,6 @@ abstract class Scheduler(val name: String,
     * @param  machineBlackList an array of of machineIDs that should be
     *                          ignored when scheduling (i.e. tasks will
     *                          not be scheduled on any of them).
-    *
     * @return List of deltas, one per task, so that the transactions can
     *         be played on some other cellstate if desired.
     */
@@ -1465,6 +1473,7 @@ class UniformWorkloadGenerator(val workloadName: String,
   * interarrival rates, numTasks, and lengths sampled from exponential
   * distributions. Assumes that all tasks in a job are identical
   * (and so no per-task data is required).
+ *
   * @param workloadName the name that will be assigned to Workloads produced by
   *                     this factory, and to the tasks they contain.
   * @param initAvgJobInterarrivalTime initial average inter-arrival time in
