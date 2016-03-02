@@ -989,8 +989,10 @@ class CellState(val numMachines: Int,
       memPerMachine + 0.000001)
     allocatedCpusPerMachine(machineID) -= cpus
     allocatedMemPerMachine(machineID) -= mem
-    //TODO : Metemos la llamada a apagar máquinas
-    simulator.powerOff.powerOff(this, machineID)
+    //TODO : Metemos la llamada a apagar máquinas sólo a las que han sido usadas, no a las locked
+    if (!locked) {
+      simulator.powerOff.powerOff(this, machineID)
+    }
   }
 
   /**
@@ -1017,6 +1019,16 @@ class CellState(val numMachines: Int,
       dest = newCellState.machineSeqNums,
       destPos = 0,
       length = numMachines)
+    Array.copy(src = machinesLoad,
+      srcPos = 0,
+      dest = newCellState.machinesLoad,
+      destPos = 0,
+      length = numMachines)
+    Array.copy(src = machinePowerState,
+      srcPos = 0,
+      dest = newCellState.machinePowerState,
+      destPos = 0,
+      length = numMachines)
     newCellState.occupiedCpus ++= occupiedCpus
     newCellState.occupiedMem ++= occupiedMem
     newCellState.lockedCpus ++= lockedCpus
@@ -1025,6 +1037,10 @@ class CellState(val numMachines: Int,
     newCellState.totalOccupiedMem = totalOccupiedMem
     newCellState.totalLockedCpus = totalLockedCpus
     newCellState.totalLockedMem = totalLockedMem
+    newCellState.numberOfMachinesOff = numberOfMachinesOff
+    newCellState.numberOfMachinesOn = numberOfMachinesOn
+    newCellState.numberOfMachinesTurningOff = numberOfMachinesTurningOff
+    newCellState.numberOfMachinesTurningOn = numberOfMachinesTurningOn
     newCellState
   }
 
@@ -1102,7 +1118,7 @@ class CellState(val numMachines: Int,
     conflictMode match {
       case "sequence-numbers" => {
         // Use machine sequence numbers to test for conflicts.
-        if (delta.machineSeqNum != machineSeqNums(delta.machineID)) {
+        if (!simulator.cellState.isMachineOn(delta.machineID) || delta.machineSeqNum != machineSeqNums(delta.machineID)) {
           simulator.log("Sequence-number conflict occurred " +
             "(sched-%s, mach-%d, seq-num-%d, cpus-%f, mem-%f)."
               .format(delta.scheduler,
@@ -1118,7 +1134,7 @@ class CellState(val numMachines: Int,
       case "resource-fit" => {
         // Check if the machine is currently short of resources,
         // regardless of whether sequence nums have changed.
-        if (availableCpusPerMachine(delta.machineID) < delta.cpus ||
+        if (!simulator.cellState.isMachineOn(delta.machineID) || availableCpusPerMachine(delta.machineID) < delta.cpus ||
           availableMemPerMachine(delta.machineID) <  delta.mem) {
           simulator.log("Resource-aware conflict occurred " +
             "(sched-%s, mach-%d, cpus-%f, mem-%f)."

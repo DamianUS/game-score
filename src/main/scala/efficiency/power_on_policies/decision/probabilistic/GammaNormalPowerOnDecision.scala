@@ -30,10 +30,10 @@ class GammaNormalPowerOnDecision(normalThreshold: Double, threshold : Double, wi
         //FIXME: en la implementación anterior teníamos un floor de (alphacpu+alphamem) /2 y le sumábamos 1
         val prob = getGammaDistributionCummulativeProbability( Math.min(alphaCpu,alphaMem), beta , cellState.powerOnTime)
         should = prob > threshold
-        if(should)
-          println(("La política : %s decide encender con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
-        else
-          println(("La política : %s decide no encender con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
+//        if(should)
+//          println(("La política : %s decide encender con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
+//        else
+//          println(("La política : %s decide no encender con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
       }
     }
     should

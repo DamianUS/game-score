@@ -11,7 +11,8 @@ import scala.util.control.Breaks
 object DefaultPowerOnAction extends PowerOnAction{
   //FIXME: No tenemos en cuenta ni los conflicted delta ni el modo all or nothing, mejoras más adelante
   override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
-    job.turnOnRequests = job.turnOnRequests :+ cellState.simulator.currentTime
+    if(job!=null)
+      job.turnOnRequests = job.turnOnRequests :+ cellState.simulator.currentTime
     var machinesToPowerOn = 0
     val machinesNeeded = Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt)
     if (cellState.numberOfMachinesOff >= machinesNeeded) {
@@ -26,19 +27,7 @@ object DefaultPowerOnAction extends PowerOnAction{
       cellState.simulator.log(("All machines are on, cant turn on any machines on %s policy").format(name))
     }
     //println(("Encendiendo %d maquinas por petición del job %d con %d tareas restantes del total de %d").format(machinesToPowerOn, job.id, job.unscheduledTasks, job.numTasks))
-    val loop = new Breaks;
-    loop.breakable {
-      for (i <- cellState.machinesLoad.length - 1 to 0 by -1) {
-        if (machinesToPowerOn == 0) {
-          loop.break
-        }
-        if (cellState.isMachineOff(cellState.machinesLoad(i))) {
-          cellState.powerOnMachine(cellState.machinesLoad(i))
-          machinesToPowerOn -= 1
-        }
-      }
-    }
-    assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %d machines to turn on after powering on machines").format(name, machinesToPowerOn))
+    powerOnMachines(cellState, machinesToPowerOn, schedType)
   }
 
   override val name: String = "default-power-on-action"

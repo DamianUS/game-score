@@ -11,7 +11,7 @@ import org.apache.commons.math.distribution.{NormalDistributionImpl, GammaDistri
 class GammaNormalPowerOffDecision(normalThreshold: Double, threshold : Double, windowSize: Int, ts : Double = 130.0) extends PowerOffDecision with GammaUtils{
 
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
-    println(("On : %f y ocupadas: %f").format(cellState.numberOfMachinesOn.toDouble/cellState.numMachines, cellState.numMachinesOccupied.toDouble/cellState.numMachines))
+    //println(("On : %f y ocupadas: %f").format(cellState.numberOfMachinesOn.toDouble/cellState.numMachines, cellState.numMachinesOccupied.toDouble/cellState.numMachines))
     //FIXME: Esto no calcula bien
     //TODO: Calculate Ts
     val allPastTuples = getPastTuples(cellState, windowSize)
@@ -27,10 +27,10 @@ class GammaNormalPowerOffDecision(normalThreshold: Double, threshold : Double, w
       //FIXME: en la implementación anterior teníamos un floor de (alphacpu+alphamem) /2 y le sumábamos 1
       val prob = getGammaDistributionCummulativeProbability( Math.min(alphaCpu,alphaMem), beta , ts)
       should = prob <= threshold
-      if(should)
-        println(("La política : %s decide apagar con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
-      else
-        println(("La política : %s decide no apagar con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
+//      if(should)
+//        println(("La política : %s decide apagar con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
+//      else
+//        println(("La política : %s decide no apagar con una probabilidad de %f frente al threshold %f con una disponibilidad de cpu de %f quedando %d máquinas encendidas").format(name, prob, threshold, cellState.availableCpus/cellState.onCpus, cellState.numberOfMachinesOn))
     }
     should
   }

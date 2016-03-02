@@ -16,18 +16,19 @@ class GammaPowerOnAction(normalThreshold: Double, threshold : Double, windowSize
   override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
     var numMachinesGamma = 0
     var gammaProbability = 10000.0;
-    println(("On : %f y ocupadas: %f").format(cellState.numberOfMachinesOn.toDouble/cellState.numMachines, cellState.numMachinesOccupied.toDouble/cellState.numMachines))
+    //println(("On : %f y ocupadas: %f").format(cellState.numberOfMachinesOn.toDouble/cellState.numMachines, cellState.numMachinesOccupied.toDouble/cellState.numMachines))
     //FIXME: Esto no calcula bien
     //TODO: Calculate Ts
     val allPastTuples = getPastTuples(cellState, windowSize)
     val jobAttributes = getJobAttributes(allPastTuples)
     var memFree = 0.0
     var cpuFree = 0.0
-    job.turnOnRequests = job.turnOnRequests :+ cellState.simulator.currentTime
+    if(job!=null)
+      job.turnOnRequests = job.turnOnRequests :+ cellState.simulator.currentTime
     var machinesToPowerOn = 0
     var machinesNeeded = 0
     //FIXME: Necesitamos un método mejor que iterar de manera naive, algo como pivotar
-    if (job.unscheduledTasks > 0){
+    if (job!=null && job.unscheduledTasks > 0){
       machinesNeeded = Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt)
     }
     do{
@@ -57,8 +58,8 @@ class GammaPowerOnAction(normalThreshold: Double, threshold : Double, windowSize
     else {
       cellState.simulator.log(("All machines are on, cant turn on any machines on %s policy").format(name))
     }
-    println(("Encendiendo %d máquinas por petición del job %d con %d tareas restantes del total de %d quedando %d máquinas apagadas").format(machinesToPowerOn, job.id, job.unscheduledTasks, job.numTasks, cellState.numberOfMachinesOff))
-    powerOnMachines(cellState, machinesToPowerOn)
+    //println(("Encendiendo %d máquinas por petición del job %d con %d tareas restantes del total de %d quedando %d máquinas apagadas").format(machinesToPowerOn, job.id, job.unscheduledTasks, job.numTasks, cellState.numberOfMachinesOff))
+    powerOnMachines(cellState, machinesToPowerOn, schedType)
   }
 
   override val name: String = "gamma-power-on-action"

@@ -10,9 +10,12 @@ import scala.util.control.Breaks
 trait PowerOnAction {
   def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]())
   val name : String
-  def powerOnMachines(cellState: CellState, numMachines: Int): Unit = {
+  def powerOnMachines(cellState: CellState, numMachines: Int, schedType: String): Unit = {
     var machinesToPowerOn = numMachines
     val loop = new Breaks;
+    if((schedType == "mesos" || schedType == "omega") && machinesToPowerOn > 0){
+      cellState.simulator.sorter.orderResources(cellState)
+    }
     loop.breakable {
       for (i <- cellState.machinesLoad.length - 1 to 0 by -1) {
         if (machinesToPowerOn == 0) {

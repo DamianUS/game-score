@@ -203,7 +203,7 @@ class MonolithicScheduler(name: String,
             jobEventType = "abandoned"
           } else {
             //FIXME: Tenemos que tener en cuenta las máquinas que se están encendiendo?
-            if((simulator.cellState.numberOfMachinesOn) < simulator.cellState.numMachines && simulator.powerOn.powerOnDecisionPolicy.shouldPowerOn(simulator.cellState, job, "monolithic")){
+            if((simulator.cellState.numberOfMachinesOn) < simulator.cellState.numMachines){
               recordWastedTimeSchedulingPowering(job, simulator.cellState.powerOnTime/4+0.1)
               simulator.afterDelay(simulator.cellState.powerOnTime/4+0.1) {
                 addJob(job)

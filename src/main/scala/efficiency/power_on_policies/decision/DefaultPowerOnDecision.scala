@@ -7,7 +7,7 @@ import ClusterSchedulingSimulation.{ClaimDelta, Job, CellState}
  */
 object DefaultPowerOnDecision extends PowerOnDecision{
   override def shouldPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Boolean = {
-    job.unscheduledTasks > 0 && (job.turnOnRequests.length <=1 || (cellState.simulator.currentTime - job.turnOnRequests(job.turnOnRequests.length-1)) > cellState.powerOnTime*1.05)
+    job!=null && job.unscheduledTasks > 0 && (job.turnOnRequests.length <=1 || (cellState.simulator.currentTime - job.turnOnRequests(job.turnOnRequests.length-1)) > cellState.powerOnTime*1.05)
   }
 
   override val name: String = "default-power-on-decision"

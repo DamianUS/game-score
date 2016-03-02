@@ -301,8 +301,16 @@ class OmegaScheduler(name: String,
           simulator.log(("Job %d still has %d unscheduled tasks, adding it " +
             "back to scheduler %s's job queue.")
             .format(job.id, job.unscheduledTasks, name))
-          simulator.afterDelay(1) {
-            addJob(job)
+          if((simulator.cellState.numberOfMachinesOn) < simulator.cellState.numMachines){
+            recordWastedTimeSchedulingPowering(job, jobThinkTime + (simulator.cellState.powerOnTime/4+0.1))
+            simulator.afterDelay(simulator.cellState.powerOnTime/4+0.1) {
+              addJob(job)
+            }
+          }
+          else{
+            simulator.afterDelay(1) {
+              addJob(job)
+            }
           }
         }
       } else {

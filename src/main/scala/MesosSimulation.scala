@@ -1,28 +1,28 @@
 /**
- * Copyright (c) 2013, Regents of the University of California
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.  Redistributions in binary
- * form must reproduce the above copyright notice, this list of conditions and the
- * following disclaimer in the documentation and/or other materials provided with
- * the distribution.  Neither the name of the University of California, Berkeley
- * nor the names of its contributors may be used to endorse or promote products
- * derived from this software without specific prior written permission.  THIS
- * SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
- * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
+  * Copyright (c) 2013, Regents of the University of California
+  * All rights reserved.
+  *
+  * Redistribution and use in source and binary forms, with or without
+  * modification, are permitted provided that the following conditions are met:
+  *
+  * Redistributions of source code must retain the above copyright notice, this
+  * list of conditions and the following disclaimer.  Redistributions in binary
+  * form must reproduce the above copyright notice, this list of conditions and the
+  * following disclaimer in the documentation and/or other materials provided with
+  * the distribution.  Neither the name of the University of California, Berkeley
+  * nor the names of its contributors may be used to endorse or promote products
+  * derived from this software without specific prior written permission.  THIS
+  * SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY
+  * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+  * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+  * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+  * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+  * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+  * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
 
 package ClusterSchedulingSimulation
 
@@ -60,9 +60,9 @@ class MesosSimulatorDesc(
       // are for this scheduler, then apply them before
       // registering it.
       var constantThinkTimes = HashMap[String, Double](
-          schedDesc.constantThinkTimes.toSeq: _*)
+        schedDesc.constantThinkTimes.toSeq: _*)
       var perTaskThinkTimes = HashMap[String, Double](
-          schedDesc.perTaskThinkTimes.toSeq: _*)
+        schedDesc.perTaskThinkTimes.toSeq: _*)
       var newBlackListPercent = 0.0
       if (schedulerWorkloadsToSweepOver
         .contains(schedDesc.name)) {
@@ -188,8 +188,8 @@ class MesosScheduler(name: String,
   }
 
   /**
-   * How an allocator sends offers to a framework.
-   */
+    * How an allocator sends offers to a framework.
+    */
   def resourceOffer(offer: Offer): Unit = {
     offerQueue.enqueue(offer)
     handleNextResourceOffer()
@@ -211,6 +211,7 @@ class MesosScheduler(name: String,
       simulator.log("------ In %s.resourceOffer(offer %d).".format(name, offer.id))
       val offerResponse = collection.mutable.ListBuffer[ClaimDelta]()
       var aggThinkTime: Double = 0.0
+      var lastJobScheduled : Option[Job] = None
       // TODO(andyk): add an efficient method to CellState that allows us to
       //              check the largest slice of available resources to decode
       //              if we should keep trying to schedule or not.
@@ -218,6 +219,7 @@ class MesosScheduler(name: String,
         offer.cellState.availableMem > 0.000001 &&
         !pendingQueue.isEmpty) {
         val job = pendingQueue.dequeue
+        lastJobScheduled = Some(job)
         job.updateTimeInQueueStats(simulator.currentTime)
         val jobThinkTime = getThinkTime(job)
         aggThinkTime += jobThinkTime
@@ -295,18 +297,23 @@ class MesosScheduler(name: String,
             numJobsTimedOutScheduling += 1
             jobEventType = "abandoned"
           } else {
-            simulator.afterDelay(1) {
-              addJob(job)
+            //FIXME: Tenemos que tener en cuenta las máquinas que se están encendiendo?
+            if((simulator.cellState.numberOfMachinesOn) < simulator.cellState.numMachines && simulator.powerOn.powerOnDecisionPolicy.shouldPowerOn(simulator.cellState, job, "mesos")){
+              recordWastedTimeSchedulingPowering(job, simulator.cellState.powerOnTime/4+0.1)
+              simulator.afterDelay(simulator.cellState.powerOnTime/4+0.1) {
+                addJob(job)
+              }
+            }
+            else{
+              simulator.afterDelay(1) {
+                addJob(job)
+              }
             }
           }
           job.lastEnqueued = simulator.currentTime
         } else {
           // All tasks in job scheduled so not putting it back in pendingQueue.
           jobEventType = "fully-scheduled"
-        }
-        //TODO: Buen sitio para la lógica de encender.
-        if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
-          simulator.powerOn.powerOn(simulator.cellState, job, "mesos")
         }
         if (!jobEventType.equals("")) {
           // Print some stats that we can use to generate CDFs of the job
@@ -344,7 +351,7 @@ class MesosScheduler(name: String,
         mesosSimulator.log(("Waited %f seconds of aggThinkTime, now " +
           "responding to offer %d with %d responses after.")
           .format(aggThinkTime, offer.id, offerResponse.length))
-        mesosSimulator.allocator.respondToOffer(offer, offerResponse)
+        mesosSimulator.allocator.respondToOffer(offer, offerResponse, lastJobScheduled.getOrElse(null))
       }
       // Done with this offer, see if we have another one to handle.
       scheduling = false
@@ -378,14 +385,14 @@ class MesosScheduler(name: String,
 }
 
 /**
- * Decides which scheduler to make resource offer to next, and manages
- * the resource offer process.
- *
- * @param constantThinkTime the time this scheduler takes to sort the
- *       list of schedulers to decide which to offer to next. This happens
- *       before each series of resource offers is made.
- * @param resources How many resources is managed by this MesosAllocator
- */
+  * Decides which scheduler to make resource offer to next, and manages
+  * the resource offer process.
+  *
+  * @param constantThinkTime the time this scheduler takes to sort the
+  *       list of schedulers to decide which to offer to next. This happens
+  *       before each series of resource offers is made.
+  * @param resources How many resources is managed by this MesosAllocator
+  */
 class MesosAllocator(constantThinkTime: Double,
                      minCpuOffer: Double = 100.0,
                      minMemOffer: Double = 100.0,
@@ -427,12 +434,12 @@ class MesosAllocator(constantThinkTime: Double,
   }
 
   /**
-   * We batch up available resources into periodic offers so
-   * that we don't send an offer in response to *every* small event,
-   * which adds latency to the average offer and slows the simulator down.
-   * This feature was in Mesos for the NSDI paper experiments, but didn't
-   * get committed to the open source codebase at that time.
-   */
+    * We batch up available resources into periodic offers so
+    * that we don't send an offer in response to *every* small event,
+    * which adds latency to the average offer and slows the simulator down.
+    * This feature was in Mesos for the NSDI paper experiments, but didn't
+    * get committed to the open source codebase at that time.
+    */
   def schedBuildAndSendOffer() = {
     if (!buildAndSendOfferScheduled) {
       buildAndSendOfferScheduled = true
@@ -447,14 +454,14 @@ class MesosAllocator(constantThinkTime: Double,
     }
   }
   /**
-   * Sort schedulers in simulator using DRF, then make an offer to
-   * the first scheduler in the list.
-   *
-   * After any task finishes or scheduler says it wants offers, we
-   * call this, i.e. buildAndSendOffer(), again. Note that the only
-   * resources that will be available will be the ones that
-   * the task that just finished was using).
-   */
+    * Sort schedulers in simulator using DRF, then make an offer to
+    * the first scheduler in the list.
+    *
+    * After any task finishes or scheduler says it wants offers, we
+    * call this, i.e. buildAndSendOffer(), again. Note that the only
+    * resources that will be available will be the ones that
+    * the task that just finished was using).
+    */
   def buildAndSendOffer(): Unit = {
     checkRegistered
     simulator.log("========================================================")
@@ -531,26 +538,33 @@ class MesosAllocator(constantThinkTime: Double,
       if (schedulersRequestingResources.isEmpty)
         reason = "No schedulers currently want offers."
       if (simulator.cellState.availableCpus < minCpuOffer ||
-        simulator.cellState.availableCpus < minMemOffer)
-        //TODO: Decidir si prescindir de esto o no. Sólo sirve para el caso en el que se encuentre todas las máquinas apagadas
-        if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
-          val nextScheduler = drfSortSchedulers(schedulersRequestingResources.toSeq)(0)
-          simulator.powerOn.powerOn(simulator.cellState, nextScheduler.nextJob(), "mesos")
-        }
+        simulator.cellState.availableCpus < minMemOffer) {
         reason = ("Only %f cpus and %f mem available in common cell state " +
           "but min offer size is %f cpus and %f mem.")
           .format(simulator.cellState.availableCpus,
             simulator.cellState.availableCpus,
             minCpuOffer,
             minMemOffer)
+        //TODO: Decidir si prescindir de esto o no. Sólo sirve para el caso en el que se encuentre todas las máquinas apagadas
+        if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+          if(!schedulersRequestingResources.isEmpty){
+            val nextScheduler = drfSortSchedulers(schedulersRequestingResources.toSeq)(0)
+            simulator.powerOn.powerOn(simulator.cellState, nextScheduler.nextJob(), "mesos")
+          }
+          else{
+            simulator.powerOn.powerOn(simulator.cellState, null, "mesos")
+          }
+        }
+      }
       simulator.log("Not sending an offer after all. %s".format(reason))
     }
+
   }
 
   /**
-   * Schedulers call this to respond to resource offers.
-   */
-  def respondToOffer(offer: Offer, claimDeltas: Seq[ClaimDelta]) = {
+    * Schedulers call this to respond to resource offers.
+    */
+  def respondToOffer(offer: Offer, claimDeltas: Seq[ClaimDelta], requestJob: Job) = {
     checkRegistered
     simulator.log(("------Scheduler %s responded to offer %d with " +
       "%d claimDeltas.")
@@ -599,16 +613,21 @@ class MesosAllocator(constantThinkTime: Double,
               delta.mem,
               simulator.cellState.availableCpus,
               simulator.cellState.availableMem))
+          //FIXME:Esto tiene sentido?
           schedBuildAndSendOffer()
         }
       })
+    }
+    //TODO: Buen sitio para la lógica de encender
+    if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
+      simulator.powerOn.powerOn(simulator.cellState, requestJob, "mesos")
     }
     schedBuildAndSendOffer()
   }
 
   /**
-   * 1/N multi-resource fair sharing.
-   */
+    * 1/N multi-resource fair sharing.
+    */
   def drfSortSchedulers(schedulers: Seq[MesosScheduler]): Seq[MesosScheduler] = {
     val schedulerDominantShares = schedulers.map(scheduler => {
       val shareOfCpus =
