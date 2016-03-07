@@ -169,6 +169,18 @@ class ClusterSimulator(val cellState: CellState,
         "%s, that is not registered").format(schedulerName))
     })
   })
+
+  var jobCache = Seq[Tuple2[Double, Job]]()
+
+  def addCacheJob(tuple : Tuple2[Double, Job]): Unit = {
+    if(jobCache.size > 0)
+      assert(tuple._1 > jobCache.last._1, "Intentando añadir un job a la cache cuyo tiempo de inicio es anterior al ultimo encontrado")
+    jobCache = jobCache :+ tuple
+    /*if(jobCache.size > queueSize+1){
+      jobCache = jobCache.drop(1)
+    }*/
+  }
+
   val sorter = cellStateResourcesSorter
   val picker = cellStateResourcesPicker
   val powerOn = powerOnPolicy
@@ -538,7 +550,7 @@ abstract class Scheduler(val name: String,
 
   def addPastJob(job : Job): Tuple2[Double, Job] = {
     val tuple = (simulator.currentTime, job)
-    DistributionCache.addCacheJob(tuple)
+    simulator.addCacheJob(tuple)
     tuple
   }
 

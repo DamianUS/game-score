@@ -31,7 +31,12 @@ trait GammaUtils {
       allPastTuples = allPastTuples.slice(allPastTuples.length-(windowSize+2), allPastTuples.length-1)
     }
     allPastTuples*/
-    DistributionCache.jobCache
+    if(cellState.simulator.jobCache.length > windowSize+1){
+      cellState.simulator.jobCache.slice(cellState.simulator.jobCache.length-(windowSize+1), cellState.simulator.jobCache.length)
+    }
+    else{
+      cellState.simulator.jobCache
+    }
   }
 
   def getJobAttributes(pastTuples : Seq[Tuple2[Double, Job]]): Tuple6[Double, Double, Double, Double, Double, Double] ={

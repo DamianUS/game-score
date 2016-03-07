@@ -239,7 +239,6 @@ class Experiment(
                          */
                         val experimentResult =
                           ExperimentResultSet.ExperimentEnv.ExperimentResult.newBuilder()
-
                         experimentResult.setCellStateAvgCpuUtilization(
                           simulator.avgCpuUtilization / simulator.cellState.totalCpus)
                         experimentResult.setCellStateAvgMemUtilization(

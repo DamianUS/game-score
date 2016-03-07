@@ -9,8 +9,6 @@ import scala.collection.immutable.Queue
   */
 object DistributionCache {
 
-
-  val queueSize = 25
   // Key: Mean, Deviation, Threshold -> Value: inverseCumulativeProbability
   var normalDistributionCache =  scala.collection.mutable.Map[Tuple3[Double, Double, Double], Double]()
   var normalDistributionCacheCalls = 0
@@ -27,15 +25,6 @@ object DistributionCache {
   var jobAttributesCacheCalls = 0
   var jobAttributesCacheMiss = 0
   def jobAttributesCacheHits = jobAttributesCacheCalls - jobAttributesCacheMiss
-  var jobCache = Seq[Tuple2[Double, Job]]()
 
-  def addCacheJob(tuple : Tuple2[Double, Job]): Unit = {
-    if(jobCache.size > 0)
-      assert(tuple._1 > jobCache.last._1, "Intentando añadir un job a la cache cuyo tiempo de inicio es anterior al ultimo encontrado")
-    jobCache = jobCache :+ tuple
-    if(jobCache.size > queueSize+1){
-      jobCache = jobCache.drop(1)
-    }
-  }
 
 }
