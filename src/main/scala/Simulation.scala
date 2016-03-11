@@ -368,8 +368,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = true
-    val runMesos = false
+    val runMonolithic = false
+    val runMesos = true
     val runOmega = false
 
     //All sorting and picking policies
