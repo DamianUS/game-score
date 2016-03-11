@@ -24,35 +24,28 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import ClusterSchedulingSimulation.Seed
-import ClusterSchedulingSimulation.ClusterSimulator
-import ClusterSchedulingSimulation.ExpExpExpWorkloadGenerator
-import ClusterSchedulingSimulation.Experiment
-import ClusterSchedulingSimulation.Job
-import ClusterSchedulingSimulation.SchedulerDesc
-import ClusterSchedulingSimulation.Workload
-import ClusterSchedulingSimulation.WorkloadDesc
-
-import ClusterSchedulingSimulation.Workloads._
-
-import ClusterSchedulingSimulation.MonolithicScheduler
-import ClusterSchedulingSimulation.MonolithicSimulatorDesc
-
-import ClusterSchedulingSimulation.MesosSchedulerDesc
-import ClusterSchedulingSimulation.MesosSimulatorDesc
-
-import ClusterSchedulingSimulation.OmegaSchedulerDesc
-import ClusterSchedulingSimulation.OmegaSimulatorDesc
-
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
+import java.io.{File, FileInputStream, FileOutputStream}
 import java.nio.channels.FileChannel
 
+import ClusterSchedulingSimulation.{ExpExpExpWorkloadGenerator, Experiment, MesosSchedulerDesc, MesosSimulatorDesc, MonolithicSimulatorDesc, OmegaSchedulerDesc, OmegaSimulatorDesc, SchedulerDesc, Seed, WorkloadDesc}
+import ClusterSchedulingSimulation.Workloads._
 import ca.zmatrix.utils._
+import efficiency.ordering_cellstate_resources_policies.{PowerStateLoadSorter, BasicLoadSorter, CellStateResourcesSorter, NoSorter}
+import efficiency.pick_cellstate_resources._
+import efficiency.power_off_policies.action.DefaultPowerOffAction
+import efficiency.power_off_policies.decision.deterministic.load.LoadMaxPowerOffDecision
+import efficiency.power_off_policies.decision.{PowerOffDecision, CombinedPowerOffDecision}
+import efficiency.power_off_policies.decision.deterministic.security_margin.FreeCapacityMinMarginPowerOffDecision
+import efficiency.power_off_policies.decision.deterministic.{AlwzPowerOffDecision, NoPowerOffDecision}
+import efficiency.power_off_policies.decision.probabilistic._
+import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
+import efficiency.power_on_policies.action.margin.PowerOnMarginPercAvailableAction
+import efficiency.power_on_policies.action.unsatisfied.{GammaPowerOnAction, DefaultPowerOnAction}
+import efficiency.power_on_policies.decision.probabilistic.GammaNormalPowerOnDecision
+import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, MarginPowerOnDecision, NoPowerOnDecision}
+import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
 
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.immutable.NumericRange
 
 object Simulation {
   def main(args: Array[String]) {
@@ -219,7 +212,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 // 1 Day
+    val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
         globalRunTime)
@@ -375,9 +368,263 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = true
-    val runMesos = false
+    val runMonolithic = false
+    val runMesos = true
     val runOmega = false
+
+    //All sorting and picking policies
+    val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
+    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicPicker, BasicPickerCandidate, BasicReversePicker, BasicReversePickerCandidate)
+    val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
+    val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
+
+
+    //Default sorting and picking policies
+    val defaultSortingPolicy = List[CellStateResourcesSorter](PowerStateLoadSorter)
+    val defaultPickingPolicy = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
+
+    val randomRange = (0.05 to 0.95 by 0.05).toList
+    val randomDefaultThreshold = 0.5
+    val normalThresholdRange = (0.05 to 0.95 by 0.05).toList
+    val defaultNormalThreshold = 0.9
+    val distributionThresholdRange = (0.05 to 0.95 by 0.05).toList
+    val defaultDistributionThreshold = 0.1
+    val distributionWindowRange = (5 to 150 by 5).toList
+    val defaultWindowSize = 25
+
+    val sweepRandomThreshold = false
+    val sweepdNormalThreshold = false
+    val sweepDistributionThreshold = false
+    val sweepWindowSize = false
+
+    //Power Off
+    val runNeverOff = true
+    val runAlwzOff = false
+    val runRandom = false
+    val runGamma = false
+    val runExp = false
+    val runGammaNormal =true
+
+    //PowerOn
+    val runNoPowerOn = true
+    val runDefault = false
+    val runGammaNormalOn = false
+    val runCombinedDefaultOrGammaNormal = true
+
+    //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
+    //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(0.9, 0.7, 50)), "or") ))
+    //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, DefaultPowerOnDecision))
+    //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
+
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new LoadMaxPowerOffDecision(0.2)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(0.1)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(0.1, 50)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(0.9, 0.3, 50)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(0.6, 25)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaFreePowerOffDecision(0.00000001, 25)))
+    //val defaultPowerOffPolicy = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(0.00000000000000000000000001, 25)))
+
+    var defaultPowerOnPolicy = List[PowerOnPolicy]()
+    var defaultPowerOffPolicy = List[PowerOffPolicy]()
+
+    if(runNeverOff){
+      defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
+    }
+
+
+    if(runAlwzOff){
+      defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision)
+    }
+
+
+    if(runRandom){
+      if(sweepRandomThreshold){
+        for (randomThreshold <- randomRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(randomThreshold))
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(randomDefaultThreshold))
+      }
+    }
+
+
+    if(runGamma){
+      if(sweepDistributionThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, windowSize))
+        }
+      }
+      else if(sweepDistributionThreshold){
+        for(distributionThreshold <- distributionThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, defaultWindowSize))
+        }
+      }
+      else if(sweepWindowSize){
+        for(windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultDistributionThreshold, windowSize))
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultDistributionThreshold, defaultWindowSize))
+      }
+    }
+
+    if(runExp){
+      if(sweepDistributionThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, windowSize))
+        }
+      }
+      else if(sweepDistributionThreshold){
+        for(distributionThreshold <- distributionThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, defaultWindowSize))
+        }
+      }
+      else if(sweepWindowSize){
+        for(windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultDistributionThreshold, windowSize))
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultDistributionThreshold, defaultWindowSize))
+      }
+    }
+
+    if(runGammaNormal){
+      if(sweepDistributionThreshold && sweepdNormalThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, distributionThreshold, windowSize))
+        }
+      }
+      else if(sweepDistributionThreshold && sweepdNormalThreshold){
+        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, distributionThreshold, defaultWindowSize))
+        }
+      }
+      else if(sweepDistributionThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, distributionThreshold, windowSize))
+        }
+      }
+      else if(sweepdNormalThreshold && sweepWindowSize){
+        for(normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, defaultDistributionThreshold, windowSize))
+        }
+      }
+      else if(sweepdNormalThreshold){
+        for(normalThreshold <- normalThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, defaultDistributionThreshold, defaultWindowSize))
+        }
+      }
+      else if(sweepWindowSize){
+        for(windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, defaultDistributionThreshold, windowSize))
+        }
+      }
+      else if(sweepDistributionThreshold){
+        for(distributionThreshold <- distributionThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize))
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, defaultDistributionThreshold, defaultWindowSize))
+      }
+    }
+
+    //Power on
+
+    if(runNoPowerOn){
+      defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
+    }
+
+    if(runDefault){
+      defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, DefaultPowerOnDecision)
+    }
+
+    if(runGammaNormalOn){
+      if(sweepDistributionThreshold && sweepdNormalThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, windowSize))
+        }
+      }
+      else if(sweepDistributionThreshold && sweepdNormalThreshold){
+        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, defaultWindowSize))
+        }
+      }
+      else if(sweepDistributionThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, windowSize))
+        }
+      }
+      else if(sweepdNormalThreshold && sweepWindowSize){
+        for(normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, defaultDistributionThreshold, windowSize))
+        }
+      }
+      else if(sweepdNormalThreshold){
+        for(normalThreshold <- normalThresholdRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, defaultDistributionThreshold, defaultWindowSize))
+        }
+      }
+      else if(sweepWindowSize){
+        for(windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultDistributionThreshold, windowSize))
+        }
+      }
+      else if(sweepDistributionThreshold){
+        for(distributionThreshold <- distributionThresholdRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize))
+        }
+      }
+      else{
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultDistributionThreshold, defaultWindowSize))
+      }
+    }
+
+    if(runCombinedDefaultOrGammaNormal){
+      if(sweepDistributionThreshold && sweepdNormalThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, windowSize)), "or") )
+        }
+      }
+      else if(sweepDistributionThreshold && sweepdNormalThreshold){
+        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, defaultWindowSize)), "or") )
+        }
+      }
+      else if(sweepDistributionThreshold && sweepWindowSize){
+        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, windowSize)), "or") )
+        }
+      }
+      else if(sweepdNormalThreshold && sweepWindowSize){
+        for(normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, defaultDistributionThreshold, windowSize)), "or") )
+        }
+      }
+      else if(sweepdNormalThreshold){
+        for(normalThreshold <- normalThresholdRange) {
+          defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, defaultDistributionThreshold, defaultWindowSize)), "or") )
+        }
+      }
+      else if(sweepWindowSize){
+        for(windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultDistributionThreshold, windowSize)), "or") )
+        }
+      }
+      else if(sweepDistributionThreshold){
+        for(distributionThreshold <- distributionThresholdRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize)), "or") )
+        }
+      }
+      else{
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultDistributionThreshold, defaultWindowSize)), "or") )
+      }
+    }
 
     val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
@@ -398,6 +645,10 @@ object Simulation {
     val sweepCL = false
     val sweepPickiness = false
     val sweepLambda = false
+    val sweepSorting = false
+    val sweepPicking = false
+    val sweepPowerOn = false
+    val sweepPowerOff = false
 
     var sweepDimensions = collection.mutable.ListBuffer[String]()
     if (sweepC)
@@ -410,6 +661,14 @@ object Simulation {
       sweepDimensions += "Pickiness"
     if (sweepLambda)
       sweepDimensions += "Lambda"
+    if (sweepSorting)
+      sweepDimensions += "Sorting"
+    if (sweepPicking)
+      sweepDimensions += "Picking"
+    if (sweepPowerOn)
+      sweepDimensions += "PowerOn"
+    if (sweepPowerOff)
+      sweepDimensions += "PowerOff"
 
     val formatter = new java.text.SimpleDateFormat("yyyy-MM-dd-HH-mm-ss")
     val dateTimeStamp = formatter.format(new java.util.Date)
@@ -462,7 +721,11 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepCL) {
@@ -483,7 +746,11 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepL) {
@@ -504,7 +771,11 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepPickiness) {
@@ -525,7 +796,11 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
 
             if (sweepLambda) {
@@ -547,7 +822,11 @@ object Simulation {
                 logging = doLogging,
                 outputDirectory = outputDirName,
                 prefillCpuLimits = prefillCpuLim,
-                simulationTimeout = timeout)
+                simulationTimeout = timeout,
+                cellStateResourcesSorterList = defaultSortingPolicy,
+                cellStateResourcesPickerList = defaultPickingPolicy,
+                powerOnPolicies = defaultPowerOnPolicy,
+                powerOffPolicies = defaultPowerOffPolicy)
             }
           }
         }
@@ -571,7 +850,11 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepCL) {
@@ -588,7 +871,11 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepL) {
@@ -605,7 +892,11 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepPickiness) {
@@ -622,7 +913,11 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
 
       if (sweepLambda) {
@@ -640,7 +935,11 @@ object Simulation {
           logging = doLogging,
           outputDirectory = outputDirName,
           prefillCpuLimits = prefillCpuLim,
-          simulationTimeout = timeout)
+          simulationTimeout = timeout,
+          cellStateResourcesSorterList = defaultSortingPolicy,
+          cellStateResourcesPickerList = defaultPickingPolicy,
+          powerOnPolicies = defaultPowerOnPolicy,
+          powerOffPolicies = defaultPowerOffPolicy)
       }
     }
 
@@ -668,7 +967,11 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepCL) {
@@ -686,7 +989,11 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepL) {
@@ -704,7 +1011,11 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepPickiness) {
@@ -722,7 +1033,11 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
 
           if (sweepLambda) {
@@ -741,7 +1056,11 @@ object Simulation {
               logging = doLogging,
               outputDirectory = outputDirName,
               prefillCpuLimits = prefillCpuLim,
-              simulationTimeout = timeout)
+              simulationTimeout = timeout,
+              cellStateResourcesSorterList = defaultSortingPolicy,
+              cellStateResourcesPickerList = defaultPickingPolicy,
+              powerOnPolicies = defaultPowerOnPolicy,
+              powerOffPolicies = defaultPowerOffPolicy)
           }
         }
       }
