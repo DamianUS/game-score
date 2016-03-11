@@ -39,5 +39,5 @@ libraryDependencies += "org.apache.commons" % "commons-math" % "2.2"
 
 libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.4" % "test"
 
-libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.4.1"
+libraryDependencies += "com.google.protobuf" % "protobuf-java" % "2.6.1"
 
