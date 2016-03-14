@@ -248,7 +248,40 @@ class Experiment(
                           simulator.avgCpuLocked / simulator.cellState.totalCpus)
                         experimentResult.setCellStateAvgMemLocked(
                           simulator.avgMemLocked / simulator.cellState.totalMem)
+                        //EfficiencyStats
 
+                        /*val efficiencyStats = ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.newBuilder()
+                        efficiencyStats.setAvgNumberMachinesOff(simulator.sumMachinesOff / simulator.numMonitoringMeasurements)
+                        efficiencyStats.setAvgNumberMachinesOn(simulator.sumMachinesOn / simulator.numMonitoringMeasurements)
+                        efficiencyStats.setAvgNumberMachinesTurningOff(simulator.sumMachinesTurningOff / simulator.numMonitoringMeasurements)
+                        efficiencyStats.setAvgNumberMachinesTurningOn(simulator.sumMachinesTurningOn / simulator.numMonitoringMeasurements)
+                        efficiencyStats.setAvgShuttingsPerMachine(simulator.shuttingDownsPerMachineAvg)
+                        efficiencyStats.setAvgTimeShuttedDownPerCycle(simulator.timeShuttedDownPerCycleAvg)
+                        efficiencyStats.setAvgTimeShuttedDownPerMachine(simulator.timeShuttedDownPerMachineAvg)
+                        efficiencyStats.setCurrentEnergyConsumed(simulator.totalCurrentEnergyConsumed)
+                        efficiencyStats.setKwhSavedPerShutting(simulator.kwhSavedPerShutting)
+                        efficiencyStats.setMaxShuttingsPerMachine(simulator.maxShuttingDowns)
+                        efficiencyStats.setMaxTimeShuttedDownPerCycle(simulator.maxTimeShuttedDownPerCycle)
+                        efficiencyStats.setMaxTimeShuttedDownPerMachine(simulator.maxTimeShuttedDownPerMachine)
+                        efficiencyStats.setMinShuttingsPerMachine(simulator.minShuttingDowns)
+                        efficiencyStats.setMinTimeShuttedDownPerCycle(simulator.minTimeShuttedDownPerCycle)
+                        efficiencyStats.setMinTimeShuttedDownPerMachine(simulator.minTimeShuttedDownPerMachine)
+                        val pOff = ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.newBuilder()
+                        pOff.setName(powerOffPolicy.name)
+                        efficiencyStats.setPowerOffPolicy(pOff)
+                        val pOn = ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.newBuilder()
+                        pOn.setName(powerOnPolicy.name)
+                        efficiencyStats.setPowerOnPolicy(pOn)
+                        efficiencyStats.setShuttingsPerMachine90Percentile(simulator.shuttingDownsPerMachinePercentile(0.9))
+                        efficiencyStats.setShuttingsPerMachine99Percentile(simulator.shuttingDownsPerMachinePercentile(0.99))
+                        efficiencyStats.setTimeShuttedDownPerCycle90Percentile(simulator.timeShuttedDownPerCyclePercentile(0.9))
+                        efficiencyStats.setTimeShuttedDownPerCycle99Percentile(simulator.timeShuttedDownPerCyclePercentile(0.99))
+                        efficiencyStats.setTimeShuttedDownPerMachine90Percentile(simulator.timeShuttedDownPerMachinePercentile(0.9))
+                        efficiencyStats.setTimeShuttedDownPerMachine99Percentile(simulator.timeShuttedDownPerMachinePercentile(0.99))
+                        efficiencyStats.setTotalEnergyConsumed(simulator.totalEnergyConsumed)
+                        efficiencyStats.setTotalEnergySaved(simulator.totalEnergySaved)
+                        efficiencyStats.setTotalPowerOffNumber(simulator.totalPowerOffNumber)
+                        experimentResult.setEfficiencyStats(efficiencyStats)*/
                         // Save repeated stats about workloads.
                         workloads.foreach(workload => {
                           val workloadStats = ExperimentResultSet.
@@ -259,7 +292,6 @@ class Experiment(
                           workloadStats.setNumJobs(workload.numJobs)
                           workloadStats.setNumJobsScheduled(
                             workload.getJobs.filter(_.numSchedulingAttempts > 0).length)
-                          workload
                           workloadStats.setJobThinkTimes90Percentile(
                             workload.jobUsefulThinkTimesPercentile(0.9))
                           workloadStats.setAvgJobQueueTimesTillFirstScheduled(
@@ -567,6 +599,8 @@ class Experiment(
 
                         val prettyLine = ("cell: %s \n" +
                           "assignment policy: %s \n" +
+                          "on policy: %s \n" +
+                          "off policy: %s \n" +
                           "runtime: %f \n" +
                           "avg cpu util: %f \n" +
                           "avg mem util: %f \n" +
@@ -606,6 +640,8 @@ class Experiment(
                           "perTaskThinkTime %f").format(
                           workloadDesc.cell,                                  // %s
                           workloadDesc.assignmentPolicy,                      // %s
+                          simulator.powerOn.name,                              // %s
+                          simulator.powerOff.name,                              // %s
                           simulatorDesc.runTime,                              // %f
                           simulator.avgCpuUtilization /
                             simulator.cellState.totalCpus,                  // %f

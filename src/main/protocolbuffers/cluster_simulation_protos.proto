@@ -128,13 +128,27 @@ message ExperimentResultSet {
         optional double total_power_off_number = 3;
         optional double kwh_saved_per_shutting = 4;
         optional double avg_shuttings_per_machine = 5;
-        optional double shuttings_per_machine_90_percentile = 6;
-        optional double shuttings_per_machine_99_percentile = 7;
-        optional double avg_time_shutted_down_per_machine = 8;
-        optional double time_shutted_down_per_machine_90_percentile = 9;
-        optional double time_shutted_down_per_machine_99_percentile = 10;
-        optional PowerOffPolicy power_off_policy = 11;
-        optional PowerOnPolicy power_on_policy = 12;
+        optional double max_shuttings_per_machine = 6;
+        optional double min_shuttings_per_machine = 7;
+        optional double shuttings_per_machine_90_percentile = 8;
+        optional double shuttings_per_machine_99_percentile = 9;
+        optional double avg_time_shutted_down_per_cycle = 10;
+        optional double max_time_shutted_down_per_cycle = 11;
+        optional double min_time_shutted_down_per_cycle = 12;
+        optional double time_shutted_down_per_cycle_90_percentile = 13;
+        optional double time_shutted_down_per_cycle_99_percentile = 14;
+        optional double avg_time_shutted_down_per_machine = 15;
+        optional double max_time_shutted_down_per_machine = 16;
+        optional double min_time_shutted_down_per_machine = 17;
+        optional double time_shutted_down_per_machine_90_percentile = 18;
+        optional double time_shutted_down_per_machine_99_percentile = 19;
+        optional double avg_number_machines_on = 20;
+        optional double avg_number_machines_off = 21;
+        optional double avg_number_machines_turning_on = 22;
+        optional double avg_number_machines_turning_off = 23;
+        optional PowerOffPolicy power_off_policy = 24;
+        optional PowerOnPolicy power_on_policy = 25;
+        optional double current_energy_consumed = 26;
 
         message PowerOffPolicy{
           optional string name = 1;

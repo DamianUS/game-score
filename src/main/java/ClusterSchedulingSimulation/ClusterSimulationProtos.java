@@ -6434,75 +6434,201 @@ public final class ClusterSimulationProtos {
           double getAvgShuttingsPerMachine();
 
           /**
-           * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+           * <code>optional double max_shuttings_per_machine = 6;</code>
+           */
+          boolean hasMaxShuttingsPerMachine();
+          /**
+           * <code>optional double max_shuttings_per_machine = 6;</code>
+           */
+          double getMaxShuttingsPerMachine();
+
+          /**
+           * <code>optional double min_shuttings_per_machine = 7;</code>
+           */
+          boolean hasMinShuttingsPerMachine();
+          /**
+           * <code>optional double min_shuttings_per_machine = 7;</code>
+           */
+          double getMinShuttingsPerMachine();
+
+          /**
+           * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
            */
           boolean hasShuttingsPerMachine90Percentile();
           /**
-           * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+           * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
            */
           double getShuttingsPerMachine90Percentile();
 
           /**
-           * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+           * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
            */
           boolean hasShuttingsPerMachine99Percentile();
           /**
-           * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+           * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
            */
           double getShuttingsPerMachine99Percentile();
 
           /**
-           * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+           * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
+           */
+          boolean hasAvgTimeShuttedDownPerCycle();
+          /**
+           * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
+           */
+          double getAvgTimeShuttedDownPerCycle();
+
+          /**
+           * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+           */
+          boolean hasMaxTimeShuttedDownPerCycle();
+          /**
+           * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+           */
+          double getMaxTimeShuttedDownPerCycle();
+
+          /**
+           * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+           */
+          boolean hasMinTimeShuttedDownPerCycle();
+          /**
+           * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+           */
+          double getMinTimeShuttedDownPerCycle();
+
+          /**
+           * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+           */
+          boolean hasTimeShuttedDownPerCycle90Percentile();
+          /**
+           * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+           */
+          double getTimeShuttedDownPerCycle90Percentile();
+
+          /**
+           * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+           */
+          boolean hasTimeShuttedDownPerCycle99Percentile();
+          /**
+           * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+           */
+          double getTimeShuttedDownPerCycle99Percentile();
+
+          /**
+           * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
            */
           boolean hasAvgTimeShuttedDownPerMachine();
           /**
-           * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+           * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
            */
           double getAvgTimeShuttedDownPerMachine();
 
           /**
-           * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+           * <code>optional double max_time_shutted_down_per_machine = 16;</code>
+           */
+          boolean hasMaxTimeShuttedDownPerMachine();
+          /**
+           * <code>optional double max_time_shutted_down_per_machine = 16;</code>
+           */
+          double getMaxTimeShuttedDownPerMachine();
+
+          /**
+           * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+           */
+          boolean hasMinTimeShuttedDownPerMachine();
+          /**
+           * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+           */
+          double getMinTimeShuttedDownPerMachine();
+
+          /**
+           * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
            */
           boolean hasTimeShuttedDownPerMachine90Percentile();
           /**
-           * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+           * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
            */
           double getTimeShuttedDownPerMachine90Percentile();
 
           /**
-           * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+           * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
            */
           boolean hasTimeShuttedDownPerMachine99Percentile();
           /**
-           * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+           * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
            */
           double getTimeShuttedDownPerMachine99Percentile();
 
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+           * <code>optional double avg_number_machines_on = 20;</code>
+           */
+          boolean hasAvgNumberMachinesOn();
+          /**
+           * <code>optional double avg_number_machines_on = 20;</code>
+           */
+          double getAvgNumberMachinesOn();
+
+          /**
+           * <code>optional double avg_number_machines_off = 21;</code>
+           */
+          boolean hasAvgNumberMachinesOff();
+          /**
+           * <code>optional double avg_number_machines_off = 21;</code>
+           */
+          double getAvgNumberMachinesOff();
+
+          /**
+           * <code>optional double avg_number_machines_turning_on = 22;</code>
+           */
+          boolean hasAvgNumberMachinesTurningOn();
+          /**
+           * <code>optional double avg_number_machines_turning_on = 22;</code>
+           */
+          double getAvgNumberMachinesTurningOn();
+
+          /**
+           * <code>optional double avg_number_machines_turning_off = 23;</code>
+           */
+          boolean hasAvgNumberMachinesTurningOff();
+          /**
+           * <code>optional double avg_number_machines_turning_off = 23;</code>
+           */
+          double getAvgNumberMachinesTurningOff();
+
+          /**
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
            */
           boolean hasPowerOffPolicy();
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
            */
           ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy getPowerOffPolicy();
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
            */
           ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicyOrBuilder getPowerOffPolicyOrBuilder();
 
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
            */
           boolean hasPowerOnPolicy();
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
            */
           ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy getPowerOnPolicy();
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
            */
           ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicyOrBuilder getPowerOnPolicyOrBuilder();
+
+          /**
+           * <code>optional double current_energy_consumed = 26;</code>
+           */
+          boolean hasCurrentEnergyConsumed();
+          /**
+           * <code>optional double current_energy_consumed = 26;</code>
+           */
+          double getCurrentEnergyConsumed();
         }
         /**
          * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats}
@@ -6583,32 +6709,97 @@ public final class ClusterSimulationProtos {
                   }
                   case 49: {
                     bitField0_ |= 0x00000020;
-                    shuttingsPerMachine90Percentile_ = input.readDouble();
+                    maxShuttingsPerMachine_ = input.readDouble();
                     break;
                   }
                   case 57: {
                     bitField0_ |= 0x00000040;
-                    shuttingsPerMachine99Percentile_ = input.readDouble();
+                    minShuttingsPerMachine_ = input.readDouble();
                     break;
                   }
                   case 65: {
                     bitField0_ |= 0x00000080;
-                    avgTimeShuttedDownPerMachine_ = input.readDouble();
+                    shuttingsPerMachine90Percentile_ = input.readDouble();
                     break;
                   }
                   case 73: {
                     bitField0_ |= 0x00000100;
-                    timeShuttedDownPerMachine90Percentile_ = input.readDouble();
+                    shuttingsPerMachine99Percentile_ = input.readDouble();
                     break;
                   }
                   case 81: {
                     bitField0_ |= 0x00000200;
+                    avgTimeShuttedDownPerCycle_ = input.readDouble();
+                    break;
+                  }
+                  case 89: {
+                    bitField0_ |= 0x00000400;
+                    maxTimeShuttedDownPerCycle_ = input.readDouble();
+                    break;
+                  }
+                  case 97: {
+                    bitField0_ |= 0x00000800;
+                    minTimeShuttedDownPerCycle_ = input.readDouble();
+                    break;
+                  }
+                  case 105: {
+                    bitField0_ |= 0x00001000;
+                    timeShuttedDownPerCycle90Percentile_ = input.readDouble();
+                    break;
+                  }
+                  case 113: {
+                    bitField0_ |= 0x00002000;
+                    timeShuttedDownPerCycle99Percentile_ = input.readDouble();
+                    break;
+                  }
+                  case 121: {
+                    bitField0_ |= 0x00004000;
+                    avgTimeShuttedDownPerMachine_ = input.readDouble();
+                    break;
+                  }
+                  case 129: {
+                    bitField0_ |= 0x00008000;
+                    maxTimeShuttedDownPerMachine_ = input.readDouble();
+                    break;
+                  }
+                  case 137: {
+                    bitField0_ |= 0x00010000;
+                    minTimeShuttedDownPerMachine_ = input.readDouble();
+                    break;
+                  }
+                  case 145: {
+                    bitField0_ |= 0x00020000;
+                    timeShuttedDownPerMachine90Percentile_ = input.readDouble();
+                    break;
+                  }
+                  case 153: {
+                    bitField0_ |= 0x00040000;
                     timeShuttedDownPerMachine99Percentile_ = input.readDouble();
                     break;
                   }
-                  case 90: {
+                  case 161: {
+                    bitField0_ |= 0x00080000;
+                    avgNumberMachinesOn_ = input.readDouble();
+                    break;
+                  }
+                  case 169: {
+                    bitField0_ |= 0x00100000;
+                    avgNumberMachinesOff_ = input.readDouble();
+                    break;
+                  }
+                  case 177: {
+                    bitField0_ |= 0x00200000;
+                    avgNumberMachinesTurningOn_ = input.readDouble();
+                    break;
+                  }
+                  case 185: {
+                    bitField0_ |= 0x00400000;
+                    avgNumberMachinesTurningOff_ = input.readDouble();
+                    break;
+                  }
+                  case 194: {
                     ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.Builder subBuilder = null;
-                    if (((bitField0_ & 0x00000400) == 0x00000400)) {
+                    if (((bitField0_ & 0x00800000) == 0x00800000)) {
                       subBuilder = powerOffPolicy_.toBuilder();
                     }
                     powerOffPolicy_ = input.readMessage(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.PARSER, extensionRegistry);
@@ -6616,12 +6807,12 @@ public final class ClusterSimulationProtos {
                       subBuilder.mergeFrom(powerOffPolicy_);
                       powerOffPolicy_ = subBuilder.buildPartial();
                     }
-                    bitField0_ |= 0x00000400;
+                    bitField0_ |= 0x00800000;
                     break;
                   }
-                  case 98: {
+                  case 202: {
                     ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.Builder subBuilder = null;
-                    if (((bitField0_ & 0x00000800) == 0x00000800)) {
+                    if (((bitField0_ & 0x01000000) == 0x01000000)) {
                       subBuilder = powerOnPolicy_.toBuilder();
                     }
                     powerOnPolicy_ = input.readMessage(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.PARSER, extensionRegistry);
@@ -6629,7 +6820,12 @@ public final class ClusterSimulationProtos {
                       subBuilder.mergeFrom(powerOnPolicy_);
                       powerOnPolicy_ = subBuilder.buildPartial();
                     }
-                    bitField0_ |= 0x00000800;
+                    bitField0_ |= 0x01000000;
+                    break;
+                  }
+                  case 209: {
+                    bitField0_ |= 0x02000000;
+                    currentEnergyConsumed_ = input.readDouble();
                     break;
                   }
                 }
@@ -7699,121 +7895,331 @@ public final class ClusterSimulationProtos {
             return avgShuttingsPerMachine_;
           }
 
-          public static final int SHUTTINGS_PER_MACHINE_90_PERCENTILE_FIELD_NUMBER = 6;
-          private double shuttingsPerMachine90Percentile_;
+          public static final int MAX_SHUTTINGS_PER_MACHINE_FIELD_NUMBER = 6;
+          private double maxShuttingsPerMachine_;
           /**
-           * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+           * <code>optional double max_shuttings_per_machine = 6;</code>
            */
-          public boolean hasShuttingsPerMachine90Percentile() {
+          public boolean hasMaxShuttingsPerMachine() {
             return ((bitField0_ & 0x00000020) == 0x00000020);
           }
           /**
-           * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+           * <code>optional double max_shuttings_per_machine = 6;</code>
+           */
+          public double getMaxShuttingsPerMachine() {
+            return maxShuttingsPerMachine_;
+          }
+
+          public static final int MIN_SHUTTINGS_PER_MACHINE_FIELD_NUMBER = 7;
+          private double minShuttingsPerMachine_;
+          /**
+           * <code>optional double min_shuttings_per_machine = 7;</code>
+           */
+          public boolean hasMinShuttingsPerMachine() {
+            return ((bitField0_ & 0x00000040) == 0x00000040);
+          }
+          /**
+           * <code>optional double min_shuttings_per_machine = 7;</code>
+           */
+          public double getMinShuttingsPerMachine() {
+            return minShuttingsPerMachine_;
+          }
+
+          public static final int SHUTTINGS_PER_MACHINE_90_PERCENTILE_FIELD_NUMBER = 8;
+          private double shuttingsPerMachine90Percentile_;
+          /**
+           * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
+           */
+          public boolean hasShuttingsPerMachine90Percentile() {
+            return ((bitField0_ & 0x00000080) == 0x00000080);
+          }
+          /**
+           * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
            */
           public double getShuttingsPerMachine90Percentile() {
             return shuttingsPerMachine90Percentile_;
           }
 
-          public static final int SHUTTINGS_PER_MACHINE_99_PERCENTILE_FIELD_NUMBER = 7;
+          public static final int SHUTTINGS_PER_MACHINE_99_PERCENTILE_FIELD_NUMBER = 9;
           private double shuttingsPerMachine99Percentile_;
           /**
-           * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+           * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
            */
           public boolean hasShuttingsPerMachine99Percentile() {
-            return ((bitField0_ & 0x00000040) == 0x00000040);
+            return ((bitField0_ & 0x00000100) == 0x00000100);
           }
           /**
-           * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+           * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
            */
           public double getShuttingsPerMachine99Percentile() {
             return shuttingsPerMachine99Percentile_;
           }
 
-          public static final int AVG_TIME_SHUTTED_DOWN_PER_MACHINE_FIELD_NUMBER = 8;
-          private double avgTimeShuttedDownPerMachine_;
+          public static final int AVG_TIME_SHUTTED_DOWN_PER_CYCLE_FIELD_NUMBER = 10;
+          private double avgTimeShuttedDownPerCycle_;
           /**
-           * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+           * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
            */
-          public boolean hasAvgTimeShuttedDownPerMachine() {
-            return ((bitField0_ & 0x00000080) == 0x00000080);
+          public boolean hasAvgTimeShuttedDownPerCycle() {
+            return ((bitField0_ & 0x00000200) == 0x00000200);
           }
           /**
-           * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+           * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
+           */
+          public double getAvgTimeShuttedDownPerCycle() {
+            return avgTimeShuttedDownPerCycle_;
+          }
+
+          public static final int MAX_TIME_SHUTTED_DOWN_PER_CYCLE_FIELD_NUMBER = 11;
+          private double maxTimeShuttedDownPerCycle_;
+          /**
+           * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+           */
+          public boolean hasMaxTimeShuttedDownPerCycle() {
+            return ((bitField0_ & 0x00000400) == 0x00000400);
+          }
+          /**
+           * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+           */
+          public double getMaxTimeShuttedDownPerCycle() {
+            return maxTimeShuttedDownPerCycle_;
+          }
+
+          public static final int MIN_TIME_SHUTTED_DOWN_PER_CYCLE_FIELD_NUMBER = 12;
+          private double minTimeShuttedDownPerCycle_;
+          /**
+           * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+           */
+          public boolean hasMinTimeShuttedDownPerCycle() {
+            return ((bitField0_ & 0x00000800) == 0x00000800);
+          }
+          /**
+           * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+           */
+          public double getMinTimeShuttedDownPerCycle() {
+            return minTimeShuttedDownPerCycle_;
+          }
+
+          public static final int TIME_SHUTTED_DOWN_PER_CYCLE_90_PERCENTILE_FIELD_NUMBER = 13;
+          private double timeShuttedDownPerCycle90Percentile_;
+          /**
+           * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+           */
+          public boolean hasTimeShuttedDownPerCycle90Percentile() {
+            return ((bitField0_ & 0x00001000) == 0x00001000);
+          }
+          /**
+           * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+           */
+          public double getTimeShuttedDownPerCycle90Percentile() {
+            return timeShuttedDownPerCycle90Percentile_;
+          }
+
+          public static final int TIME_SHUTTED_DOWN_PER_CYCLE_99_PERCENTILE_FIELD_NUMBER = 14;
+          private double timeShuttedDownPerCycle99Percentile_;
+          /**
+           * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+           */
+          public boolean hasTimeShuttedDownPerCycle99Percentile() {
+            return ((bitField0_ & 0x00002000) == 0x00002000);
+          }
+          /**
+           * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+           */
+          public double getTimeShuttedDownPerCycle99Percentile() {
+            return timeShuttedDownPerCycle99Percentile_;
+          }
+
+          public static final int AVG_TIME_SHUTTED_DOWN_PER_MACHINE_FIELD_NUMBER = 15;
+          private double avgTimeShuttedDownPerMachine_;
+          /**
+           * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
+           */
+          public boolean hasAvgTimeShuttedDownPerMachine() {
+            return ((bitField0_ & 0x00004000) == 0x00004000);
+          }
+          /**
+           * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
            */
           public double getAvgTimeShuttedDownPerMachine() {
             return avgTimeShuttedDownPerMachine_;
           }
 
-          public static final int TIME_SHUTTED_DOWN_PER_MACHINE_90_PERCENTILE_FIELD_NUMBER = 9;
-          private double timeShuttedDownPerMachine90Percentile_;
+          public static final int MAX_TIME_SHUTTED_DOWN_PER_MACHINE_FIELD_NUMBER = 16;
+          private double maxTimeShuttedDownPerMachine_;
           /**
-           * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+           * <code>optional double max_time_shutted_down_per_machine = 16;</code>
            */
-          public boolean hasTimeShuttedDownPerMachine90Percentile() {
-            return ((bitField0_ & 0x00000100) == 0x00000100);
+          public boolean hasMaxTimeShuttedDownPerMachine() {
+            return ((bitField0_ & 0x00008000) == 0x00008000);
           }
           /**
-           * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+           * <code>optional double max_time_shutted_down_per_machine = 16;</code>
+           */
+          public double getMaxTimeShuttedDownPerMachine() {
+            return maxTimeShuttedDownPerMachine_;
+          }
+
+          public static final int MIN_TIME_SHUTTED_DOWN_PER_MACHINE_FIELD_NUMBER = 17;
+          private double minTimeShuttedDownPerMachine_;
+          /**
+           * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+           */
+          public boolean hasMinTimeShuttedDownPerMachine() {
+            return ((bitField0_ & 0x00010000) == 0x00010000);
+          }
+          /**
+           * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+           */
+          public double getMinTimeShuttedDownPerMachine() {
+            return minTimeShuttedDownPerMachine_;
+          }
+
+          public static final int TIME_SHUTTED_DOWN_PER_MACHINE_90_PERCENTILE_FIELD_NUMBER = 18;
+          private double timeShuttedDownPerMachine90Percentile_;
+          /**
+           * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
+           */
+          public boolean hasTimeShuttedDownPerMachine90Percentile() {
+            return ((bitField0_ & 0x00020000) == 0x00020000);
+          }
+          /**
+           * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
            */
           public double getTimeShuttedDownPerMachine90Percentile() {
             return timeShuttedDownPerMachine90Percentile_;
           }
 
-          public static final int TIME_SHUTTED_DOWN_PER_MACHINE_99_PERCENTILE_FIELD_NUMBER = 10;
+          public static final int TIME_SHUTTED_DOWN_PER_MACHINE_99_PERCENTILE_FIELD_NUMBER = 19;
           private double timeShuttedDownPerMachine99Percentile_;
           /**
-           * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+           * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
            */
           public boolean hasTimeShuttedDownPerMachine99Percentile() {
-            return ((bitField0_ & 0x00000200) == 0x00000200);
+            return ((bitField0_ & 0x00040000) == 0x00040000);
           }
           /**
-           * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+           * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
            */
           public double getTimeShuttedDownPerMachine99Percentile() {
             return timeShuttedDownPerMachine99Percentile_;
           }
 
-          public static final int POWER_OFF_POLICY_FIELD_NUMBER = 11;
-          private ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy powerOffPolicy_;
+          public static final int AVG_NUMBER_MACHINES_ON_FIELD_NUMBER = 20;
+          private double avgNumberMachinesOn_;
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+           * <code>optional double avg_number_machines_on = 20;</code>
            */
-          public boolean hasPowerOffPolicy() {
-            return ((bitField0_ & 0x00000400) == 0x00000400);
+          public boolean hasAvgNumberMachinesOn() {
+            return ((bitField0_ & 0x00080000) == 0x00080000);
           }
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+           * <code>optional double avg_number_machines_on = 20;</code>
+           */
+          public double getAvgNumberMachinesOn() {
+            return avgNumberMachinesOn_;
+          }
+
+          public static final int AVG_NUMBER_MACHINES_OFF_FIELD_NUMBER = 21;
+          private double avgNumberMachinesOff_;
+          /**
+           * <code>optional double avg_number_machines_off = 21;</code>
+           */
+          public boolean hasAvgNumberMachinesOff() {
+            return ((bitField0_ & 0x00100000) == 0x00100000);
+          }
+          /**
+           * <code>optional double avg_number_machines_off = 21;</code>
+           */
+          public double getAvgNumberMachinesOff() {
+            return avgNumberMachinesOff_;
+          }
+
+          public static final int AVG_NUMBER_MACHINES_TURNING_ON_FIELD_NUMBER = 22;
+          private double avgNumberMachinesTurningOn_;
+          /**
+           * <code>optional double avg_number_machines_turning_on = 22;</code>
+           */
+          public boolean hasAvgNumberMachinesTurningOn() {
+            return ((bitField0_ & 0x00200000) == 0x00200000);
+          }
+          /**
+           * <code>optional double avg_number_machines_turning_on = 22;</code>
+           */
+          public double getAvgNumberMachinesTurningOn() {
+            return avgNumberMachinesTurningOn_;
+          }
+
+          public static final int AVG_NUMBER_MACHINES_TURNING_OFF_FIELD_NUMBER = 23;
+          private double avgNumberMachinesTurningOff_;
+          /**
+           * <code>optional double avg_number_machines_turning_off = 23;</code>
+           */
+          public boolean hasAvgNumberMachinesTurningOff() {
+            return ((bitField0_ & 0x00400000) == 0x00400000);
+          }
+          /**
+           * <code>optional double avg_number_machines_turning_off = 23;</code>
+           */
+          public double getAvgNumberMachinesTurningOff() {
+            return avgNumberMachinesTurningOff_;
+          }
+
+          public static final int POWER_OFF_POLICY_FIELD_NUMBER = 24;
+          private ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy powerOffPolicy_;
+          /**
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
+           */
+          public boolean hasPowerOffPolicy() {
+            return ((bitField0_ & 0x00800000) == 0x00800000);
+          }
+          /**
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
            */
           public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy getPowerOffPolicy() {
             return powerOffPolicy_;
           }
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
            */
           public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicyOrBuilder getPowerOffPolicyOrBuilder() {
             return powerOffPolicy_;
           }
 
-          public static final int POWER_ON_POLICY_FIELD_NUMBER = 12;
+          public static final int POWER_ON_POLICY_FIELD_NUMBER = 25;
           private ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy powerOnPolicy_;
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
            */
           public boolean hasPowerOnPolicy() {
-            return ((bitField0_ & 0x00000800) == 0x00000800);
+            return ((bitField0_ & 0x01000000) == 0x01000000);
           }
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
            */
           public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy getPowerOnPolicy() {
             return powerOnPolicy_;
           }
           /**
-           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+           * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
            */
           public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicyOrBuilder getPowerOnPolicyOrBuilder() {
             return powerOnPolicy_;
+          }
+
+          public static final int CURRENT_ENERGY_CONSUMED_FIELD_NUMBER = 26;
+          private double currentEnergyConsumed_;
+          /**
+           * <code>optional double current_energy_consumed = 26;</code>
+           */
+          public boolean hasCurrentEnergyConsumed() {
+            return ((bitField0_ & 0x02000000) == 0x02000000);
+          }
+          /**
+           * <code>optional double current_energy_consumed = 26;</code>
+           */
+          public double getCurrentEnergyConsumed() {
+            return currentEnergyConsumed_;
           }
 
           private void initFields() {
@@ -7822,13 +8228,27 @@ public final class ClusterSimulationProtos {
             totalPowerOffNumber_ = 0D;
             kwhSavedPerShutting_ = 0D;
             avgShuttingsPerMachine_ = 0D;
+            maxShuttingsPerMachine_ = 0D;
+            minShuttingsPerMachine_ = 0D;
             shuttingsPerMachine90Percentile_ = 0D;
             shuttingsPerMachine99Percentile_ = 0D;
+            avgTimeShuttedDownPerCycle_ = 0D;
+            maxTimeShuttedDownPerCycle_ = 0D;
+            minTimeShuttedDownPerCycle_ = 0D;
+            timeShuttedDownPerCycle90Percentile_ = 0D;
+            timeShuttedDownPerCycle99Percentile_ = 0D;
             avgTimeShuttedDownPerMachine_ = 0D;
+            maxTimeShuttedDownPerMachine_ = 0D;
+            minTimeShuttedDownPerMachine_ = 0D;
             timeShuttedDownPerMachine90Percentile_ = 0D;
             timeShuttedDownPerMachine99Percentile_ = 0D;
+            avgNumberMachinesOn_ = 0D;
+            avgNumberMachinesOff_ = 0D;
+            avgNumberMachinesTurningOn_ = 0D;
+            avgNumberMachinesTurningOff_ = 0D;
             powerOffPolicy_ = ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.getDefaultInstance();
             powerOnPolicy_ = ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.getDefaultInstance();
+            currentEnergyConsumed_ = 0D;
           }
           private byte memoizedIsInitialized = -1;
           public final boolean isInitialized() {
@@ -7859,25 +8279,67 @@ public final class ClusterSimulationProtos {
               output.writeDouble(5, avgShuttingsPerMachine_);
             }
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
-              output.writeDouble(6, shuttingsPerMachine90Percentile_);
+              output.writeDouble(6, maxShuttingsPerMachine_);
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
-              output.writeDouble(7, shuttingsPerMachine99Percentile_);
+              output.writeDouble(7, minShuttingsPerMachine_);
             }
             if (((bitField0_ & 0x00000080) == 0x00000080)) {
-              output.writeDouble(8, avgTimeShuttedDownPerMachine_);
+              output.writeDouble(8, shuttingsPerMachine90Percentile_);
             }
             if (((bitField0_ & 0x00000100) == 0x00000100)) {
-              output.writeDouble(9, timeShuttedDownPerMachine90Percentile_);
+              output.writeDouble(9, shuttingsPerMachine99Percentile_);
             }
             if (((bitField0_ & 0x00000200) == 0x00000200)) {
-              output.writeDouble(10, timeShuttedDownPerMachine99Percentile_);
+              output.writeDouble(10, avgTimeShuttedDownPerCycle_);
             }
             if (((bitField0_ & 0x00000400) == 0x00000400)) {
-              output.writeMessage(11, powerOffPolicy_);
+              output.writeDouble(11, maxTimeShuttedDownPerCycle_);
             }
             if (((bitField0_ & 0x00000800) == 0x00000800)) {
-              output.writeMessage(12, powerOnPolicy_);
+              output.writeDouble(12, minTimeShuttedDownPerCycle_);
+            }
+            if (((bitField0_ & 0x00001000) == 0x00001000)) {
+              output.writeDouble(13, timeShuttedDownPerCycle90Percentile_);
+            }
+            if (((bitField0_ & 0x00002000) == 0x00002000)) {
+              output.writeDouble(14, timeShuttedDownPerCycle99Percentile_);
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+              output.writeDouble(15, avgTimeShuttedDownPerMachine_);
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
+              output.writeDouble(16, maxTimeShuttedDownPerMachine_);
+            }
+            if (((bitField0_ & 0x00010000) == 0x00010000)) {
+              output.writeDouble(17, minTimeShuttedDownPerMachine_);
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+              output.writeDouble(18, timeShuttedDownPerMachine90Percentile_);
+            }
+            if (((bitField0_ & 0x00040000) == 0x00040000)) {
+              output.writeDouble(19, timeShuttedDownPerMachine99Percentile_);
+            }
+            if (((bitField0_ & 0x00080000) == 0x00080000)) {
+              output.writeDouble(20, avgNumberMachinesOn_);
+            }
+            if (((bitField0_ & 0x00100000) == 0x00100000)) {
+              output.writeDouble(21, avgNumberMachinesOff_);
+            }
+            if (((bitField0_ & 0x00200000) == 0x00200000)) {
+              output.writeDouble(22, avgNumberMachinesTurningOn_);
+            }
+            if (((bitField0_ & 0x00400000) == 0x00400000)) {
+              output.writeDouble(23, avgNumberMachinesTurningOff_);
+            }
+            if (((bitField0_ & 0x00800000) == 0x00800000)) {
+              output.writeMessage(24, powerOffPolicy_);
+            }
+            if (((bitField0_ & 0x01000000) == 0x01000000)) {
+              output.writeMessage(25, powerOnPolicy_);
+            }
+            if (((bitField0_ & 0x02000000) == 0x02000000)) {
+              output.writeDouble(26, currentEnergyConsumed_);
             }
             getUnknownFields().writeTo(output);
           }
@@ -7910,31 +8372,87 @@ public final class ClusterSimulationProtos {
             }
             if (((bitField0_ & 0x00000020) == 0x00000020)) {
               size += com.google.protobuf.CodedOutputStream
-                .computeDoubleSize(6, shuttingsPerMachine90Percentile_);
+                .computeDoubleSize(6, maxShuttingsPerMachine_);
             }
             if (((bitField0_ & 0x00000040) == 0x00000040)) {
               size += com.google.protobuf.CodedOutputStream
-                .computeDoubleSize(7, shuttingsPerMachine99Percentile_);
+                .computeDoubleSize(7, minShuttingsPerMachine_);
             }
             if (((bitField0_ & 0x00000080) == 0x00000080)) {
               size += com.google.protobuf.CodedOutputStream
-                .computeDoubleSize(8, avgTimeShuttedDownPerMachine_);
+                .computeDoubleSize(8, shuttingsPerMachine90Percentile_);
             }
             if (((bitField0_ & 0x00000100) == 0x00000100)) {
               size += com.google.protobuf.CodedOutputStream
-                .computeDoubleSize(9, timeShuttedDownPerMachine90Percentile_);
+                .computeDoubleSize(9, shuttingsPerMachine99Percentile_);
             }
             if (((bitField0_ & 0x00000200) == 0x00000200)) {
               size += com.google.protobuf.CodedOutputStream
-                .computeDoubleSize(10, timeShuttedDownPerMachine99Percentile_);
+                .computeDoubleSize(10, avgTimeShuttedDownPerCycle_);
             }
             if (((bitField0_ & 0x00000400) == 0x00000400)) {
               size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(11, powerOffPolicy_);
+                .computeDoubleSize(11, maxTimeShuttedDownPerCycle_);
             }
             if (((bitField0_ & 0x00000800) == 0x00000800)) {
               size += com.google.protobuf.CodedOutputStream
-                .computeMessageSize(12, powerOnPolicy_);
+                .computeDoubleSize(12, minTimeShuttedDownPerCycle_);
+            }
+            if (((bitField0_ & 0x00001000) == 0x00001000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(13, timeShuttedDownPerCycle90Percentile_);
+            }
+            if (((bitField0_ & 0x00002000) == 0x00002000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(14, timeShuttedDownPerCycle99Percentile_);
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(15, avgTimeShuttedDownPerMachine_);
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(16, maxTimeShuttedDownPerMachine_);
+            }
+            if (((bitField0_ & 0x00010000) == 0x00010000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(17, minTimeShuttedDownPerMachine_);
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(18, timeShuttedDownPerMachine90Percentile_);
+            }
+            if (((bitField0_ & 0x00040000) == 0x00040000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(19, timeShuttedDownPerMachine99Percentile_);
+            }
+            if (((bitField0_ & 0x00080000) == 0x00080000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(20, avgNumberMachinesOn_);
+            }
+            if (((bitField0_ & 0x00100000) == 0x00100000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(21, avgNumberMachinesOff_);
+            }
+            if (((bitField0_ & 0x00200000) == 0x00200000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(22, avgNumberMachinesTurningOn_);
+            }
+            if (((bitField0_ & 0x00400000) == 0x00400000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(23, avgNumberMachinesTurningOff_);
+            }
+            if (((bitField0_ & 0x00800000) == 0x00800000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(24, powerOffPolicy_);
+            }
+            if (((bitField0_ & 0x01000000) == 0x01000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(25, powerOnPolicy_);
+            }
+            if (((bitField0_ & 0x02000000) == 0x02000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(26, currentEnergyConsumed_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -8065,28 +8583,56 @@ public final class ClusterSimulationProtos {
               bitField0_ = (bitField0_ & ~0x00000008);
               avgShuttingsPerMachine_ = 0D;
               bitField0_ = (bitField0_ & ~0x00000010);
-              shuttingsPerMachine90Percentile_ = 0D;
+              maxShuttingsPerMachine_ = 0D;
               bitField0_ = (bitField0_ & ~0x00000020);
-              shuttingsPerMachine99Percentile_ = 0D;
+              minShuttingsPerMachine_ = 0D;
               bitField0_ = (bitField0_ & ~0x00000040);
-              avgTimeShuttedDownPerMachine_ = 0D;
+              shuttingsPerMachine90Percentile_ = 0D;
               bitField0_ = (bitField0_ & ~0x00000080);
-              timeShuttedDownPerMachine90Percentile_ = 0D;
+              shuttingsPerMachine99Percentile_ = 0D;
               bitField0_ = (bitField0_ & ~0x00000100);
-              timeShuttedDownPerMachine99Percentile_ = 0D;
+              avgTimeShuttedDownPerCycle_ = 0D;
               bitField0_ = (bitField0_ & ~0x00000200);
+              maxTimeShuttedDownPerCycle_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000400);
+              minTimeShuttedDownPerCycle_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000800);
+              timeShuttedDownPerCycle90Percentile_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00001000);
+              timeShuttedDownPerCycle99Percentile_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00002000);
+              avgTimeShuttedDownPerMachine_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00004000);
+              maxTimeShuttedDownPerMachine_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00008000);
+              minTimeShuttedDownPerMachine_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00010000);
+              timeShuttedDownPerMachine90Percentile_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00020000);
+              timeShuttedDownPerMachine99Percentile_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00040000);
+              avgNumberMachinesOn_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00080000);
+              avgNumberMachinesOff_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00100000);
+              avgNumberMachinesTurningOn_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00200000);
+              avgNumberMachinesTurningOff_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00400000);
               if (powerOffPolicyBuilder_ == null) {
                 powerOffPolicy_ = ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.getDefaultInstance();
               } else {
                 powerOffPolicyBuilder_.clear();
               }
-              bitField0_ = (bitField0_ & ~0x00000400);
+              bitField0_ = (bitField0_ & ~0x00800000);
               if (powerOnPolicyBuilder_ == null) {
                 powerOnPolicy_ = ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.getDefaultInstance();
               } else {
                 powerOnPolicyBuilder_.clear();
               }
-              bitField0_ = (bitField0_ & ~0x00000800);
+              bitField0_ = (bitField0_ & ~0x01000000);
+              currentEnergyConsumed_ = 0D;
+              bitField0_ = (bitField0_ & ~0x02000000);
               return this;
             }
 
@@ -8138,39 +8684,95 @@ public final class ClusterSimulationProtos {
               if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
                 to_bitField0_ |= 0x00000020;
               }
-              result.shuttingsPerMachine90Percentile_ = shuttingsPerMachine90Percentile_;
+              result.maxShuttingsPerMachine_ = maxShuttingsPerMachine_;
               if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
                 to_bitField0_ |= 0x00000040;
               }
-              result.shuttingsPerMachine99Percentile_ = shuttingsPerMachine99Percentile_;
+              result.minShuttingsPerMachine_ = minShuttingsPerMachine_;
               if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
                 to_bitField0_ |= 0x00000080;
               }
-              result.avgTimeShuttedDownPerMachine_ = avgTimeShuttedDownPerMachine_;
+              result.shuttingsPerMachine90Percentile_ = shuttingsPerMachine90Percentile_;
               if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
                 to_bitField0_ |= 0x00000100;
               }
-              result.timeShuttedDownPerMachine90Percentile_ = timeShuttedDownPerMachine90Percentile_;
+              result.shuttingsPerMachine99Percentile_ = shuttingsPerMachine99Percentile_;
               if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
                 to_bitField0_ |= 0x00000200;
               }
-              result.timeShuttedDownPerMachine99Percentile_ = timeShuttedDownPerMachine99Percentile_;
+              result.avgTimeShuttedDownPerCycle_ = avgTimeShuttedDownPerCycle_;
               if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
                 to_bitField0_ |= 0x00000400;
+              }
+              result.maxTimeShuttedDownPerCycle_ = maxTimeShuttedDownPerCycle_;
+              if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+                to_bitField0_ |= 0x00000800;
+              }
+              result.minTimeShuttedDownPerCycle_ = minTimeShuttedDownPerCycle_;
+              if (((from_bitField0_ & 0x00001000) == 0x00001000)) {
+                to_bitField0_ |= 0x00001000;
+              }
+              result.timeShuttedDownPerCycle90Percentile_ = timeShuttedDownPerCycle90Percentile_;
+              if (((from_bitField0_ & 0x00002000) == 0x00002000)) {
+                to_bitField0_ |= 0x00002000;
+              }
+              result.timeShuttedDownPerCycle99Percentile_ = timeShuttedDownPerCycle99Percentile_;
+              if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
+                to_bitField0_ |= 0x00004000;
+              }
+              result.avgTimeShuttedDownPerMachine_ = avgTimeShuttedDownPerMachine_;
+              if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
+                to_bitField0_ |= 0x00008000;
+              }
+              result.maxTimeShuttedDownPerMachine_ = maxTimeShuttedDownPerMachine_;
+              if (((from_bitField0_ & 0x00010000) == 0x00010000)) {
+                to_bitField0_ |= 0x00010000;
+              }
+              result.minTimeShuttedDownPerMachine_ = minTimeShuttedDownPerMachine_;
+              if (((from_bitField0_ & 0x00020000) == 0x00020000)) {
+                to_bitField0_ |= 0x00020000;
+              }
+              result.timeShuttedDownPerMachine90Percentile_ = timeShuttedDownPerMachine90Percentile_;
+              if (((from_bitField0_ & 0x00040000) == 0x00040000)) {
+                to_bitField0_ |= 0x00040000;
+              }
+              result.timeShuttedDownPerMachine99Percentile_ = timeShuttedDownPerMachine99Percentile_;
+              if (((from_bitField0_ & 0x00080000) == 0x00080000)) {
+                to_bitField0_ |= 0x00080000;
+              }
+              result.avgNumberMachinesOn_ = avgNumberMachinesOn_;
+              if (((from_bitField0_ & 0x00100000) == 0x00100000)) {
+                to_bitField0_ |= 0x00100000;
+              }
+              result.avgNumberMachinesOff_ = avgNumberMachinesOff_;
+              if (((from_bitField0_ & 0x00200000) == 0x00200000)) {
+                to_bitField0_ |= 0x00200000;
+              }
+              result.avgNumberMachinesTurningOn_ = avgNumberMachinesTurningOn_;
+              if (((from_bitField0_ & 0x00400000) == 0x00400000)) {
+                to_bitField0_ |= 0x00400000;
+              }
+              result.avgNumberMachinesTurningOff_ = avgNumberMachinesTurningOff_;
+              if (((from_bitField0_ & 0x00800000) == 0x00800000)) {
+                to_bitField0_ |= 0x00800000;
               }
               if (powerOffPolicyBuilder_ == null) {
                 result.powerOffPolicy_ = powerOffPolicy_;
               } else {
                 result.powerOffPolicy_ = powerOffPolicyBuilder_.build();
               }
-              if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
-                to_bitField0_ |= 0x00000800;
+              if (((from_bitField0_ & 0x01000000) == 0x01000000)) {
+                to_bitField0_ |= 0x01000000;
               }
               if (powerOnPolicyBuilder_ == null) {
                 result.powerOnPolicy_ = powerOnPolicy_;
               } else {
                 result.powerOnPolicy_ = powerOnPolicyBuilder_.build();
               }
+              if (((from_bitField0_ & 0x02000000) == 0x02000000)) {
+                to_bitField0_ |= 0x02000000;
+              }
+              result.currentEnergyConsumed_ = currentEnergyConsumed_;
               result.bitField0_ = to_bitField0_;
               onBuilt();
               return result;
@@ -8202,14 +8804,41 @@ public final class ClusterSimulationProtos {
               if (other.hasAvgShuttingsPerMachine()) {
                 setAvgShuttingsPerMachine(other.getAvgShuttingsPerMachine());
               }
+              if (other.hasMaxShuttingsPerMachine()) {
+                setMaxShuttingsPerMachine(other.getMaxShuttingsPerMachine());
+              }
+              if (other.hasMinShuttingsPerMachine()) {
+                setMinShuttingsPerMachine(other.getMinShuttingsPerMachine());
+              }
               if (other.hasShuttingsPerMachine90Percentile()) {
                 setShuttingsPerMachine90Percentile(other.getShuttingsPerMachine90Percentile());
               }
               if (other.hasShuttingsPerMachine99Percentile()) {
                 setShuttingsPerMachine99Percentile(other.getShuttingsPerMachine99Percentile());
               }
+              if (other.hasAvgTimeShuttedDownPerCycle()) {
+                setAvgTimeShuttedDownPerCycle(other.getAvgTimeShuttedDownPerCycle());
+              }
+              if (other.hasMaxTimeShuttedDownPerCycle()) {
+                setMaxTimeShuttedDownPerCycle(other.getMaxTimeShuttedDownPerCycle());
+              }
+              if (other.hasMinTimeShuttedDownPerCycle()) {
+                setMinTimeShuttedDownPerCycle(other.getMinTimeShuttedDownPerCycle());
+              }
+              if (other.hasTimeShuttedDownPerCycle90Percentile()) {
+                setTimeShuttedDownPerCycle90Percentile(other.getTimeShuttedDownPerCycle90Percentile());
+              }
+              if (other.hasTimeShuttedDownPerCycle99Percentile()) {
+                setTimeShuttedDownPerCycle99Percentile(other.getTimeShuttedDownPerCycle99Percentile());
+              }
               if (other.hasAvgTimeShuttedDownPerMachine()) {
                 setAvgTimeShuttedDownPerMachine(other.getAvgTimeShuttedDownPerMachine());
+              }
+              if (other.hasMaxTimeShuttedDownPerMachine()) {
+                setMaxTimeShuttedDownPerMachine(other.getMaxTimeShuttedDownPerMachine());
+              }
+              if (other.hasMinTimeShuttedDownPerMachine()) {
+                setMinTimeShuttedDownPerMachine(other.getMinTimeShuttedDownPerMachine());
               }
               if (other.hasTimeShuttedDownPerMachine90Percentile()) {
                 setTimeShuttedDownPerMachine90Percentile(other.getTimeShuttedDownPerMachine90Percentile());
@@ -8217,11 +8846,26 @@ public final class ClusterSimulationProtos {
               if (other.hasTimeShuttedDownPerMachine99Percentile()) {
                 setTimeShuttedDownPerMachine99Percentile(other.getTimeShuttedDownPerMachine99Percentile());
               }
+              if (other.hasAvgNumberMachinesOn()) {
+                setAvgNumberMachinesOn(other.getAvgNumberMachinesOn());
+              }
+              if (other.hasAvgNumberMachinesOff()) {
+                setAvgNumberMachinesOff(other.getAvgNumberMachinesOff());
+              }
+              if (other.hasAvgNumberMachinesTurningOn()) {
+                setAvgNumberMachinesTurningOn(other.getAvgNumberMachinesTurningOn());
+              }
+              if (other.hasAvgNumberMachinesTurningOff()) {
+                setAvgNumberMachinesTurningOff(other.getAvgNumberMachinesTurningOff());
+              }
               if (other.hasPowerOffPolicy()) {
                 mergePowerOffPolicy(other.getPowerOffPolicy());
               }
               if (other.hasPowerOnPolicy()) {
                 mergePowerOnPolicy(other.getPowerOnPolicy());
+              }
+              if (other.hasCurrentEnergyConsumed()) {
+                setCurrentEnergyConsumed(other.getCurrentEnergyConsumed());
               }
               this.mergeUnknownFields(other.getUnknownFields());
               return this;
@@ -8410,33 +9054,97 @@ public final class ClusterSimulationProtos {
               return this;
             }
 
-            private double shuttingsPerMachine90Percentile_ ;
+            private double maxShuttingsPerMachine_ ;
             /**
-             * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+             * <code>optional double max_shuttings_per_machine = 6;</code>
              */
-            public boolean hasShuttingsPerMachine90Percentile() {
+            public boolean hasMaxShuttingsPerMachine() {
               return ((bitField0_ & 0x00000020) == 0x00000020);
             }
             /**
-             * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+             * <code>optional double max_shuttings_per_machine = 6;</code>
+             */
+            public double getMaxShuttingsPerMachine() {
+              return maxShuttingsPerMachine_;
+            }
+            /**
+             * <code>optional double max_shuttings_per_machine = 6;</code>
+             */
+            public Builder setMaxShuttingsPerMachine(double value) {
+              bitField0_ |= 0x00000020;
+              maxShuttingsPerMachine_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double max_shuttings_per_machine = 6;</code>
+             */
+            public Builder clearMaxShuttingsPerMachine() {
+              bitField0_ = (bitField0_ & ~0x00000020);
+              maxShuttingsPerMachine_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double minShuttingsPerMachine_ ;
+            /**
+             * <code>optional double min_shuttings_per_machine = 7;</code>
+             */
+            public boolean hasMinShuttingsPerMachine() {
+              return ((bitField0_ & 0x00000040) == 0x00000040);
+            }
+            /**
+             * <code>optional double min_shuttings_per_machine = 7;</code>
+             */
+            public double getMinShuttingsPerMachine() {
+              return minShuttingsPerMachine_;
+            }
+            /**
+             * <code>optional double min_shuttings_per_machine = 7;</code>
+             */
+            public Builder setMinShuttingsPerMachine(double value) {
+              bitField0_ |= 0x00000040;
+              minShuttingsPerMachine_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double min_shuttings_per_machine = 7;</code>
+             */
+            public Builder clearMinShuttingsPerMachine() {
+              bitField0_ = (bitField0_ & ~0x00000040);
+              minShuttingsPerMachine_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double shuttingsPerMachine90Percentile_ ;
+            /**
+             * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
+             */
+            public boolean hasShuttingsPerMachine90Percentile() {
+              return ((bitField0_ & 0x00000080) == 0x00000080);
+            }
+            /**
+             * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
              */
             public double getShuttingsPerMachine90Percentile() {
               return shuttingsPerMachine90Percentile_;
             }
             /**
-             * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+             * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
              */
             public Builder setShuttingsPerMachine90Percentile(double value) {
-              bitField0_ |= 0x00000020;
+              bitField0_ |= 0x00000080;
               shuttingsPerMachine90Percentile_ = value;
               onChanged();
               return this;
             }
             /**
-             * <code>optional double shuttings_per_machine_90_percentile = 6;</code>
+             * <code>optional double shuttings_per_machine_90_percentile = 8;</code>
              */
             public Builder clearShuttingsPerMachine90Percentile() {
-              bitField0_ = (bitField0_ & ~0x00000020);
+              bitField0_ = (bitField0_ & ~0x00000080);
               shuttingsPerMachine90Percentile_ = 0D;
               onChanged();
               return this;
@@ -8444,95 +9152,319 @@ public final class ClusterSimulationProtos {
 
             private double shuttingsPerMachine99Percentile_ ;
             /**
-             * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+             * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
              */
             public boolean hasShuttingsPerMachine99Percentile() {
-              return ((bitField0_ & 0x00000040) == 0x00000040);
+              return ((bitField0_ & 0x00000100) == 0x00000100);
             }
             /**
-             * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+             * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
              */
             public double getShuttingsPerMachine99Percentile() {
               return shuttingsPerMachine99Percentile_;
             }
             /**
-             * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+             * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
              */
             public Builder setShuttingsPerMachine99Percentile(double value) {
-              bitField0_ |= 0x00000040;
+              bitField0_ |= 0x00000100;
               shuttingsPerMachine99Percentile_ = value;
               onChanged();
               return this;
             }
             /**
-             * <code>optional double shuttings_per_machine_99_percentile = 7;</code>
+             * <code>optional double shuttings_per_machine_99_percentile = 9;</code>
              */
             public Builder clearShuttingsPerMachine99Percentile() {
-              bitField0_ = (bitField0_ & ~0x00000040);
+              bitField0_ = (bitField0_ & ~0x00000100);
               shuttingsPerMachine99Percentile_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgTimeShuttedDownPerCycle_ ;
+            /**
+             * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
+             */
+            public boolean hasAvgTimeShuttedDownPerCycle() {
+              return ((bitField0_ & 0x00000200) == 0x00000200);
+            }
+            /**
+             * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
+             */
+            public double getAvgTimeShuttedDownPerCycle() {
+              return avgTimeShuttedDownPerCycle_;
+            }
+            /**
+             * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
+             */
+            public Builder setAvgTimeShuttedDownPerCycle(double value) {
+              bitField0_ |= 0x00000200;
+              avgTimeShuttedDownPerCycle_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_time_shutted_down_per_cycle = 10;</code>
+             */
+            public Builder clearAvgTimeShuttedDownPerCycle() {
+              bitField0_ = (bitField0_ & ~0x00000200);
+              avgTimeShuttedDownPerCycle_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double maxTimeShuttedDownPerCycle_ ;
+            /**
+             * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+             */
+            public boolean hasMaxTimeShuttedDownPerCycle() {
+              return ((bitField0_ & 0x00000400) == 0x00000400);
+            }
+            /**
+             * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+             */
+            public double getMaxTimeShuttedDownPerCycle() {
+              return maxTimeShuttedDownPerCycle_;
+            }
+            /**
+             * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+             */
+            public Builder setMaxTimeShuttedDownPerCycle(double value) {
+              bitField0_ |= 0x00000400;
+              maxTimeShuttedDownPerCycle_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double max_time_shutted_down_per_cycle = 11;</code>
+             */
+            public Builder clearMaxTimeShuttedDownPerCycle() {
+              bitField0_ = (bitField0_ & ~0x00000400);
+              maxTimeShuttedDownPerCycle_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double minTimeShuttedDownPerCycle_ ;
+            /**
+             * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+             */
+            public boolean hasMinTimeShuttedDownPerCycle() {
+              return ((bitField0_ & 0x00000800) == 0x00000800);
+            }
+            /**
+             * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+             */
+            public double getMinTimeShuttedDownPerCycle() {
+              return minTimeShuttedDownPerCycle_;
+            }
+            /**
+             * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+             */
+            public Builder setMinTimeShuttedDownPerCycle(double value) {
+              bitField0_ |= 0x00000800;
+              minTimeShuttedDownPerCycle_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double min_time_shutted_down_per_cycle = 12;</code>
+             */
+            public Builder clearMinTimeShuttedDownPerCycle() {
+              bitField0_ = (bitField0_ & ~0x00000800);
+              minTimeShuttedDownPerCycle_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double timeShuttedDownPerCycle90Percentile_ ;
+            /**
+             * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+             */
+            public boolean hasTimeShuttedDownPerCycle90Percentile() {
+              return ((bitField0_ & 0x00001000) == 0x00001000);
+            }
+            /**
+             * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+             */
+            public double getTimeShuttedDownPerCycle90Percentile() {
+              return timeShuttedDownPerCycle90Percentile_;
+            }
+            /**
+             * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+             */
+            public Builder setTimeShuttedDownPerCycle90Percentile(double value) {
+              bitField0_ |= 0x00001000;
+              timeShuttedDownPerCycle90Percentile_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double time_shutted_down_per_cycle_90_percentile = 13;</code>
+             */
+            public Builder clearTimeShuttedDownPerCycle90Percentile() {
+              bitField0_ = (bitField0_ & ~0x00001000);
+              timeShuttedDownPerCycle90Percentile_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double timeShuttedDownPerCycle99Percentile_ ;
+            /**
+             * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+             */
+            public boolean hasTimeShuttedDownPerCycle99Percentile() {
+              return ((bitField0_ & 0x00002000) == 0x00002000);
+            }
+            /**
+             * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+             */
+            public double getTimeShuttedDownPerCycle99Percentile() {
+              return timeShuttedDownPerCycle99Percentile_;
+            }
+            /**
+             * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+             */
+            public Builder setTimeShuttedDownPerCycle99Percentile(double value) {
+              bitField0_ |= 0x00002000;
+              timeShuttedDownPerCycle99Percentile_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double time_shutted_down_per_cycle_99_percentile = 14;</code>
+             */
+            public Builder clearTimeShuttedDownPerCycle99Percentile() {
+              bitField0_ = (bitField0_ & ~0x00002000);
+              timeShuttedDownPerCycle99Percentile_ = 0D;
               onChanged();
               return this;
             }
 
             private double avgTimeShuttedDownPerMachine_ ;
             /**
-             * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+             * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
              */
             public boolean hasAvgTimeShuttedDownPerMachine() {
-              return ((bitField0_ & 0x00000080) == 0x00000080);
+              return ((bitField0_ & 0x00004000) == 0x00004000);
             }
             /**
-             * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+             * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
              */
             public double getAvgTimeShuttedDownPerMachine() {
               return avgTimeShuttedDownPerMachine_;
             }
             /**
-             * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+             * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
              */
             public Builder setAvgTimeShuttedDownPerMachine(double value) {
-              bitField0_ |= 0x00000080;
+              bitField0_ |= 0x00004000;
               avgTimeShuttedDownPerMachine_ = value;
               onChanged();
               return this;
             }
             /**
-             * <code>optional double avg_time_shutted_down_per_machine = 8;</code>
+             * <code>optional double avg_time_shutted_down_per_machine = 15;</code>
              */
             public Builder clearAvgTimeShuttedDownPerMachine() {
-              bitField0_ = (bitField0_ & ~0x00000080);
+              bitField0_ = (bitField0_ & ~0x00004000);
               avgTimeShuttedDownPerMachine_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double maxTimeShuttedDownPerMachine_ ;
+            /**
+             * <code>optional double max_time_shutted_down_per_machine = 16;</code>
+             */
+            public boolean hasMaxTimeShuttedDownPerMachine() {
+              return ((bitField0_ & 0x00008000) == 0x00008000);
+            }
+            /**
+             * <code>optional double max_time_shutted_down_per_machine = 16;</code>
+             */
+            public double getMaxTimeShuttedDownPerMachine() {
+              return maxTimeShuttedDownPerMachine_;
+            }
+            /**
+             * <code>optional double max_time_shutted_down_per_machine = 16;</code>
+             */
+            public Builder setMaxTimeShuttedDownPerMachine(double value) {
+              bitField0_ |= 0x00008000;
+              maxTimeShuttedDownPerMachine_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double max_time_shutted_down_per_machine = 16;</code>
+             */
+            public Builder clearMaxTimeShuttedDownPerMachine() {
+              bitField0_ = (bitField0_ & ~0x00008000);
+              maxTimeShuttedDownPerMachine_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double minTimeShuttedDownPerMachine_ ;
+            /**
+             * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+             */
+            public boolean hasMinTimeShuttedDownPerMachine() {
+              return ((bitField0_ & 0x00010000) == 0x00010000);
+            }
+            /**
+             * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+             */
+            public double getMinTimeShuttedDownPerMachine() {
+              return minTimeShuttedDownPerMachine_;
+            }
+            /**
+             * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+             */
+            public Builder setMinTimeShuttedDownPerMachine(double value) {
+              bitField0_ |= 0x00010000;
+              minTimeShuttedDownPerMachine_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double min_time_shutted_down_per_machine = 17;</code>
+             */
+            public Builder clearMinTimeShuttedDownPerMachine() {
+              bitField0_ = (bitField0_ & ~0x00010000);
+              minTimeShuttedDownPerMachine_ = 0D;
               onChanged();
               return this;
             }
 
             private double timeShuttedDownPerMachine90Percentile_ ;
             /**
-             * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+             * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
              */
             public boolean hasTimeShuttedDownPerMachine90Percentile() {
-              return ((bitField0_ & 0x00000100) == 0x00000100);
+              return ((bitField0_ & 0x00020000) == 0x00020000);
             }
             /**
-             * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+             * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
              */
             public double getTimeShuttedDownPerMachine90Percentile() {
               return timeShuttedDownPerMachine90Percentile_;
             }
             /**
-             * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+             * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
              */
             public Builder setTimeShuttedDownPerMachine90Percentile(double value) {
-              bitField0_ |= 0x00000100;
+              bitField0_ |= 0x00020000;
               timeShuttedDownPerMachine90Percentile_ = value;
               onChanged();
               return this;
             }
             /**
-             * <code>optional double time_shutted_down_per_machine_90_percentile = 9;</code>
+             * <code>optional double time_shutted_down_per_machine_90_percentile = 18;</code>
              */
             public Builder clearTimeShuttedDownPerMachine90Percentile() {
-              bitField0_ = (bitField0_ & ~0x00000100);
+              bitField0_ = (bitField0_ & ~0x00020000);
               timeShuttedDownPerMachine90Percentile_ = 0D;
               onChanged();
               return this;
@@ -8540,32 +9472,160 @@ public final class ClusterSimulationProtos {
 
             private double timeShuttedDownPerMachine99Percentile_ ;
             /**
-             * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+             * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
              */
             public boolean hasTimeShuttedDownPerMachine99Percentile() {
-              return ((bitField0_ & 0x00000200) == 0x00000200);
+              return ((bitField0_ & 0x00040000) == 0x00040000);
             }
             /**
-             * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+             * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
              */
             public double getTimeShuttedDownPerMachine99Percentile() {
               return timeShuttedDownPerMachine99Percentile_;
             }
             /**
-             * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+             * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
              */
             public Builder setTimeShuttedDownPerMachine99Percentile(double value) {
-              bitField0_ |= 0x00000200;
+              bitField0_ |= 0x00040000;
               timeShuttedDownPerMachine99Percentile_ = value;
               onChanged();
               return this;
             }
             /**
-             * <code>optional double time_shutted_down_per_machine_99_percentile = 10;</code>
+             * <code>optional double time_shutted_down_per_machine_99_percentile = 19;</code>
              */
             public Builder clearTimeShuttedDownPerMachine99Percentile() {
-              bitField0_ = (bitField0_ & ~0x00000200);
+              bitField0_ = (bitField0_ & ~0x00040000);
               timeShuttedDownPerMachine99Percentile_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgNumberMachinesOn_ ;
+            /**
+             * <code>optional double avg_number_machines_on = 20;</code>
+             */
+            public boolean hasAvgNumberMachinesOn() {
+              return ((bitField0_ & 0x00080000) == 0x00080000);
+            }
+            /**
+             * <code>optional double avg_number_machines_on = 20;</code>
+             */
+            public double getAvgNumberMachinesOn() {
+              return avgNumberMachinesOn_;
+            }
+            /**
+             * <code>optional double avg_number_machines_on = 20;</code>
+             */
+            public Builder setAvgNumberMachinesOn(double value) {
+              bitField0_ |= 0x00080000;
+              avgNumberMachinesOn_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_number_machines_on = 20;</code>
+             */
+            public Builder clearAvgNumberMachinesOn() {
+              bitField0_ = (bitField0_ & ~0x00080000);
+              avgNumberMachinesOn_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgNumberMachinesOff_ ;
+            /**
+             * <code>optional double avg_number_machines_off = 21;</code>
+             */
+            public boolean hasAvgNumberMachinesOff() {
+              return ((bitField0_ & 0x00100000) == 0x00100000);
+            }
+            /**
+             * <code>optional double avg_number_machines_off = 21;</code>
+             */
+            public double getAvgNumberMachinesOff() {
+              return avgNumberMachinesOff_;
+            }
+            /**
+             * <code>optional double avg_number_machines_off = 21;</code>
+             */
+            public Builder setAvgNumberMachinesOff(double value) {
+              bitField0_ |= 0x00100000;
+              avgNumberMachinesOff_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_number_machines_off = 21;</code>
+             */
+            public Builder clearAvgNumberMachinesOff() {
+              bitField0_ = (bitField0_ & ~0x00100000);
+              avgNumberMachinesOff_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgNumberMachinesTurningOn_ ;
+            /**
+             * <code>optional double avg_number_machines_turning_on = 22;</code>
+             */
+            public boolean hasAvgNumberMachinesTurningOn() {
+              return ((bitField0_ & 0x00200000) == 0x00200000);
+            }
+            /**
+             * <code>optional double avg_number_machines_turning_on = 22;</code>
+             */
+            public double getAvgNumberMachinesTurningOn() {
+              return avgNumberMachinesTurningOn_;
+            }
+            /**
+             * <code>optional double avg_number_machines_turning_on = 22;</code>
+             */
+            public Builder setAvgNumberMachinesTurningOn(double value) {
+              bitField0_ |= 0x00200000;
+              avgNumberMachinesTurningOn_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_number_machines_turning_on = 22;</code>
+             */
+            public Builder clearAvgNumberMachinesTurningOn() {
+              bitField0_ = (bitField0_ & ~0x00200000);
+              avgNumberMachinesTurningOn_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double avgNumberMachinesTurningOff_ ;
+            /**
+             * <code>optional double avg_number_machines_turning_off = 23;</code>
+             */
+            public boolean hasAvgNumberMachinesTurningOff() {
+              return ((bitField0_ & 0x00400000) == 0x00400000);
+            }
+            /**
+             * <code>optional double avg_number_machines_turning_off = 23;</code>
+             */
+            public double getAvgNumberMachinesTurningOff() {
+              return avgNumberMachinesTurningOff_;
+            }
+            /**
+             * <code>optional double avg_number_machines_turning_off = 23;</code>
+             */
+            public Builder setAvgNumberMachinesTurningOff(double value) {
+              bitField0_ |= 0x00400000;
+              avgNumberMachinesTurningOff_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_number_machines_turning_off = 23;</code>
+             */
+            public Builder clearAvgNumberMachinesTurningOff() {
+              bitField0_ = (bitField0_ & ~0x00400000);
+              avgNumberMachinesTurningOff_ = 0D;
               onChanged();
               return this;
             }
@@ -8574,13 +9634,13 @@ public final class ClusterSimulationProtos {
             private com.google.protobuf.SingleFieldBuilder<
                 ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicyOrBuilder> powerOffPolicyBuilder_;
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public boolean hasPowerOffPolicy() {
-              return ((bitField0_ & 0x00000400) == 0x00000400);
+              return ((bitField0_ & 0x00800000) == 0x00800000);
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy getPowerOffPolicy() {
               if (powerOffPolicyBuilder_ == null) {
@@ -8590,7 +9650,7 @@ public final class ClusterSimulationProtos {
               }
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public Builder setPowerOffPolicy(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy value) {
               if (powerOffPolicyBuilder_ == null) {
@@ -8602,11 +9662,11 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOffPolicyBuilder_.setMessage(value);
               }
-              bitField0_ |= 0x00000400;
+              bitField0_ |= 0x00800000;
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public Builder setPowerOffPolicy(
                 ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.Builder builderForValue) {
@@ -8616,15 +9676,15 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOffPolicyBuilder_.setMessage(builderForValue.build());
               }
-              bitField0_ |= 0x00000400;
+              bitField0_ |= 0x00800000;
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public Builder mergePowerOffPolicy(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy value) {
               if (powerOffPolicyBuilder_ == null) {
-                if (((bitField0_ & 0x00000400) == 0x00000400) &&
+                if (((bitField0_ & 0x00800000) == 0x00800000) &&
                     powerOffPolicy_ != ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.getDefaultInstance()) {
                   powerOffPolicy_ =
                     ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.newBuilder(powerOffPolicy_).mergeFrom(value).buildPartial();
@@ -8635,11 +9695,11 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOffPolicyBuilder_.mergeFrom(value);
               }
-              bitField0_ |= 0x00000400;
+              bitField0_ |= 0x00800000;
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public Builder clearPowerOffPolicy() {
               if (powerOffPolicyBuilder_ == null) {
@@ -8648,19 +9708,19 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOffPolicyBuilder_.clear();
               }
-              bitField0_ = (bitField0_ & ~0x00000400);
+              bitField0_ = (bitField0_ & ~0x00800000);
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.Builder getPowerOffPolicyBuilder() {
-              bitField0_ |= 0x00000400;
+              bitField0_ |= 0x00800000;
               onChanged();
               return getPowerOffPolicyFieldBuilder().getBuilder();
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicyOrBuilder getPowerOffPolicyOrBuilder() {
               if (powerOffPolicyBuilder_ != null) {
@@ -8670,7 +9730,7 @@ public final class ClusterSimulationProtos {
               }
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 11;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy power_off_policy = 24;</code>
              */
             private com.google.protobuf.SingleFieldBuilder<
                 ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicyOrBuilder> 
@@ -8690,13 +9750,13 @@ public final class ClusterSimulationProtos {
             private com.google.protobuf.SingleFieldBuilder<
                 ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicyOrBuilder> powerOnPolicyBuilder_;
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public boolean hasPowerOnPolicy() {
-              return ((bitField0_ & 0x00000800) == 0x00000800);
+              return ((bitField0_ & 0x01000000) == 0x01000000);
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy getPowerOnPolicy() {
               if (powerOnPolicyBuilder_ == null) {
@@ -8706,7 +9766,7 @@ public final class ClusterSimulationProtos {
               }
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public Builder setPowerOnPolicy(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy value) {
               if (powerOnPolicyBuilder_ == null) {
@@ -8718,11 +9778,11 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOnPolicyBuilder_.setMessage(value);
               }
-              bitField0_ |= 0x00000800;
+              bitField0_ |= 0x01000000;
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public Builder setPowerOnPolicy(
                 ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.Builder builderForValue) {
@@ -8732,15 +9792,15 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOnPolicyBuilder_.setMessage(builderForValue.build());
               }
-              bitField0_ |= 0x00000800;
+              bitField0_ |= 0x01000000;
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public Builder mergePowerOnPolicy(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy value) {
               if (powerOnPolicyBuilder_ == null) {
-                if (((bitField0_ & 0x00000800) == 0x00000800) &&
+                if (((bitField0_ & 0x01000000) == 0x01000000) &&
                     powerOnPolicy_ != ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.getDefaultInstance()) {
                   powerOnPolicy_ =
                     ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.newBuilder(powerOnPolicy_).mergeFrom(value).buildPartial();
@@ -8751,11 +9811,11 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOnPolicyBuilder_.mergeFrom(value);
               }
-              bitField0_ |= 0x00000800;
+              bitField0_ |= 0x01000000;
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public Builder clearPowerOnPolicy() {
               if (powerOnPolicyBuilder_ == null) {
@@ -8764,19 +9824,19 @@ public final class ClusterSimulationProtos {
               } else {
                 powerOnPolicyBuilder_.clear();
               }
-              bitField0_ = (bitField0_ & ~0x00000800);
+              bitField0_ = (bitField0_ & ~0x01000000);
               return this;
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.Builder getPowerOnPolicyBuilder() {
-              bitField0_ |= 0x00000800;
+              bitField0_ |= 0x01000000;
               onChanged();
               return getPowerOnPolicyFieldBuilder().getBuilder();
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicyOrBuilder getPowerOnPolicyOrBuilder() {
               if (powerOnPolicyBuilder_ != null) {
@@ -8786,7 +9846,7 @@ public final class ClusterSimulationProtos {
               }
             }
             /**
-             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 12;</code>
+             * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy power_on_policy = 25;</code>
              */
             private com.google.protobuf.SingleFieldBuilder<
                 ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicyOrBuilder> 
@@ -8800,6 +9860,38 @@ public final class ClusterSimulationProtos {
                 powerOnPolicy_ = null;
               }
               return powerOnPolicyBuilder_;
+            }
+
+            private double currentEnergyConsumed_ ;
+            /**
+             * <code>optional double current_energy_consumed = 26;</code>
+             */
+            public boolean hasCurrentEnergyConsumed() {
+              return ((bitField0_ & 0x02000000) == 0x02000000);
+            }
+            /**
+             * <code>optional double current_energy_consumed = 26;</code>
+             */
+            public double getCurrentEnergyConsumed() {
+              return currentEnergyConsumed_;
+            }
+            /**
+             * <code>optional double current_energy_consumed = 26;</code>
+             */
+            public Builder setCurrentEnergyConsumed(double value) {
+              bitField0_ |= 0x02000000;
+              currentEnergyConsumed_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double current_energy_consumed = 26;</code>
+             */
+            public Builder clearCurrentEnergyConsumed() {
+              bitField0_ = (bitField0_ & ~0x02000000);
+              currentEnergyConsumed_ = 0D;
+              onChanged();
+              return this;
             }
 
             // @@protoc_insertion_point(builder_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats)
@@ -12832,15 +13924,15 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\223\033\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\303\037\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\243\032\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\323\036\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
-      "tSet.ExperimentEnv.ExperimentResult\032\306\030\n\020",
+      "tSet.ExperimentEnv.ExperimentResult\032\366\034\n\020",
       "ExperimentResult\022&\n\036cell_state_avg_cpu_u" +
       "tilization\030\004 \001(\001\022&\n\036cell_state_avg_mem_u" +
       "tilization\030\005 \001(\001\022!\n\031cell_state_avg_cpu_l" +
@@ -12900,24 +13992,38 @@ public final class ClusterSimulationProtos {
       "ime\022\025\n\rworkload_name\030\001 \001(\t\022\030\n\020useful_bus" +
       "y_time\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\032@" +
       "\n\021SchedulerWorkload\022\025\n\rschedulerName\030\001 \001" +
-      "(\t\022\024\n\014workloadName\030\002 \001(\t\032\361\005\n\017EfficiencyS",
+      "(\t\022\024\n\014workloadName\030\002 \001(\t\032\241\n\n\017EfficiencyS",
       "tats\022\035\n\025total_energy_consumed\030\001 \001(\001\022\032\n\022t" +
       "otal_energy_saved\030\002 \001(\001\022\036\n\026total_power_o" +
       "ff_number\030\003 \001(\001\022\036\n\026kwh_saved_per_shuttin" +
       "g\030\004 \001(\001\022!\n\031avg_shuttings_per_machine\030\005 \001" +
-      "(\001\022+\n#shuttings_per_machine_90_percentil" +
-      "e\030\006 \001(\001\022+\n#shuttings_per_machine_99_perc" +
-      "entile\030\007 \001(\001\022)\n!avg_time_shutted_down_pe" +
-      "r_machine\030\010 \001(\001\0223\n+time_shutted_down_per" +
-      "_machine_90_percentile\030\t \001(\001\0223\n+time_shu" +
-      "tted_down_per_machine_99_percentile\030\n \001(",
-      "\001\022\210\001\n\020power_off_policy\030\013 \001(\0132n.ClusterSc" +
-      "hedulingSimulation.ExperimentResultSet.E" +
-      "xperimentEnv.ExperimentResult.Efficiency" +
-      "Stats.PowerOffPolicy\022\206\001\n\017power_on_policy" +
-      "\030\014 \001(\0132m.ClusterSchedulingSimulation.Exp" +
-      "erimentResultSet.ExperimentEnv.Experimen" +
-      "tResult.EfficiencyStats.PowerOnPolicy\032\036\n" +
+      "(\001\022!\n\031max_shuttings_per_machine\030\006 \001(\001\022!\n" +
+      "\031min_shuttings_per_machine\030\007 \001(\001\022+\n#shut" +
+      "tings_per_machine_90_percentile\030\010 \001(\001\022+\n" +
+      "#shuttings_per_machine_99_percentile\030\t \001" +
+      "(\001\022\'\n\037avg_time_shutted_down_per_cycle\030\n " +
+      "\001(\001\022\'\n\037max_time_shutted_down_per_cycle\030\013",
+      " \001(\001\022\'\n\037min_time_shutted_down_per_cycle\030" +
+      "\014 \001(\001\0221\n)time_shutted_down_per_cycle_90_" +
+      "percentile\030\r \001(\001\0221\n)time_shutted_down_pe" +
+      "r_cycle_99_percentile\030\016 \001(\001\022)\n!avg_time_" +
+      "shutted_down_per_machine\030\017 \001(\001\022)\n!max_ti" +
+      "me_shutted_down_per_machine\030\020 \001(\001\022)\n!min" +
+      "_time_shutted_down_per_machine\030\021 \001(\001\0223\n+" +
+      "time_shutted_down_per_machine_90_percent" +
+      "ile\030\022 \001(\001\0223\n+time_shutted_down_per_machi" +
+      "ne_99_percentile\030\023 \001(\001\022\036\n\026avg_number_mac",
+      "hines_on\030\024 \001(\001\022\037\n\027avg_number_machines_of" +
+      "f\030\025 \001(\001\022&\n\036avg_number_machines_turning_o" +
+      "n\030\026 \001(\001\022\'\n\037avg_number_machines_turning_o" +
+      "ff\030\027 \001(\001\022\210\001\n\020power_off_policy\030\030 \001(\0132n.Cl" +
+      "usterSchedulingSimulation.ExperimentResu" +
+      "ltSet.ExperimentEnv.ExperimentResult.Eff" +
+      "iciencyStats.PowerOffPolicy\022\206\001\n\017power_on" +
+      "_policy\030\031 \001(\0132m.ClusterSchedulingSimulat" +
+      "ion.ExperimentResultSet.ExperimentEnv.Ex" +
+      "perimentResult.EfficiencyStats.PowerOnPo",
+      "licy\022\037\n\027current_energy_consumed\030\032 \001(\001\032\036\n" +
       "\016PowerOffPolicy\022\014\n\004name\030\001 \001(\t\032\035\n\rPowerOn" +
       "Policy\022\014\n\004name\030\001 \001(\t"
     };
@@ -12986,7 +14092,7 @@ public final class ClusterSimulationProtos {
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_descriptor,
-        new java.lang.String[] { "TotalEnergyConsumed", "TotalEnergySaved", "TotalPowerOffNumber", "KwhSavedPerShutting", "AvgShuttingsPerMachine", "ShuttingsPerMachine90Percentile", "ShuttingsPerMachine99Percentile", "AvgTimeShuttedDownPerMachine", "TimeShuttedDownPerMachine90Percentile", "TimeShuttedDownPerMachine99Percentile", "PowerOffPolicy", "PowerOnPolicy", });
+        new java.lang.String[] { "TotalEnergyConsumed", "TotalEnergySaved", "TotalPowerOffNumber", "KwhSavedPerShutting", "AvgShuttingsPerMachine", "MaxShuttingsPerMachine", "MinShuttingsPerMachine", "ShuttingsPerMachine90Percentile", "ShuttingsPerMachine99Percentile", "AvgTimeShuttedDownPerCycle", "MaxTimeShuttedDownPerCycle", "MinTimeShuttedDownPerCycle", "TimeShuttedDownPerCycle90Percentile", "TimeShuttedDownPerCycle99Percentile", "AvgTimeShuttedDownPerMachine", "MaxTimeShuttedDownPerMachine", "MinTimeShuttedDownPerMachine", "TimeShuttedDownPerMachine90Percentile", "TimeShuttedDownPerMachine99Percentile", "AvgNumberMachinesOn", "AvgNumberMachinesOff", "AvgNumberMachinesTurningOn", "AvgNumberMachinesTurningOff", "PowerOffPolicy", "PowerOnPolicy", "CurrentEnergyConsumed", });
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_PowerOffPolicy_descriptor =
       internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_descriptor.getNestedTypes().get(0);
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_PowerOffPolicy_fieldAccessorTable = new

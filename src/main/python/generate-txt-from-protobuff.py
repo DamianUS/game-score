@@ -181,10 +181,12 @@ for env in experiment_result_set.experiment_env:
                         if per_workload_busy_time.workload_name == workload_stat.workload_name:
                             # TODO: Añadir solo una cabecera
                             output_strings[scheduler_stats_key] += \
-                                "%s%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
+                                "%s%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
                                                                                                                                                         "env.cell_name",
                                                                                                                                                         "env.is_prefilled",
                                                                                                                                                         "env.run_time",
+                                                                                                                                                        "eff.power_on",
+                                                                                                                                                        "eff.power_off",
                                                                                                                                                         "sched_stat.scheduler_name",
                                                                                                                                                         "exp_result.sweep_workload",
                                                                                                                                                         "workload_stat.workload_name",
@@ -221,10 +223,12 @@ for env in experiment_result_set.experiment_env:
                                                                                                                                                         "per_workload_busy_time.useful_busy_time",
                                                                                                                                                         "per_workload_busy_time.wasted_busy_time")
                             output_strings[scheduler_stats_key] += \
-                                "%s%s %s %d %s %s %s %.4f %.4f %.4f %.4f %.2f %.2f %s %i %i %i %i %.4f %.4f %i %i %i %i %i %i %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %s %i %.4f %.4f\n" % (opt_extra_newline,
+                                "%s%s %s %d %s %s %s %s %s %.4f %.4f %.4f %.4f %.2f %.2f %s %i %i %i %i %.4f %.4f %i %i %i %i %i %i %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %s %i %.4f %.4f\n" % (opt_extra_newline,
                                                                                                                                                         env.cell_name,
                                                                                                                                                         env.is_prefilled,
                                                                                                                                                         env.run_time,
+                                                                                                                                                        exp_result.efficiency_stats.power_on_policy.name,
+                                                                                                                                                        exp_result.efficiency_stats.power_off_policy.name,
                                                                                                                                                         sched_stat.scheduler_name,
                                                                                                                                                         exp_result.sweep_workload,
                                                                                                                                                         workload_stat.workload_name,

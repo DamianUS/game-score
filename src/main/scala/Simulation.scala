@@ -368,8 +368,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = false
-    val runMesos = true
+    val runMonolithic = true
+    val runMesos = false
     val runOmega = false
 
     //All sorting and picking policies
@@ -403,13 +403,13 @@ object Simulation {
     val runRandom = false
     val runGamma = false
     val runExp = false
-    val runGammaNormal =true
+    val runGammaNormal =false
 
     //PowerOn
-    val runNoPowerOn = true
-    val runDefault = false
+    val runNoPowerOn = false
+    val runDefault = true
     val runGammaNormalOn = false
-    val runCombinedDefaultOrGammaNormal = true
+    val runCombinedDefaultOrGammaNormal = false
 
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(0.9, 0.7, 50)), "or") ))
@@ -626,7 +626,8 @@ object Simulation {
       }
     }
 
-    val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
+    val constantRange = (1.0 :: Nil)
+    //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     val perTaskRange = (0.005 :: Nil)

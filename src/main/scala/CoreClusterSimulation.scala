@@ -320,9 +320,12 @@ class ClusterSimulator(val cellState: CellState,
   var sumMachinesTurningOff = 0
   var totalMachinePowerStates = Seq[Array[Int]]()
   var sumMachinesOccupied = 0
+  var sumCpuIdle = 0.0
+  var sumMemIdle = 0.0
 
 
-  val runtime = 86400 * 30
+
+  val runtime = 0.0
   val powerPerCpuOn = 108
   val powerPerCpuIdle = 50
   val powerTurnedOff = 5
@@ -344,6 +347,87 @@ class ClusterSimulator(val cellState: CellState,
     energyOn + energyIdle
   }
 
+  def shuttingDownsPerMachineAvg : Double = cellState.powerOffs.filter(_ != null).map(_.length).sum / cellState.powerOffs.filter(_ != null).length
+  def maxShuttingDowns : Int = cellState.powerOffs.filter(_ != null).map(_.length).max
+  def minShuttingDowns : Int = if(cellState.powerOffs.filter(_ != null).length < cellState.powerOffs.length) 0 else cellState.powerOffs.filter(_ != null).map(_.length).min
+  def shuttingDownsPerMachineArray : Array[Seq[Double]] = cellState.powerOffs.filter(_ != null)
+  def shuttingDownsPerMachinePercentile(percentile: Double): Double = {
+    assert(percentile <= 1.0 && percentile >= 0)
+    val powerOffs = cellState.powerOffs.filter(_ != null)
+    if (powerOffs.length > 0) {
+      val powerOffsArray = new Array[Int](powerOffs.length)
+      powerOffs.map(_.length).copyToArray(powerOffsArray)
+      util.Sorting.quickSort(powerOffsArray)
+      val result = powerOffsArray(((powerOffsArray.length-1) * percentile).toInt)
+      println(("Looking up job queue time till fully scheduled " +
+        "percentile value at position %d of %d: %f.")
+        .format(((powerOffsArray.length) * percentile).toInt,
+          powerOffsArray.length,
+          result))
+      result
+    } else {
+      -1.0
+    }
+  }
+
+  def timeShuttedDownPerCycleAvg : Double = cyclesShuttedDownPerMachineArray.flatten.sum / cyclesShuttedDownPerMachineArray.flatten.length
+  def maxTimeShuttedDownPerCycle : Double = cyclesShuttedDownPerMachineArray.flatten.max
+  def minTimeShuttedDownPerCycle : Double = cyclesShuttedDownPerMachineArray.flatten.min
+  def cyclesShuttedDownPerMachineArray : Array[Seq[Double]] = {
+    val powerOffs = cellState.powerOffs.filter(_ != null)
+    var timeShuttedDownPerMachine = Array[Seq[Double]]()
+    for(i <- 0 to powerOffs.length-1){
+      timeShuttedDownPerMachine(i) = Seq[Double]()
+      for(j <- 1 to powerOffs(i).length-1){
+        timeShuttedDownPerMachine(i) = timeShuttedDownPerMachine(i) :+ (powerOffs(i)(j)-powerOffs(i)(j-1))
+      }
+    }
+    timeShuttedDownPerMachine
+  }
+  def timeShuttedDownPerCyclePercentile(percentile: Double): Double = {
+    assert(percentile <= 1.0 && percentile >= 0)
+    val powerOffs = cellState.powerOffs.filter(_ != null)
+    if (powerOffs.length > 0) {
+      val timeShuttedDownArray = new Array[Double](cyclesShuttedDownPerMachineArray.flatten.length)
+      cyclesShuttedDownPerMachineArray.flatten.copyToArray(timeShuttedDownArray)
+      util.Sorting.quickSort(timeShuttedDownArray)
+      val result = timeShuttedDownArray(((timeShuttedDownArray.length-1) * percentile).toInt)
+      println(("Looking up job queue time till fully scheduled " +
+        "percentile value at position %d of %d: %f.")
+        .format(((timeShuttedDownArray.length) * percentile).toInt,
+          timeShuttedDownArray.length,
+          result))
+      result
+    } else {
+      -1.0
+    }
+  }
+
+  def timeShuttedDownPerMachineArray : Seq[Double] = {
+    cellState.powerOffs.filter(_ != null).map(_.sum)
+  }
+  def timeShuttedDownPerMachineAvg : Double = timeShuttedDownPerMachineArray.sum / timeShuttedDownPerMachineArray.length
+  def maxTimeShuttedDownPerMachine : Double = timeShuttedDownPerMachineArray.max
+  def minTimeShuttedDownPerMachine : Double = timeShuttedDownPerMachineArray.min
+  def timeShuttedDownPerMachinePercentile(percentile: Double): Double = {
+    assert(percentile <= 1.0 && percentile >= 0)
+    val powerOffs = cellState.powerOffs.filter(_ != null)
+    if (powerOffs.length > 0) {
+      val timeShuttedDownArray = new Array[Double](timeShuttedDownPerMachineArray.length)
+      timeShuttedDownPerMachineArray.copyToArray(timeShuttedDownArray)
+      util.Sorting.quickSort(timeShuttedDownArray)
+      val result = timeShuttedDownArray(((timeShuttedDownArray.length-1) * percentile).toInt)
+      println(("Looking up job queue time till fully scheduled " +
+        "percentile value at position %d of %d: %f.")
+        .format(((timeShuttedDownArray.length) * percentile).toInt,
+          timeShuttedDownArray.length,
+          result))
+      result
+    } else {
+      -1.0
+    }
+  }
+
   def totalPowerOffNumber : Int =   {
     cellState.powerOffs.filter(_ != null).map(_.length).sum
   }
@@ -363,7 +447,12 @@ class ClusterSimulator(val cellState: CellState,
   def secondsWastedPerKwhSaved : Double = {
     var totalSecondsWasted = 0.0
     schedulers.map(_._2).foreach(totalSecondsWasted += _.totalWastedTimeSchedulingPowering)
-    totalSecondsWasted / (totalEnergySaved / 3600000)
+    if(totalSecondsWasted > 0 && totalEnergySaved > 0){
+      totalSecondsWasted / (totalEnergySaved / 3600000)
+    }
+    else{
+      0.0
+    }
   }
 
   def totalSecondsWasted : Double = {
@@ -373,7 +462,12 @@ class ClusterSimulator(val cellState: CellState,
   }
 
   def kwhSavedPerShutting : Double = {
-    (totalEnergySaved / 3600000) / totalPowerOffNumber
+    if(totalPowerOffNumber > 0 && totalEnergySaved > 0.0){
+      (totalEnergySaved / 3600000) / totalPowerOffNumber
+    }
+    else{
+      0.0
+    }
   }
 
   def measureUtilization: Unit = {
@@ -434,6 +528,7 @@ class ClusterSimulator(val cellState: CellState,
         measureUtilization
       }
     }
+    runtime = runTime
     super.run(runTime, wallClockTimeout)
   }
 }
@@ -1347,7 +1442,7 @@ class Workload(val name: String,
       scheduled.map(_.timeInQueueTillFullyScheduled)
         .copyToArray(queueTimesArray)
       util.Sorting.quickSort(queueTimesArray)
-      val result = queueTimesArray(((queueTimesArray.length-1) * 0.9).toInt)
+      val result = queueTimesArray(((queueTimesArray.length-1) * percentile).toInt)
       println(("Looking up job queue time till fully scheduled " +
         "percentile value at position %d of %d: %f.")
         .format(((queueTimesArray.length) * percentile).toInt,
