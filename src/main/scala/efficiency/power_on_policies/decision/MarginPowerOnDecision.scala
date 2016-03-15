@@ -11,7 +11,7 @@ class MarginPowerOnDecision(securityMargin: Double) extends PowerOnDecision{
     job.unscheduledTasks > 0 || mustPowerOn(cellState, job)
   }
 
-  override val name: String = "margin-power-on-decision"
+  override val name: String = ("margin-power-on-decision-with-security-margin:%f").format(securityMargin)
 
   def mustPowerOn(cellState: CellState, job: Job): Boolean = {
     val machinesCpuNeeded = Math.max(0, ((securityMargin * cellState.numberOfMachinesOn * cellState.cpusPerMachine - (cellState.availableCpus - job.cpusStillNeeded))/cellState.cpusPerMachine).ceil.toInt)

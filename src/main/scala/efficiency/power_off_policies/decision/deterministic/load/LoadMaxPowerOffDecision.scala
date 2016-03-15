@@ -12,5 +12,5 @@ class LoadMaxPowerOffDecision(threshold : Double) extends PowerOffDecision{
         threshold > Math.max(cellState.totalOccupiedCpus/cellState.totalCpus, cellState.totalOccupiedMem/cellState.totalMem)
     }
 
-    override val name: String = "load-max-power-off-decision"
+    override val name: String = ("load-max-power-off-decision-with-threshold:%f").format(threshold)
   }

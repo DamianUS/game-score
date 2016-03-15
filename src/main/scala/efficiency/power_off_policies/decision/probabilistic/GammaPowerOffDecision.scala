@@ -28,5 +28,5 @@ class GammaPowerOffDecision(threshold : Double, windowSize: Int, ts : Double = 1
   }
 
 
-  override val name: String = "gamma-power-off-decision"
+  override val name: String = ("gamma-power-off-decision-with-gamma-threshold:%f-and-window-size:%d-and-ts:%f").format(threshold,windowSize,ts)
 }

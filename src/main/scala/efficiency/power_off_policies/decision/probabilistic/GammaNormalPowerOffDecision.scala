@@ -35,5 +35,5 @@ class GammaNormalPowerOffDecision(normalThreshold: Double, threshold : Double, w
     should
   }
 
-  override val name: String = "gamma-normal-power-off-decision"
+  override val name: String = ("gamma-normal-power-off-decision-with-normal-threshold:%f-and-gamma-threshold:%f-and-window-size:%d-and-ts:%f").format(normalThreshold,threshold,windowSize,ts)
 }

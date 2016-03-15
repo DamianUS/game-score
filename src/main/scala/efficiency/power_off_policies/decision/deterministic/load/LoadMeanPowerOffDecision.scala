@@ -11,5 +11,5 @@ class LoadMeanPowerOffDecision(threshold : Double) extends PowerOffDecision{
         threshold > ((cellState.totalOccupiedCpus/cellState.totalCpus + cellState.totalOccupiedMem/cellState.totalMem)/2)
     }
 
-    override val name: String = "load-mean-power-off-decision"
+    override val name: String = ("load-mean-power-off-decision-with-margin:%f").format(threshold)
   }

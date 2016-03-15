@@ -77,5 +77,5 @@ class ExpNormPowerOffDecision(threshold : Double, windowSize: Int) extends Power
     math.sqrt(variance(items))
   }
 
-  override val name: String = "exponential-normal-power-off-decision"
+  override val name: String = ("exponential-normal-power-off-decision-with-threshold:%f-and-window-size:%d").format(threshold,windowSize)
 }

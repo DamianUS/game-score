@@ -12,5 +12,5 @@ class FreeCapacityMeanMarginPowerOffDecision(percentage : Double) extends PowerO
         percentage < (cellState.availableCpus/cellState.onCpus + cellState.availableCpus/cellState.onCpus)/2
     }
 
-    override val name: String = "free-capacity-margin-max-power-off-decision"
+    override val name: String = ("free-capacity-margin-max-power-off-decision-with-perc:%f").format(percentage)
   }

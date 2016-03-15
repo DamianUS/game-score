@@ -42,7 +42,7 @@ class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) exten
     assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %d machines to turn on after powering on machines").format(name, machinesToPowerOn))
   }
 
-  override val name: String = "power-on-percentage-resources-free-margin-action"
+  override val name: String = ("power-on-percentage-resources-free-margin-action-with-margin:%f").format(resourcesPercentageMargin)
 
   def numMachinesNeeded(cellState: CellState, job: Job): Int = {
     var machinesNeeded = 0

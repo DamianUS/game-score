@@ -56,5 +56,5 @@ class GammaFreePowerOffDecision(threshold : Double, windowSize: Int) extends Pow
     should
   }
 
-  override val name: String = "gamma-free-power-off-decision"
+  override val name: String = ("gamma-free-power-off-decision-with-threshold:%f-and-window-size:%d").format(threshold,windowSize)
 }

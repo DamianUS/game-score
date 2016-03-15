@@ -41,5 +41,5 @@ class ExponentialPowerOffDecision(threshold : Double, windowSize: Int) extends P
     should
   }
 
-  override val name: String = "exponential-power-off-decision"
+  override val name: String = ("exponential-power-off-decision-with-threshold:%f-and-window-size:%d").format(threshold,windowSize)
 }

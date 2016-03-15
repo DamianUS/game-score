@@ -62,5 +62,5 @@ class GammaPowerOnAction(normalThreshold: Double, threshold : Double, windowSize
     powerOnMachines(cellState, machinesToPowerOn, schedType)
   }
 
-  override val name: String = "gamma-power-on-action"
+  override val name: String = ("gamma-normal-power-on-action-with-normal-threshold:%f-and-gamma-threshold:%f-and-window-size:%d").format(normalThreshold,threshold,windowSize)
 }

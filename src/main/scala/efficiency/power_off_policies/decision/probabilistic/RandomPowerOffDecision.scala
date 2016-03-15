@@ -14,5 +14,5 @@ class RandomPowerOffDecision(threshold: Double = 0.5) extends PowerOffDecision{
      Random.nextFloat() < threshold
    }
 
-   override val name: String = "random-power-off-decision"
+   override val name: String = ("random-power-off-decision-with-threshold:%f").format(threshold)
  }

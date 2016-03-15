@@ -18,5 +18,5 @@ class FreeCapacityMinPonderatedMarginPowerOffDecision(percentage : Double) exten
         percentage < 1 - Math.max(cellState.totalOccupiedCpus/cellState.totalCpus, cellState.totalOccupiedMem/cellState.totalMem)
     }
 
-    override val name: String = "free-capacity-min-ponderated-margin-power-off-decision"
+    override val name: String = ("free-capacity-min-ponderated-margin-power-off-decision-with-perc:%f").format(percentage)
   }
