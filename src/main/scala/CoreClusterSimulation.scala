@@ -85,7 +85,7 @@ abstract class Simulator(logging: Boolean = false){
     * Run the simulation for {@code runTime} virtual (i.e., simulated)
     * seconds or until {@code wallClockTimeout} seconds of execution
     * time elapses.
- *
+    *
     * @return true if simulation ran till runTime or completion, and false
     *         if simulation timed out.
     */
@@ -139,7 +139,7 @@ abstract class ClusterSimulatorDesc(val runTime: Double) {
   * (single agent, dynamically partitioned,and replicated state), based
   * on a set of input parameters that define the schedulers being used
   * and the workload being played.
- *
+  *
   * @param schedulers A Map from schedulerName to Scheduler, should
   *       exactly one entry for each scheduler that is registered with
   *       this simulator.
@@ -325,7 +325,7 @@ class ClusterSimulator(val cellState: CellState,
 
 
 
-  val runtime = 0.0
+  var runtime = 0.0
   val powerPerCpuOn = 108
   val powerPerCpuIdle = 50
   val powerTurnedOff = 5
@@ -347,8 +347,8 @@ class ClusterSimulator(val cellState: CellState,
     energyOn + energyIdle
   }
 
-  def shuttingDownsPerMachineAvg : Double = cellState.powerOffs.filter(_ != null).map(_.length).sum / cellState.powerOffs.filter(_ != null).length
-  def maxShuttingDowns : Int = cellState.powerOffs.filter(_ != null).map(_.length).max
+  def shuttingDownsPerMachineAvg : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cellState.powerOffs.filter(_ != null).map(_.length).sum / cellState.powerOffs.filter(_ != null).length else 0.0
+  def maxShuttingDowns : Int = if(cellState.powerOffs.filter(_ != null).length > 0) cellState.powerOffs.filter(_ != null).map(_.length).max else 0
   def minShuttingDowns : Int = if(cellState.powerOffs.filter(_ != null).length < cellState.powerOffs.length) 0 else cellState.powerOffs.filter(_ != null).map(_.length).min
   def shuttingDownsPerMachineArray : Array[Seq[Double]] = cellState.powerOffs.filter(_ != null)
   def shuttingDownsPerMachinePercentile(percentile: Double): Double = {
@@ -359,27 +359,40 @@ class ClusterSimulator(val cellState: CellState,
       powerOffs.map(_.length).copyToArray(powerOffsArray)
       util.Sorting.quickSort(powerOffsArray)
       val result = powerOffsArray(((powerOffsArray.length-1) * percentile).toInt)
-      println(("Looking up job queue time till fully scheduled " +
+      println(("Looking up number of shutting downs per machine " +
         "percentile value at position %d of %d: %f.")
         .format(((powerOffsArray.length) * percentile).toInt,
           powerOffsArray.length,
-          result))
+          result.toDouble))
       result
     } else {
       -1.0
     }
   }
 
-  def timeShuttedDownPerCycleAvg : Double = cyclesShuttedDownPerMachineArray.flatten.sum / cyclesShuttedDownPerMachineArray.flatten.length
-  def maxTimeShuttedDownPerCycle : Double = cyclesShuttedDownPerMachineArray.flatten.max
-  def minTimeShuttedDownPerCycle : Double = cyclesShuttedDownPerMachineArray.flatten.min
+  def timeShuttedDownPerCycleAvg : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cyclesShuttedDownPerMachineArray.flatten.sum / cyclesShuttedDownPerMachineArray.flatten.length else 0.0
+  def maxTimeShuttedDownPerCycle : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cyclesShuttedDownPerMachineArray.flatten.max else 0.0
+  def minTimeShuttedDownPerCycle : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cyclesShuttedDownPerMachineArray.flatten.min else 0.0
   def cyclesShuttedDownPerMachineArray : Array[Seq[Double]] = {
     val powerOffs = cellState.powerOffs.filter(_ != null)
+    //We assume
+    val powerOns = cellState.powerOns.filter(_ != null)
     var timeShuttedDownPerMachine = Array[Seq[Double]]()
-    for(i <- 0 to powerOffs.length-1){
-      timeShuttedDownPerMachine(i) = Seq[Double]()
-      for(j <- 1 to powerOffs(i).length-1){
-        timeShuttedDownPerMachine(i) = timeShuttedDownPerMachine(i) :+ (powerOffs(i)(j)-powerOffs(i)(j-1))
+    if(powerOffs.length > 0){
+      for(i <- 0 to powerOffs.length-1){
+        var machineShuttingTimes = Seq[Double]()
+        //timeShuttedDownPerMachine = timeShuttedDownPerMachine :+  Seq[Double]()
+        for(j <- 0 to powerOffs(i).length-1){
+          if(powerOns.length > i && powerOns(i) !=null && powerOns(i).length > j){
+            //Exists a power on after this power off
+            machineShuttingTimes = machineShuttingTimes :+ (powerOns(i)(j)-powerOffs(i)(j))
+          }
+          else{
+            //Does not exists a power on after this power off
+            machineShuttingTimes = machineShuttingTimes :+ (currentTime-powerOffs(i)(j))
+          }
+        }
+        timeShuttedDownPerMachine = timeShuttedDownPerMachine :+  machineShuttingTimes
       }
     }
     timeShuttedDownPerMachine
@@ -392,7 +405,7 @@ class ClusterSimulator(val cellState: CellState,
       cyclesShuttedDownPerMachineArray.flatten.copyToArray(timeShuttedDownArray)
       util.Sorting.quickSort(timeShuttedDownArray)
       val result = timeShuttedDownArray(((timeShuttedDownArray.length-1) * percentile).toInt)
-      println(("Looking up job queue time till fully scheduled " +
+      println(("Looking up time that machines are keep shutted down per cycle " +
         "percentile value at position %d of %d: %f.")
         .format(((timeShuttedDownArray.length) * percentile).toInt,
           timeShuttedDownArray.length,
@@ -406,9 +419,9 @@ class ClusterSimulator(val cellState: CellState,
   def timeShuttedDownPerMachineArray : Seq[Double] = {
     cellState.powerOffs.filter(_ != null).map(_.sum)
   }
-  def timeShuttedDownPerMachineAvg : Double = timeShuttedDownPerMachineArray.sum / timeShuttedDownPerMachineArray.length
-  def maxTimeShuttedDownPerMachine : Double = timeShuttedDownPerMachineArray.max
-  def minTimeShuttedDownPerMachine : Double = timeShuttedDownPerMachineArray.min
+  def timeShuttedDownPerMachineAvg : Double = if(cellState.powerOffs.filter(_ != null).length > 0) timeShuttedDownPerMachineArray.sum / timeShuttedDownPerMachineArray.length else 0.0
+  def maxTimeShuttedDownPerMachine : Double = if(cellState.powerOffs.filter(_ != null).length > 0) timeShuttedDownPerMachineArray.max else 0.0
+  def minTimeShuttedDownPerMachine : Double = if(cellState.powerOffs.filter(_ != null).length > 0) timeShuttedDownPerMachineArray.min else 0.0
   def timeShuttedDownPerMachinePercentile(percentile: Double): Double = {
     assert(percentile <= 1.0 && percentile >= 0)
     val powerOffs = cellState.powerOffs.filter(_ != null)
@@ -417,7 +430,7 @@ class ClusterSimulator(val cellState: CellState,
       timeShuttedDownPerMachineArray.copyToArray(timeShuttedDownArray)
       util.Sorting.quickSort(timeShuttedDownArray)
       val result = timeShuttedDownArray(((timeShuttedDownArray.length-1) * percentile).toInt)
-      println(("Looking up job queue time till fully scheduled " +
+      println(("Looking up job time that machines are keep shutted down " +
         "percentile value at position %d of %d: %f.")
         .format(((timeShuttedDownArray.length) * percentile).toInt,
           timeShuttedDownArray.length,
@@ -528,7 +541,7 @@ class ClusterSimulator(val cellState: CellState,
         measureUtilization
       }
     }
-    runtime = runTime
+    runtime = runTime.getOrElse(0.0)
     super.run(runTime, wallClockTimeout)
   }
 }
@@ -785,7 +798,7 @@ abstract class Scheduler(val name: String,
   }
 
   def recordWastedTimeSchedulingPowering(job: Job,
-                                 timeScheduling: Double): Unit = {
+                                         timeScheduling: Double): Unit = {
     assert(simulator != null, "This scheduler has not been added to a " +
       "simulator yet.")
     // Scheduler level stats.
@@ -1596,7 +1609,7 @@ class UniformWorkloadGenerator(val workloadName: String,
   * interarrival rates, numTasks, and lengths sampled from exponential
   * distributions. Assumes that all tasks in a job are identical
   * (and so no per-task data is required).
- *
+  *
   * @param workloadName the name that will be assigned to Workloads produced by
   *                     this factory, and to the tasks they contain.
   * @param initAvgJobInterarrivalTime initial average inter-arrival time in

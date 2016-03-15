@@ -13,6 +13,6 @@ class ComposedPowerOnPolicy(action : PowerOnAction, decision : PowerOnDecision) 
 
   override var powerOnAction: PowerOnAction = action
   override var powerOnDecisionPolicy: PowerOnDecision = decision
-  override val name: String = ("Composed Power on Policy with decision: %s and action: %s").format(powerOnDecisionPolicy.name, powerOnAction.name)
+  override val name: String = ("composed-power-on-policy-with-decision:-%s-and-action:-%s").format(powerOnDecisionPolicy.name, powerOnAction.name)
 
 }

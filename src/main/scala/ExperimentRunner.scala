@@ -250,7 +250,7 @@ class Experiment(
                           simulator.avgMemLocked / simulator.cellState.totalMem)
                         //EfficiencyStats
 
-                        /*val efficiencyStats = ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.newBuilder()
+                        val efficiencyStats = ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.newBuilder()
                         efficiencyStats.setAvgNumberMachinesOff(simulator.sumMachinesOff / simulator.numMonitoringMeasurements)
                         efficiencyStats.setAvgNumberMachinesOn(simulator.sumMachinesOn / simulator.numMonitoringMeasurements)
                         efficiencyStats.setAvgNumberMachinesTurningOff(simulator.sumMachinesTurningOff / simulator.numMonitoringMeasurements)
@@ -281,7 +281,7 @@ class Experiment(
                         efficiencyStats.setTotalEnergyConsumed(simulator.totalEnergyConsumed)
                         efficiencyStats.setTotalEnergySaved(simulator.totalEnergySaved)
                         efficiencyStats.setTotalPowerOffNumber(simulator.totalPowerOffNumber)
-                        experimentResult.setEfficiencyStats(efficiencyStats)*/
+                        experimentResult.setEfficiencyStats(efficiencyStats)
                         // Save repeated stats about workloads.
                         workloads.foreach(workload => {
                           val workloadStats = ExperimentResultSet.

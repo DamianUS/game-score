@@ -20,5 +20,5 @@ class CombinedPowerOffDecision(pOffDecisions: Seq[PowerOffDecision], op: String)
      }
      powerOff
    }
-   val name : String = {powerOffDecisions.map(_.name).mkString("combined-power-off-decision with power-off-decision-policies: ", ", ", " and operator "+operator)}
+   val name : String = {powerOffDecisions.map(_.name).mkString("combined-power-off-decision with power-off-decision-policies:",",","and_operator:"+operator)}
  }

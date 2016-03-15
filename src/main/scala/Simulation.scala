@@ -27,22 +27,18 @@
 import java.io.{File, FileInputStream, FileOutputStream}
 import java.nio.channels.FileChannel
 
-import ClusterSchedulingSimulation.{ExpExpExpWorkloadGenerator, Experiment, MesosSchedulerDesc, MesosSimulatorDesc, MonolithicSimulatorDesc, OmegaSchedulerDesc, OmegaSimulatorDesc, SchedulerDesc, Seed, WorkloadDesc}
 import ClusterSchedulingSimulation.Workloads._
+import ClusterSchedulingSimulation.{ExpExpExpWorkloadGenerator, Experiment, MesosSchedulerDesc, MesosSimulatorDesc, MonolithicSimulatorDesc, OmegaSchedulerDesc, OmegaSimulatorDesc, SchedulerDesc, Seed, WorkloadDesc}
 import ca.zmatrix.utils._
-import efficiency.ordering_cellstate_resources_policies.{PowerStateLoadSorter, BasicLoadSorter, CellStateResourcesSorter, NoSorter}
+import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter, PowerStateLoadSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.action.DefaultPowerOffAction
-import efficiency.power_off_policies.decision.deterministic.load.LoadMaxPowerOffDecision
-import efficiency.power_off_policies.decision.{PowerOffDecision, CombinedPowerOffDecision}
-import efficiency.power_off_policies.decision.deterministic.security_margin.FreeCapacityMinMarginPowerOffDecision
 import efficiency.power_off_policies.decision.deterministic.{AlwzPowerOffDecision, NoPowerOffDecision}
 import efficiency.power_off_policies.decision.probabilistic._
 import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
-import efficiency.power_on_policies.action.margin.PowerOnMarginPercAvailableAction
-import efficiency.power_on_policies.action.unsatisfied.{GammaPowerOnAction, DefaultPowerOnAction}
+import efficiency.power_on_policies.action.unsatisfied.{DefaultPowerOnAction, GammaPowerOnAction}
 import efficiency.power_on_policies.decision.probabilistic.GammaNormalPowerOnDecision
-import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, MarginPowerOnDecision, NoPowerOnDecision}
+import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, NoPowerOnDecision}
 import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
 
 import scala.collection.mutable.ArrayBuffer
@@ -403,7 +399,7 @@ object Simulation {
     val runRandom = false
     val runGamma = false
     val runExp = false
-    val runGammaNormal =false
+    val runGammaNormal =true
 
     //PowerOn
     val runNoPowerOn = false
@@ -626,8 +622,8 @@ object Simulation {
       }
     }
 
-    val constantRange = (1.0 :: Nil)
-    //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
+    //val constantRange = (1.0 :: Nil)
+    val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     val perTaskRange = (0.005 :: Nil)

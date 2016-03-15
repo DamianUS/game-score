@@ -11,6 +11,6 @@ class ComposedPowerOffPolicy(action : PowerOffAction, decision : PowerOffDecisio
   override var powerOffAction: PowerOffAction = action
   override var powerOffDecisionPolicy: PowerOffDecision = decision
 
-  override val name: String = ("Composed Power Off Policy with decision: %s and action: %s").format(powerOffDecisionPolicy.name, powerOffAction.name)
+  override val name: String = ("composed_power_off_policy_with_decision:%s_and_action:%s").format(powerOffDecisionPolicy.name, powerOffAction.name)
 
 }
