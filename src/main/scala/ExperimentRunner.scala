@@ -59,7 +59,7 @@ class Experiment(
                   schedulerWorkloadMap: Map[String, Seq[String]],
                   // Simulator setup.
                   simulatorDesc: ClusterSimulatorDesc,
-                  logging: Boolean = false,
+                  logging: Boolean = true,
                   outputDirectory: String = "experiment_results",
                   // Map from workloadName -> max % of cellState this prefill workload
                   // can account for. Any prefill workload generator with workloadName
@@ -69,7 +69,7 @@ class Experiment(
                   prefillCpuLimits: Map[String, Double] = Map(),
                   prefillMemLimits: Map[String, Double] = Map(),
                   // Default simulations to 10 minute timeout.
-                  simulationTimeout: Double = 60.0*10.0,
+                  simulationTimeout: Double = 60.0*10000000000.0,
                   cellStateResourcesSorterList: Seq[CellStateResourcesSorter],
                   cellStateResourcesPickerList: Seq[CellStateResourcesPicker],
                   powerOnPolicies: Seq[PowerOnPolicy],
@@ -251,10 +251,10 @@ class Experiment(
                         //EfficiencyStats
 
                         val efficiencyStats = ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.newBuilder()
-                        efficiencyStats.setAvgNumberMachinesOff(simulator.sumMachinesOff / simulator.numMonitoringMeasurements)
-                        efficiencyStats.setAvgNumberMachinesOn(simulator.sumMachinesOn / simulator.numMonitoringMeasurements)
-                        efficiencyStats.setAvgNumberMachinesTurningOff(simulator.sumMachinesTurningOff / simulator.numMonitoringMeasurements)
-                        efficiencyStats.setAvgNumberMachinesTurningOn(simulator.sumMachinesTurningOn / simulator.numMonitoringMeasurements)
+                        efficiencyStats.setAvgNumberMachinesOff(simulator.sumMachinesOff.toDouble / simulator.numMonitoringMeasurements.toDouble)
+                        efficiencyStats.setAvgNumberMachinesOn(simulator.sumMachinesOn.toDouble / simulator.numMonitoringMeasurements.toDouble)
+                        efficiencyStats.setAvgNumberMachinesTurningOff(simulator.sumMachinesTurningOff.toDouble / simulator.numMonitoringMeasurements.toDouble)
+                        efficiencyStats.setAvgNumberMachinesTurningOn(simulator.sumMachinesTurningOn.toDouble / simulator.numMonitoringMeasurements.toDouble)
                         efficiencyStats.setAvgShuttingsPerMachine(simulator.shuttingDownsPerMachineAvg)
                         efficiencyStats.setAvgTimeShuttedDownPerCycle(simulator.timeShuttedDownPerCycleAvg)
                         efficiencyStats.setAvgTimeShuttedDownPerMachine(simulator.timeShuttedDownPerMachineAvg)

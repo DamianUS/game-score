@@ -27,7 +27,7 @@
 package ClusterSchedulingSimulation
 
 import efficiency.DistributionCache
-import efficiency.ordering_cellstate_resources_policies.{NoSorter, BasicLoadSorter, CellStateResourcesSorter}
+import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.PowerOffPolicy
 import efficiency.power_on_policies.PowerOnPolicy
@@ -347,7 +347,7 @@ class ClusterSimulator(val cellState: CellState,
     energyOn + energyIdle
   }
 
-  def shuttingDownsPerMachineAvg : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cellState.powerOffs.filter(_ != null).map(_.length).sum / cellState.powerOffs.filter(_ != null).length else 0.0
+  def shuttingDownsPerMachineAvg : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cellState.powerOffs.filter(_ != null).map(_.length).sum.toDouble / cellState.powerOffs.filter(_ != null).length.toDouble else 0.0
   def maxShuttingDowns : Int = if(cellState.powerOffs.filter(_ != null).length > 0) cellState.powerOffs.filter(_ != null).map(_.length).max else 0
   def minShuttingDowns : Int = if(cellState.powerOffs.filter(_ != null).length < cellState.powerOffs.length) 0 else cellState.powerOffs.filter(_ != null).map(_.length).min
   def shuttingDownsPerMachineArray : Array[Seq[Double]] = cellState.powerOffs.filter(_ != null)
@@ -733,8 +733,8 @@ abstract class Scheduler(val name: String,
 
     var numRemainingTasks = job.unscheduledTasks
     var remainingCandidates = math.max(0, cellState.numberOfMachinesOn - numMachinesToBlackList).toInt
+    simulator.sorter.orderResources(cellState)
     while(numRemainingTasks > 0 && remainingCandidates > 0) {
-      simulator.sorter.orderResources(cellState)
       val pickResult = simulator.picker.pickResource(cellState, job, candidatePool, remainingCandidates);
       remainingCandidates = pickResult._3
       candidatePool = pickResult._4
@@ -876,13 +876,15 @@ class CellStateDesc(val numMachines: Int,
                     val cpusPerMachine: Double,
                     val memPerMachine: Double)
 
+
 class CellState(val numMachines: Int,
                 val cpusPerMachine: Double,
                 val memPerMachine: Double,
                 val conflictMode: String,
                 val transactionMode: String,
                 val powerOnTime : Double = 30.0,
-                val powerOffTime : Double = 10.0) {
+                val powerOffTime : Double = 10.0,
+                val mustPopulateLoadFactor : Boolean = true ) {
   assert(conflictMode.equals("resource-fit") ||
     conflictMode.equals("sequence-numbers"),
     "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
@@ -900,6 +902,19 @@ class CellState(val numMachines: Int,
   // An array where index 0 is the highest loaded machine and n-1 is the lowest
   // loaded machine. Values are Machine IDs
   var machinesLoad = new Array[Int] (numMachines)
+  var machinesLoadFactor = populateMachinesLoadFactorMap()
+  var machinesLoadOrdered = true;
+
+  def populateMachinesLoadFactorMap(): HashMap[Int,Double] ={
+    val map = HashMap[Int,Double]()
+    if(mustPopulateLoadFactor){
+      for (a <- 0 to numMachines-1){
+        map.put(a, 0.0)
+      }
+      machinesLoad = map.keySet.toArray
+    }
+    map
+  }
 
   // Map from scheduler name to number of cpus assigned to that scheduler.
   val occupiedCpus = HashMap[String, Double]()
@@ -967,6 +982,11 @@ class CellState(val numMachines: Int,
         machinePowerState(machineID) = 1
         numberOfMachinesOn += 1
       }
+      val cpuLoad = simulator.cellState.allocatedCpusPerMachine(machineID) / (simulator.cellState.cpusPerMachine)
+      val memLoad = simulator.cellState.allocatedMemPerMachine(machineID) / (simulator.cellState.memPerMachine)
+      val calculatedLoad = Math.max(cpuLoad, memLoad)
+      simulator.cellState.machinesLoadFactor.update(machineID, calculatedLoad)
+      machinesLoadOrdered = false
     }
     assert(numberOfMachinesOff + numberOfMachinesOn + numberOfMachinesTurningOn + numberOfMachinesTurningOff == numMachines, "El número de máquinas no es correcto tras encender una máquina")
   }
@@ -989,6 +1009,8 @@ class CellState(val numMachines: Int,
         numberOfMachinesOff += 1
       }
     }
+    simulator.cellState.machinesLoadFactor.update(machineID, 2.0)
+    machinesLoadOrdered = false
     assert(numberOfMachinesOff + numberOfMachinesOn + numberOfMachinesTurningOn + numberOfMachinesTurningOff == numMachines, "El número de máquinas no es correcto tras apagar una máquina")
   }
 
@@ -1039,6 +1061,11 @@ class CellState(val numMachines: Int,
       assert(occupiedMem(scheduler.name) <= totalMem + 0.000001)
       totalOccupiedCpus += cpus
       totalOccupiedMem += mem
+      val cpuLoad = (allocatedCpusPerMachine(machineID) + cpus) / cpusPerMachine
+      val memLoad = (allocatedMemPerMachine(machineID) + mem) / memPerMachine
+      val calculatedLoad = Math.max(cpuLoad, memLoad)
+      machinesLoadFactor.update(machineID, calculatedLoad)
+      machinesLoadOrdered = false
     }
 
     // Also track the per machine resources available.
@@ -1100,6 +1127,11 @@ class CellState(val numMachines: Int,
       occupiedMem(scheduler.name) = occupiedMem(scheduler.name) - mem
       totalOccupiedCpus -= cpus
       totalOccupiedMem -= mem
+      val cpuLoad = (allocatedCpusPerMachine(machineID) - cpus) / (cpusPerMachine)
+      val memLoad = (allocatedMemPerMachine(machineID) - mem) / (memPerMachine)
+      val calculatedLoad = Math.max(cpuLoad, memLoad)
+      machinesLoadFactor.update(machineID, calculatedLoad)
+      machinesLoadOrdered = false
     }
 
     // Also track the per machine resources available.
@@ -1123,7 +1155,8 @@ class CellState(val numMachines: Int,
       cpusPerMachine,
       memPerMachine,
       conflictMode,
-      transactionMode)
+      transactionMode,
+      mustPopulateLoadFactor = false)
     Array.copy(src = allocatedCpusPerMachine,
       srcPos = 0,
       dest = newCellState.allocatedCpusPerMachine,
@@ -1149,6 +1182,9 @@ class CellState(val numMachines: Int,
       dest = newCellState.machinePowerState,
       destPos = 0,
       length = numMachines)
+    newCellState.machinesLoadFactor = HashMap[Int, Double]()
+    newCellState.machinesLoadFactor ++= machinesLoadFactor
+    newCellState.machinesLoadOrdered = machinesLoadOrdered
     newCellState.occupiedCpus ++= occupiedCpus
     newCellState.occupiedMem ++= occupiedMem
     newCellState.lockedCpus ++= lockedCpus
@@ -1161,6 +1197,7 @@ class CellState(val numMachines: Int,
     newCellState.numberOfMachinesOn = numberOfMachinesOn
     newCellState.numberOfMachinesTurningOff = numberOfMachinesTurningOff
     newCellState.numberOfMachinesTurningOn = numberOfMachinesTurningOn
+    //newCellState.simulator = simulator
     newCellState
   }
 

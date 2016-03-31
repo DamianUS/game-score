@@ -208,7 +208,8 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 * 30 // 1 Day
+    val globalRunTime = 86400.0 * 7
+    //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
         globalRunTime)
@@ -293,7 +294,7 @@ object Simulation {
      * we want to use.
      */
     var allWorkloadDescs = List[WorkloadDesc]()
-    allWorkloadDescs ::= exampleWorkloadDesc
+    allWorkloadDescs ::= googleWorkloadDesc
     //allWorkloadDescs ::= exampleWorkloadPrefillDesc
 
     // Prefills jobs based on prefill trace, draws job and task stats from
@@ -364,8 +365,8 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = true
-    val runMesos = false
+    val runMonolithic = false
+    val runMesos = true
     val runOmega = false
 
     //All sorting and picking policies
@@ -405,7 +406,7 @@ object Simulation {
     val runNoPowerOn = false
     val runDefault = true
     val runGammaNormalOn = false
-    val runCombinedDefaultOrGammaNormal = false
+    val runCombinedDefaultOrGammaNormal = true
 
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(0.9, 0.7, 50)), "or") ))
@@ -633,9 +634,9 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillCpuLim = Map("PrefillBatchService" -> 0.6)
+    val prefillCpuLim = Map("PrefillBatch" -> 0.9, "PrefillService" -> 0.9)
     val doLogging = false
-    val timeout = 60.0 * 60.0 // In seconds.
+    val timeout = 60.0 * 60.0 *10000.0 // In seconds.
 
     val sweepC = true
     val sweepL = false

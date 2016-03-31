@@ -6,6 +6,12 @@ import ClusterSchedulingSimulation.CellState
  * Created by dfernandez on 8/1/16.
  */
 trait CellStateResourcesSorter {
-  def orderResources(cellstate: CellState)
+  def order(cellstate: CellState)
+  def orderResources(cellState: CellState) : Unit ={
+    if(!cellState.machinesLoadOrdered){
+      order(cellState)
+      cellState.machinesLoadOrdered = true
+    }
+  }
   val name: String
 }

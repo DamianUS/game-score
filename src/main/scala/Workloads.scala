@@ -28,21 +28,32 @@ package ClusterSchedulingSimulation
 
 import java.io.File
 
+import scala.collection.mutable.HashMap
+
 /**
  * Set up workloads based on measurements from a real cluster.
  * In the Eurosys paper, we used measurements from Google clusters here.
  */
 object Workloads {
+
+  def populateMachinesLoadFactorMap(numMachines : Int): HashMap[Int,Double] ={
+    val map = HashMap[Int,Double]()
+    for (a <- 0 to numMachines-1){
+      map.put(a, 0.0)
+    }
+    map
+  }
+
   /**
    * Set up CellStateDescs that will go into WorkloadDescs. Fabricated
    * numbers are provided as an example. Enter numbers based on your
    * own clusters instead.
    */
-  val exampleCellStateDesc = new CellStateDesc(numMachines = 100,
+  val exampleCellStateDesc = new CellStateDesc(numMachines = 12500,
     cpusPerMachine = 4,
-    memPerMachine = 8)
+    memPerMachine = 16)
 
-
+/*
   /**
    * Set up WorkloadDescs, containing generators of workloads and
    * pre-fill workloads based on measurements of cells/workloads.
@@ -68,7 +79,7 @@ object Workloads {
         exampleWorkloadGeneratorService :: Nil,
     cellStateDesc = exampleCellStateDesc)
 
-
+*/
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/example-init-cluster-state.log"
@@ -84,7 +95,7 @@ object Workloads {
     new PrefillPbbTraceWorkloadGenerator("PrefillBatchService",
       examplePrefillTraceFileName)
 
-  val exampleWorkloadPrefillDesc =
+  /*val exampleWorkloadPrefillDesc =
     WorkloadDesc(cell = "example",
       assignmentPolicy = "CMB_PBB",
       workloadGenerators =
@@ -93,53 +104,61 @@ object Workloads {
           Nil,
       cellStateDesc = exampleCellStateDesc,
       prefillWorkloadGenerators =
-        List(exampleBatchServicePrefillTraceWLGenerator))
+        List(exampleBatchServicePrefillTraceWLGenerator))*/
 
-  //
-  //  // Set up example workload with jobs that have interarrival times
-  //  // from trace-based interarrival times.
-  //  val exampleInterarrivalTraceFileName = "traces/job-distribution-traces/" +
-  //      "example_interarrival_cmb.log"
-  //  val exampleNumTasksTraceFileName = "traces/job-distribution-traces/" +
-  //      "example_csizes_cmb.log"
-  //  val exampleJobDurationTraceFileName = "traces/job-distribution-traces/" +
-  //      "example_runtimes_cmb.log"
-  //  assert((new File(exampleInterarrivalTraceFileName)).exists())
-  //  assert((new File(exampleNumTasksTraceFileName)).exists())
-  //  assert((new File(exampleJobDurationTraceFileName)).exists())
-  //  assert((new File(exampleAllTraceFileName)).exists())
-  //
-  //  // A workload based on traces of interarrival times, tasks-per-job,
-  //  // and job duration. Task shapes now based on pre-fill traces.
-  //  // Now task shapes are based on all jobs traces from google
-  //  val exampleWorkloadGeneratorTraceAllBatch =
-  //      new TraceAllWLGenerator(
-  //          "Batch".intern(),
-  //          exampleInterarrivalTraceFileName,
-  //          exampleNumTasksTraceFileName,
-  //          exampleJobDurationTraceFileName,
-  //          exampleAllTraceFileName,
-  //          maxCpusPerTask = 3.9, // Machines in example cluster have 4 CPUs.
-  //          maxMemPerTask = 15.9) // Machines in example cluster have 16GB mem.
-  //
-  //  val exampleWorkloadGeneratorTraceAllService =
-  //      new TraceAllWLGenerator(
-  //          "Service".intern(),
-  //          exampleInterarrivalTraceFileName,
-  //          exampleNumTasksTraceFileName,
-  //          exampleJobDurationTraceFileName,
-  //          exampleAllTraceFileName,
-  //          maxCpusPerTask = 3.9,
-  //          maxMemPerTask = 15.9)
-  //
-  //  val exampleTraceAllWorkloadPrefillDesc =
-  //      WorkloadDesc(cell = "example",
-  //                   assignmentPolicy = "CMB_PBB",
-  //                   workloadGenerators =
-  //                       exampleWorkloadGeneratorTraceAllBatch ::
-  //                       exampleWorkloadGeneratorTraceAllService ::
-  //                       Nil,
-  //                   cellStateDesc = exampleCellStateDesc,
-  //                   prefillWorkloadGenerators =
-  //                      List(exampleBatchServicePrefillTraceWLGenerator))
+
+    // Set up example workload with jobs that have interarrival times
+    // from trace-based interarrival times.
+    val exampleInterarrivalTraceFileName = "traces/job-distribution-traces/" +
+        "example_interarrival_cmb.log"
+    val exampleNumTasksTraceFileName = "traces/job-distribution-traces/" +
+        "example_csizes_cmb.log"
+    val exampleJobDurationTraceFileName = "traces/job-distribution-traces/" +
+        "example_runtimes_cmb.log"
+    assert((new File(exampleInterarrivalTraceFileName)).exists())
+    assert((new File(exampleNumTasksTraceFileName)).exists())
+    assert((new File(exampleJobDurationTraceFileName)).exists())
+    assert((new File(exampleAllTraceFileName)).exists())
+
+    // A workload based on traces of interarrival times, tasks-per-job,
+    // and job duration. Task shapes now based on pre-fill traces.
+    // Now task shapes are based on all jobs traces from google
+    val exampleWorkloadGeneratorTraceAllBatch =
+        new TraceAllWLGenerator(
+            "Batch".intern(),
+            exampleInterarrivalTraceFileName,
+            exampleNumTasksTraceFileName,
+            exampleJobDurationTraceFileName,
+            exampleAllTraceFileName,
+            maxCpusPerTask = 3.9, // Machines in example cluster have 4 CPUs.
+            maxMemPerTask = 15.9) // Machines in example cluster have 16GB mem.
+
+    val exampleWorkloadGeneratorTraceAllService =
+        new TraceAllWLGenerator(
+            "Service".intern(),
+            exampleInterarrivalTraceFileName,
+            exampleNumTasksTraceFileName,
+            exampleJobDurationTraceFileName,
+            exampleAllTraceFileName,
+            maxCpusPerTask = 3.9,
+            maxMemPerTask = 15.9)
+
+    val exampleTraceAllWorkloadPrefillDesc =
+        WorkloadDesc(cell = "example",
+                     assignmentPolicy = "CMB_PBB",
+                     workloadGenerators =
+                         exampleWorkloadGeneratorTraceAllBatch ::
+                         exampleWorkloadGeneratorTraceAllService ::
+                         Nil,
+                     cellStateDesc = exampleCellStateDesc,
+                     prefillWorkloadGenerators =
+                        List(exampleBatchServicePrefillTraceWLGenerator))
+
+  val googleWorkloadDesc = WorkloadDesc(cell = "example",
+    assignmentPolicy = "CMB_PBB",
+    workloadGenerators =
+      exampleWorkloadGeneratorTraceAllBatch ::
+        exampleWorkloadGeneratorTraceAllService :: Nil,
+    cellStateDesc = exampleCellStateDesc,
+    prefillWorkloadGenerators = exampleBatchPrefillTraceWLGenerator :: exampleServicePrefillTraceWLGenerator :: Nil)
 }

@@ -17,7 +17,7 @@ trait PowerOnAction {
       cellState.simulator.sorter.orderResources(cellState)
     }
     loop.breakable {
-      for (i <- cellState.machinesLoad.length - 1 to 0 by -1) {
+      for (i <- cellState.numMachines - 1 to 0 by -1) {
         if (machinesToPowerOn == 0) {
           loop.break
         }

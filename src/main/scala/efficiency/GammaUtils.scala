@@ -31,8 +31,9 @@ trait GammaUtils {
       allPastTuples = allPastTuples.slice(allPastTuples.length-(windowSize+2), allPastTuples.length-1)
     }
     allPastTuples*/
-    if(cellState.simulator.jobCache.length > windowSize+1){
-      cellState.simulator.jobCache.slice(cellState.simulator.jobCache.length-(windowSize+1), cellState.simulator.jobCache.length)
+    val jobCacheLength = cellState.simulator.jobCache.length
+    if(jobCacheLength > windowSize+1){
+      cellState.simulator.jobCache.slice(jobCacheLength-(windowSize+1), jobCacheLength)
     }
     else{
       cellState.simulator.jobCache
@@ -45,14 +46,16 @@ trait GammaUtils {
   }
 
   def generateJobAtributes(allPastTuples : Seq[Tuple2[Double, Job]]): Tuple6[Double, Double, Double, Double, Double, Double] ={
+    val allPastTuplesLength = allPastTuples.length
     DistributionCache.jobAttributesCacheMiss += 1
-    var interArrival = Seq[Double]()
-    var memConsumed = Seq[Double]()
-    var cpuConsumed = Seq[Double]()
-    for(i <- 1 to allPastTuples.length-1){
-      interArrival = interArrival :+ (allPastTuples(i)._1 - allPastTuples(i-1)._1)
-      memConsumed = memConsumed :+ allPastTuples(i)._2.numTasks*allPastTuples(i)._2.memPerTask
-      cpuConsumed = cpuConsumed :+ allPastTuples(i)._2.numTasks*allPastTuples(i)._2.cpusPerTask
+    val arraySize = if (allPastTuplesLength > 0) allPastTuplesLength-1 else 0
+    val interArrival = new Array[Double](arraySize)
+    val memConsumed = new Array[Double](arraySize)
+    val cpuConsumed = new Array[Double](arraySize)
+    for(i <- 1 to allPastTuplesLength-1){
+      interArrival(i-1) = (allPastTuples(i)._1 - allPastTuples(i-1)._1)
+      memConsumed(i-1) = allPastTuples(i)._2.numTasks*allPastTuples(i)._2.memPerTask
+      cpuConsumed(i-1) = allPastTuples(i)._2.numTasks*allPastTuples(i)._2.cpusPerTask
     }
     val interArrivalTuple = meanAndStdDev(interArrival)
     val memTuple = meanAndStdDev(memConsumed)
