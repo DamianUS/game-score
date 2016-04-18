@@ -15,6 +15,21 @@ object DefaultPowerOnAction extends PowerOnAction{
       job.turnOnRequests = job.turnOnRequests :+ cellState.simulator.currentTime
     var machinesToPowerOn = 0
     val machinesNeeded = Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt)
+    /*if(schedType == "omega"){
+      val unscheduledTasksWithoutConflict = Math.max (0, job.unscheduledTasks - conflictedDelta.length)
+      machinesNeeded = Math.max(((unscheduledTasksWithoutConflict * job.cpusPerTask) / cellState.cpusPerMachine).ceil.toInt, ((unscheduledTasksWithoutConflict * job.memPerTask) / cellState.memPerMachine).ceil.toInt)
+      val unsatisfiedMem = conflictedDelta.map(_.mem).sum
+      val unsatisfiedCpu = conflictedDelta.map(_.cpus).sum
+      if(unsatisfiedMem > cellState.availableMem || unsatisfiedCpu > cellState.availableCpus){
+        machinesNeeded += Math.max((unsatisfiedMem / cellState.memPerMachine).ceil.toInt, (unsatisfiedCpu / cellState.cpusPerMachine).ceil.toInt)
+      }
+      /*if(cellState.transactionMode == "all-or-nothing"){
+
+      }
+      else if(cellState.transactionMode == "incremental"){
+
+      }*/
+    }*/
     if (cellState.numberOfMachinesOff >= machinesNeeded) {
       cellState.simulator.log(("There are enough machines turned off, turning on %d machines on %s policy").format(machinesNeeded, name))
       machinesToPowerOn = machinesNeeded

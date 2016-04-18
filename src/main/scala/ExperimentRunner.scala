@@ -199,7 +199,7 @@ class Experiment(
                 println("\nSet picking strategy "+cellStateResourcesPicker.name)
 
                 cellStateResourcesSorterList.foreach(cellStateResourcesSorter => {
-                  println ("\nSet picking strategy "+cellStateResourcesSorter.name)
+                  println ("\nSet sorting strategy "+cellStateResourcesSorter.name)
 
                   powerOnPolicies.foreach(powerOnPolicy => {
                     println("\nSet power on policy "+powerOnPolicy.name)
@@ -281,6 +281,7 @@ class Experiment(
                         efficiencyStats.setTotalEnergyConsumed(simulator.totalEnergyConsumed)
                         efficiencyStats.setTotalEnergySaved(simulator.totalEnergySaved)
                         efficiencyStats.setTotalPowerOffNumber(simulator.totalPowerOffNumber)
+                        efficiencyStats.setPickingPolicy(simulator.picker.name)
                         experimentResult.setEfficiencyStats(efficiencyStats)
                         // Save repeated stats about workloads.
                         workloads.foreach(workload => {

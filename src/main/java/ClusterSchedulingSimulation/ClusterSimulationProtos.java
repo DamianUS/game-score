@@ -6629,6 +6629,20 @@ public final class ClusterSimulationProtos {
            * <code>optional double current_energy_consumed = 26;</code>
            */
           double getCurrentEnergyConsumed();
+
+          /**
+           * <code>optional string picking_policy = 27;</code>
+           */
+          boolean hasPickingPolicy();
+          /**
+           * <code>optional string picking_policy = 27;</code>
+           */
+          java.lang.String getPickingPolicy();
+          /**
+           * <code>optional string picking_policy = 27;</code>
+           */
+          com.google.protobuf.ByteString
+              getPickingPolicyBytes();
         }
         /**
          * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats}
@@ -6826,6 +6840,12 @@ public final class ClusterSimulationProtos {
                   case 209: {
                     bitField0_ |= 0x02000000;
                     currentEnergyConsumed_ = input.readDouble();
+                    break;
+                  }
+                  case 218: {
+                    com.google.protobuf.ByteString bs = input.readBytes();
+                    bitField0_ |= 0x04000000;
+                    pickingPolicy_ = bs;
                     break;
                   }
                 }
@@ -8222,6 +8242,48 @@ public final class ClusterSimulationProtos {
             return currentEnergyConsumed_;
           }
 
+          public static final int PICKING_POLICY_FIELD_NUMBER = 27;
+          private java.lang.Object pickingPolicy_;
+          /**
+           * <code>optional string picking_policy = 27;</code>
+           */
+          public boolean hasPickingPolicy() {
+            return ((bitField0_ & 0x04000000) == 0x04000000);
+          }
+          /**
+           * <code>optional string picking_policy = 27;</code>
+           */
+          public java.lang.String getPickingPolicy() {
+            java.lang.Object ref = pickingPolicy_;
+            if (ref instanceof java.lang.String) {
+              return (java.lang.String) ref;
+            } else {
+              com.google.protobuf.ByteString bs = 
+                  (com.google.protobuf.ByteString) ref;
+              java.lang.String s = bs.toStringUtf8();
+              if (bs.isValidUtf8()) {
+                pickingPolicy_ = s;
+              }
+              return s;
+            }
+          }
+          /**
+           * <code>optional string picking_policy = 27;</code>
+           */
+          public com.google.protobuf.ByteString
+              getPickingPolicyBytes() {
+            java.lang.Object ref = pickingPolicy_;
+            if (ref instanceof java.lang.String) {
+              com.google.protobuf.ByteString b = 
+                  com.google.protobuf.ByteString.copyFromUtf8(
+                      (java.lang.String) ref);
+              pickingPolicy_ = b;
+              return b;
+            } else {
+              return (com.google.protobuf.ByteString) ref;
+            }
+          }
+
           private void initFields() {
             totalEnergyConsumed_ = 0D;
             totalEnergySaved_ = 0D;
@@ -8249,6 +8311,7 @@ public final class ClusterSimulationProtos {
             powerOffPolicy_ = ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy.getDefaultInstance();
             powerOnPolicy_ = ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy.getDefaultInstance();
             currentEnergyConsumed_ = 0D;
+            pickingPolicy_ = "";
           }
           private byte memoizedIsInitialized = -1;
           public final boolean isInitialized() {
@@ -8340,6 +8403,9 @@ public final class ClusterSimulationProtos {
             }
             if (((bitField0_ & 0x02000000) == 0x02000000)) {
               output.writeDouble(26, currentEnergyConsumed_);
+            }
+            if (((bitField0_ & 0x04000000) == 0x04000000)) {
+              output.writeBytes(27, getPickingPolicyBytes());
             }
             getUnknownFields().writeTo(output);
           }
@@ -8453,6 +8519,10 @@ public final class ClusterSimulationProtos {
             if (((bitField0_ & 0x02000000) == 0x02000000)) {
               size += com.google.protobuf.CodedOutputStream
                 .computeDoubleSize(26, currentEnergyConsumed_);
+            }
+            if (((bitField0_ & 0x04000000) == 0x04000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeBytesSize(27, getPickingPolicyBytes());
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -8633,6 +8703,8 @@ public final class ClusterSimulationProtos {
               bitField0_ = (bitField0_ & ~0x01000000);
               currentEnergyConsumed_ = 0D;
               bitField0_ = (bitField0_ & ~0x02000000);
+              pickingPolicy_ = "";
+              bitField0_ = (bitField0_ & ~0x04000000);
               return this;
             }
 
@@ -8773,6 +8845,10 @@ public final class ClusterSimulationProtos {
                 to_bitField0_ |= 0x02000000;
               }
               result.currentEnergyConsumed_ = currentEnergyConsumed_;
+              if (((from_bitField0_ & 0x04000000) == 0x04000000)) {
+                to_bitField0_ |= 0x04000000;
+              }
+              result.pickingPolicy_ = pickingPolicy_;
               result.bitField0_ = to_bitField0_;
               onBuilt();
               return result;
@@ -8866,6 +8942,11 @@ public final class ClusterSimulationProtos {
               }
               if (other.hasCurrentEnergyConsumed()) {
                 setCurrentEnergyConsumed(other.getCurrentEnergyConsumed());
+              }
+              if (other.hasPickingPolicy()) {
+                bitField0_ |= 0x04000000;
+                pickingPolicy_ = other.pickingPolicy_;
+                onChanged();
               }
               this.mergeUnknownFields(other.getUnknownFields());
               return this;
@@ -9890,6 +9971,82 @@ public final class ClusterSimulationProtos {
             public Builder clearCurrentEnergyConsumed() {
               bitField0_ = (bitField0_ & ~0x02000000);
               currentEnergyConsumed_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private java.lang.Object pickingPolicy_ = "";
+            /**
+             * <code>optional string picking_policy = 27;</code>
+             */
+            public boolean hasPickingPolicy() {
+              return ((bitField0_ & 0x04000000) == 0x04000000);
+            }
+            /**
+             * <code>optional string picking_policy = 27;</code>
+             */
+            public java.lang.String getPickingPolicy() {
+              java.lang.Object ref = pickingPolicy_;
+              if (!(ref instanceof java.lang.String)) {
+                com.google.protobuf.ByteString bs =
+                    (com.google.protobuf.ByteString) ref;
+                java.lang.String s = bs.toStringUtf8();
+                if (bs.isValidUtf8()) {
+                  pickingPolicy_ = s;
+                }
+                return s;
+              } else {
+                return (java.lang.String) ref;
+              }
+            }
+            /**
+             * <code>optional string picking_policy = 27;</code>
+             */
+            public com.google.protobuf.ByteString
+                getPickingPolicyBytes() {
+              java.lang.Object ref = pickingPolicy_;
+              if (ref instanceof String) {
+                com.google.protobuf.ByteString b = 
+                    com.google.protobuf.ByteString.copyFromUtf8(
+                        (java.lang.String) ref);
+                pickingPolicy_ = b;
+                return b;
+              } else {
+                return (com.google.protobuf.ByteString) ref;
+              }
+            }
+            /**
+             * <code>optional string picking_policy = 27;</code>
+             */
+            public Builder setPickingPolicy(
+                java.lang.String value) {
+              if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x04000000;
+              pickingPolicy_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional string picking_policy = 27;</code>
+             */
+            public Builder clearPickingPolicy() {
+              bitField0_ = (bitField0_ & ~0x04000000);
+              pickingPolicy_ = getDefaultInstance().getPickingPolicy();
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional string picking_policy = 27;</code>
+             */
+            public Builder setPickingPolicyBytes(
+                com.google.protobuf.ByteString value) {
+              if (value == null) {
+    throw new NullPointerException();
+  }
+  bitField0_ |= 0x04000000;
+              pickingPolicy_ = value;
               onChanged();
               return this;
             }
@@ -13924,15 +14081,15 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\303\037\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\333\037\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\323\036\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\353\036\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
-      "tSet.ExperimentEnv.ExperimentResult\032\366\034\n\020",
+      "tSet.ExperimentEnv.ExperimentResult\032\216\035\n\020",
       "ExperimentResult\022&\n\036cell_state_avg_cpu_u" +
       "tilization\030\004 \001(\001\022&\n\036cell_state_avg_mem_u" +
       "tilization\030\005 \001(\001\022!\n\031cell_state_avg_cpu_l" +
@@ -13992,7 +14149,7 @@ public final class ClusterSimulationProtos {
       "ime\022\025\n\rworkload_name\030\001 \001(\t\022\030\n\020useful_bus" +
       "y_time\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\032@" +
       "\n\021SchedulerWorkload\022\025\n\rschedulerName\030\001 \001" +
-      "(\t\022\024\n\014workloadName\030\002 \001(\t\032\241\n\n\017EfficiencyS",
+      "(\t\022\024\n\014workloadName\030\002 \001(\t\032\271\n\n\017EfficiencyS",
       "tats\022\035\n\025total_energy_consumed\030\001 \001(\001\022\032\n\022t" +
       "otal_energy_saved\030\002 \001(\001\022\036\n\026total_power_o" +
       "ff_number\030\003 \001(\001\022\036\n\026kwh_saved_per_shuttin" +
@@ -14023,9 +14180,10 @@ public final class ClusterSimulationProtos {
       "_policy\030\031 \001(\0132m.ClusterSchedulingSimulat" +
       "ion.ExperimentResultSet.ExperimentEnv.Ex" +
       "perimentResult.EfficiencyStats.PowerOnPo",
-      "licy\022\037\n\027current_energy_consumed\030\032 \001(\001\032\036\n" +
-      "\016PowerOffPolicy\022\014\n\004name\030\001 \001(\t\032\035\n\rPowerOn" +
-      "Policy\022\014\n\004name\030\001 \001(\t"
+      "licy\022\037\n\027current_energy_consumed\030\032 \001(\001\022\026\n" +
+      "\016picking_policy\030\033 \001(\t\032\036\n\016PowerOffPolicy\022" +
+      "\014\n\004name\030\001 \001(\t\032\035\n\rPowerOnPolicy\022\014\n\004name\030\001" +
+      " \001(\t"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -14092,7 +14250,7 @@ public final class ClusterSimulationProtos {
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_descriptor,
-        new java.lang.String[] { "TotalEnergyConsumed", "TotalEnergySaved", "TotalPowerOffNumber", "KwhSavedPerShutting", "AvgShuttingsPerMachine", "MaxShuttingsPerMachine", "MinShuttingsPerMachine", "ShuttingsPerMachine90Percentile", "ShuttingsPerMachine99Percentile", "AvgTimeShuttedDownPerCycle", "MaxTimeShuttedDownPerCycle", "MinTimeShuttedDownPerCycle", "TimeShuttedDownPerCycle90Percentile", "TimeShuttedDownPerCycle99Percentile", "AvgTimeShuttedDownPerMachine", "MaxTimeShuttedDownPerMachine", "MinTimeShuttedDownPerMachine", "TimeShuttedDownPerMachine90Percentile", "TimeShuttedDownPerMachine99Percentile", "AvgNumberMachinesOn", "AvgNumberMachinesOff", "AvgNumberMachinesTurningOn", "AvgNumberMachinesTurningOff", "PowerOffPolicy", "PowerOnPolicy", "CurrentEnergyConsumed", });
+        new java.lang.String[] { "TotalEnergyConsumed", "TotalEnergySaved", "TotalPowerOffNumber", "KwhSavedPerShutting", "AvgShuttingsPerMachine", "MaxShuttingsPerMachine", "MinShuttingsPerMachine", "ShuttingsPerMachine90Percentile", "ShuttingsPerMachine99Percentile", "AvgTimeShuttedDownPerCycle", "MaxTimeShuttedDownPerCycle", "MinTimeShuttedDownPerCycle", "TimeShuttedDownPerCycle90Percentile", "TimeShuttedDownPerCycle99Percentile", "AvgTimeShuttedDownPerMachine", "MaxTimeShuttedDownPerMachine", "MinTimeShuttedDownPerMachine", "TimeShuttedDownPerMachine90Percentile", "TimeShuttedDownPerMachine99Percentile", "AvgNumberMachinesOn", "AvgNumberMachinesOff", "AvgNumberMachinesTurningOn", "AvgNumberMachinesTurningOff", "PowerOffPolicy", "PowerOnPolicy", "CurrentEnergyConsumed", "PickingPolicy", });
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_PowerOffPolicy_descriptor =
       internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_descriptor.getNestedTypes().get(0);
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_PowerOffPolicy_fieldAccessorTable = new

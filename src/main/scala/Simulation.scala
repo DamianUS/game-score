@@ -26,10 +26,12 @@
 
 import java.io.{File, FileInputStream, FileOutputStream}
 import java.nio.channels.FileChannel
+import java.util.Locale
 
 import ClusterSchedulingSimulation.Workloads._
 import ClusterSchedulingSimulation.{ExpExpExpWorkloadGenerator, Experiment, MesosSchedulerDesc, MesosSimulatorDesc, MonolithicSimulatorDesc, OmegaSchedulerDesc, OmegaSimulatorDesc, SchedulerDesc, Seed, WorkloadDesc}
 import ca.zmatrix.utils._
+import com.sun.xml.internal.ws.policy.jaxws.SafePolicyReader
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter, PowerStateLoadSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.action.DefaultPowerOffAction
@@ -45,6 +47,8 @@ import scala.collection.mutable.ArrayBuffer
 
 object Simulation {
   def main(args: Array[String]) {
+    Locale.setDefault(Locale.US);
+
     val helpString = "Usage: bin/sbt run [--thread-pool-size INT_NUM_THREADS] [--random-seed INT_SEED_VALUE]"
     if (args.length > 0) {
       if (args.head.equals("--help") || args.head.equals("-h")) {
@@ -208,7 +212,7 @@ object Simulation {
     /**
      * Set up a simulatorDesc-s.
      */
-    val globalRunTime = 86400.0 * 7
+    val globalRunTime = 86400.0
     //val globalRunTime = 86400.0 * 30 // 1 Day
     val monolithicSimulatorDesc =
       new MonolithicSimulatorDesc(Array(monolithicSchedulerDesc),
@@ -365,25 +369,27 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = false
-    val runMesos = true
+    val runMonolithic = true
+    val runMesos = false
     val runOmega = false
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
-    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicPicker, BasicPickerCandidate, BasicReversePicker, BasicReversePickerCandidate)
+    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
 
 
     //Default sorting and picking policies
     val defaultSortingPolicy = List[CellStateResourcesSorter](PowerStateLoadSorter)
-    val defaultPickingPolicy = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
+    //val defaultPickingPolicy = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
+    //val defaultPickingPolicy = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.02))
+    val defaultPickingPolicy = pickingPolicies
 
     val randomRange = (0.05 to 0.95 by 0.05).toList
     val randomDefaultThreshold = 0.5
     val normalThresholdRange = (0.05 to 0.95 by 0.05).toList
-    val defaultNormalThreshold = 0.9
+    val defaultNormalThreshold = 0.7
     val distributionThresholdRange = (0.05 to 0.95 by 0.05).toList
     val defaultDistributionThreshold = 0.1
     val distributionWindowRange = (5 to 150 by 5).toList
@@ -396,17 +402,17 @@ object Simulation {
 
     //Power Off
     val runNeverOff = true
-    val runAlwzOff = false
+    val runAlwzOff = true
     val runRandom = false
     val runGamma = false
     val runExp = false
-    val runGammaNormal =true
+    val runGammaNormal =false
 
     //PowerOn
     val runNoPowerOn = false
     val runDefault = true
     val runGammaNormalOn = false
-    val runCombinedDefaultOrGammaNormal = true
+    val runCombinedDefaultOrGammaNormal = false
 
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(0.9, 0.7, 50)), "or") ))
@@ -623,8 +629,8 @@ object Simulation {
       }
     }
 
-    //val constantRange = (1.0 :: Nil)
-    val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
+    val constantRange = (1.0 :: Nil)
+    //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     val perTaskRange = (0.005 :: Nil)

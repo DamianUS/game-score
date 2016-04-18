@@ -153,7 +153,7 @@ class ClusterSimulator(val cellState: CellState,
                        prefillWorkloads: Seq[Workload],
                        logging: Boolean = false,
                        monitorUtilization: Boolean = true,
-                       monitoringPeriod: Double = 1.0,
+                       monitoringPeriod: Double = 15.0,
                        cellStateResourcesSorter: CellStateResourcesSorter,
                        cellStateResourcesPicker: CellStateResourcesPicker,
                        powerOnPolicy: PowerOnPolicy,
@@ -176,9 +176,9 @@ class ClusterSimulator(val cellState: CellState,
     if(jobCache.size > 0)
       assert(tuple._1 > jobCache.last._1, "Intentando añadir un job a la cache cuyo tiempo de inicio es anterior al ultimo encontrado")
     jobCache = jobCache :+ tuple
-    /*if(jobCache.size > queueSize+1){
+    if(jobCache.size > 100){
       jobCache = jobCache.drop(1)
-    }*/
+    }
   }
 
   val sorter = cellStateResourcesSorter
@@ -1067,7 +1067,6 @@ class CellState(val numMachines: Int,
       machinesLoadFactor.update(machineID, calculatedLoad)
       machinesLoadOrdered = false
     }
-
     // Also track the per machine resources available.
     assert(availableCpusPerMachine(machineID) >= cpus,
       ("Scheduler %s (%d) tried to claim %f cpus on machine %d in cell " +
@@ -1293,7 +1292,7 @@ class CellState(val numMachines: Int,
         // regardless of whether sequence nums have changed.
         if (!simulator.cellState.isMachineOn(delta.machineID) || availableCpusPerMachine(delta.machineID) < delta.cpus ||
           availableMemPerMachine(delta.machineID) <  delta.mem) {
-          simulator.log("Resource-aware conflict occurred " +
+            simulator.log("Resource-aware conflict occurred " +
             "(sched-%s, mach-%d, cpus-%f, mem-%f)."
               .format(delta.scheduler,
                 delta.machineID,

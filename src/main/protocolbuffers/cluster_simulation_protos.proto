@@ -149,6 +149,7 @@ message ExperimentResultSet {
         optional PowerOffPolicy power_off_policy = 24;
         optional PowerOnPolicy power_on_policy = 25;
         optional double current_energy_consumed = 26;
+        optional string picking_policy = 27;
 
         message PowerOffPolicy{
           optional string name = 1;

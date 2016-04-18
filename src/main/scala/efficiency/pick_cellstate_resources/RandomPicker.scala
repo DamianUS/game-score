@@ -22,7 +22,7 @@ object RandomPicker extends CellStateResourcesPicker{
         val candidateIndex = randomNumberGenerator.nextInt(remainingCandidatesVar)
         val currMachID = candidatePoolVar(candidateIndex)
         if (cellState.availableCpusPerMachine(currMachID) >= job.cpusPerTask &&
-          cellState.availableMemPerMachine(currMachID) >= job.memPerTask) {
+          cellState.availableMemPerMachine(currMachID) >= job.memPerTask && cellState.isMachineOn(currMachID)) {
           machineID=currMachID
           assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+name)
           loop.break;

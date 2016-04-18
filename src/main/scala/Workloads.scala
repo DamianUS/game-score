@@ -95,6 +95,19 @@ object Workloads {
     new PrefillPbbTraceWorkloadGenerator("PrefillBatchService",
       examplePrefillTraceFileName)
 
+  val googlePrefillTraceFileName = "traces/example-init-cluster-state_google.log"
+  val googleAllTraceFileName = "traces/example-all-cluster-state_google.log"
+  assert((new File(googlePrefillTraceFileName)).exists())
+  val googleBatchPrefillTraceWLGenerator =
+    new PrefillPbbTraceWorkloadGenerator("PrefillBatch",
+      googlePrefillTraceFileName)
+  val googleServicePrefillTraceWLGenerator =
+    new PrefillPbbTraceWorkloadGenerator("PrefillService",
+      googlePrefillTraceFileName)
+  val googleBatchServicePrefillTraceWLGenerator =
+    new PrefillPbbTraceWorkloadGenerator("PrefillBatchService",
+      googlePrefillTraceFileName)
+
   /*val exampleWorkloadPrefillDesc =
     WorkloadDesc(cell = "example",
       assignmentPolicy = "CMB_PBB",
@@ -160,5 +173,5 @@ object Workloads {
       exampleWorkloadGeneratorTraceAllBatch ::
         exampleWorkloadGeneratorTraceAllService :: Nil,
     cellStateDesc = exampleCellStateDesc,
-    prefillWorkloadGenerators = exampleBatchPrefillTraceWLGenerator :: exampleServicePrefillTraceWLGenerator :: Nil)
+    prefillWorkloadGenerators = googleBatchPrefillTraceWLGenerator :: googleServicePrefillTraceWLGenerator :: Nil)
 }

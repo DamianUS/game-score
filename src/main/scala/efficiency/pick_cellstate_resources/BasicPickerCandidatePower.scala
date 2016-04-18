@@ -18,8 +18,9 @@ object BasicPickerCandidatePower extends CellStateResourcesPicker{
     val loop = new Breaks;
     loop.breakable {
       for( i <- (cellState.numberOfMachinesOn - remainingCandidatesVar) to cellState.numberOfMachinesOn-1){
-        if (cellState.availableCpusPerMachine(cellState.machinesLoad(i)) >= job.cpusPerTask && cellState.availableMemPerMachine(cellState.machinesLoad(i)) >= job.memPerTask) {
-          machineID=cellState.machinesLoad(i)
+        val mID = cellState.machinesLoad(i)
+        if (cellState.availableCpusPerMachine(mID) >= (job.cpusPerTask + 0.01) && cellState.availableMemPerMachine(mID) >= (job.memPerTask + 0.01)) {
+          machineID=mID
           assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+name)
           loop.break;
         }

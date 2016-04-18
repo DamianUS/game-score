@@ -18,7 +18,7 @@ object BasicReversePicker extends CellStateResourcesPicker{
     val loop = new Breaks;
     loop.breakable {
       for( i <- cellState.numMachines-1 to 0 by -1){
-        if (cellState.availableCpusPerMachine(cellState.machinesLoad(i)) >= job.cpusPerTask && cellState.availableMemPerMachine(cellState.machinesLoad(i)) >= job.memPerTask) {
+        if (cellState.availableCpusPerMachine(cellState.machinesLoad(i)) >= (job.cpusPerTask + 0.01) && cellState.availableMemPerMachine(cellState.machinesLoad(i)) >= (job.memPerTask + 0.01)) {
           machineID=cellState.machinesLoad(i)
           assert(cellState.isMachineOn(machineID), "Trying to pick a powered off machine with picker : "+name)
           loop.break;

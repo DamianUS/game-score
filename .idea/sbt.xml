@@ -12,14 +12,8 @@
           </set>
         </option>
         <option name="sbtVersion" value="0.13.9" />
-        <option name="myModules">
-          <set>
-            <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/project" />
-          </set>
-        </option>
       </SbtProjectSettings>
     </option>
-    <option name="maximumHeapSize" value="2048" />
+    <option name="maximumHeapSize" value="3072" />
   </component>
 </project>
