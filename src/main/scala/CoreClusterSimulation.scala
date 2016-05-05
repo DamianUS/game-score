@@ -26,7 +26,6 @@
 
 package ClusterSchedulingSimulation
 
-import efficiency.DistributionCache
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter}
 import efficiency.pick_cellstate_resources._
 import efficiency.power_off_policies.PowerOffPolicy
@@ -366,7 +365,7 @@ class ClusterSimulator(val cellState: CellState,
           result.toDouble))
       result
     } else {
-      -1.0
+      0.0
     }
   }
 
@@ -374,22 +373,26 @@ class ClusterSimulator(val cellState: CellState,
   def maxTimeShuttedDownPerCycle : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cyclesShuttedDownPerMachineArray.flatten.max else 0.0
   def minTimeShuttedDownPerCycle : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cyclesShuttedDownPerMachineArray.flatten.min else 0.0
   def cyclesShuttedDownPerMachineArray : Array[Seq[Double]] = {
-    val powerOffs = cellState.powerOffs.filter(_ != null)
-    //We assume
-    val powerOns = cellState.powerOns.filter(_ != null)
     var timeShuttedDownPerMachine = Array[Seq[Double]]()
-    if(powerOffs.length > 0){
-      for(i <- 0 to powerOffs.length-1){
+    for (i <- 0 to cellState.numMachines-1){
+      if(cellState.powerOffs(i) != null){
+        assert(cellState.powerOffs(i).length > 0, "No tiene ningún apagado y ha entrado en que tiene")
+        if(cellState.powerOffs(i).length == 1){
+          assert(cellState.powerOns(i) == null || cellState.powerOns(i).length == 1, "número de apagados/encendidos no acordes")
+        }
+        else{
+          assert(cellState.powerOns(i).length==cellState.powerOffs(i).length || cellState.powerOns(i).length==cellState.powerOffs(i).length-1, "número de apagados/encendidos no acordes")
+        }
         var machineShuttingTimes = Seq[Double]()
         //timeShuttedDownPerMachine = timeShuttedDownPerMachine :+  Seq[Double]()
-        for(j <- 0 to powerOffs(i).length-1){
-          if(powerOns.length > i && powerOns(i) !=null && powerOns(i).length > j){
+        for(j <- 0 to cellState.powerOffs(i).length-1){
+          if(cellState.powerOns(i) != null && cellState.powerOns(i).length > j){
             //Exists a power on after this power off
-            machineShuttingTimes = machineShuttingTimes :+ (powerOns(i)(j)-powerOffs(i)(j))
+            machineShuttingTimes = machineShuttingTimes :+ (cellState.powerOns(i)(j)-cellState.powerOffs(i)(j))
           }
           else{
             //Does not exists a power on after this power off
-            machineShuttingTimes = machineShuttingTimes :+ (currentTime-powerOffs(i)(j))
+            machineShuttingTimes = machineShuttingTimes :+ (currentTime-cellState.powerOffs(i)(j))
           }
         }
         timeShuttedDownPerMachine = timeShuttedDownPerMachine :+  machineShuttingTimes
@@ -412,7 +415,7 @@ class ClusterSimulator(val cellState: CellState,
           result))
       result
     } else {
-      -1.0
+      0.0
     }
   }
 
@@ -718,6 +721,7 @@ abstract class Scheduler(val name: String,
                   cellState: CellState): Seq[ClaimDelta] = {
     assert(simulator != null)
     assert(cellState != null)
+    assert(job.cpusPerTask >= 0.00001 && job.memPerTask >= 0.00001, "Job con cpu o ram muy pequeña")
     assert(job.cpusPerTask <= cellState.cpusPerMachine,
       "Looking for machine with %f cpus, but machines only have %f cpus."
         .format(job.cpusPerTask, cellState.cpusPerMachine))
@@ -861,10 +865,12 @@ class ClaimDelta(val scheduler: Scheduler,
     * by machineID.
     */
   def apply(cellState: CellState, locked: Boolean): Unit = {
-    cellState.assignResources(scheduler, machineID, cpus, mem, locked)
+    this.synchronized{
+      cellState.machineSeqNums(machineID) += 1
+      cellState.assignResources(scheduler, machineID, cpus, mem, locked)
+    }
     // Mark that the machine has changed, used for testing for conflicts
     // when using optimistic concurrency.
-    cellState.machineSeqNums(machineID) += 1
   }
 
   def unApply(cellState: CellState, locked: Boolean = false): Unit = {
@@ -968,6 +974,7 @@ class CellState(val numMachines: Int,
 
   def powerOnMachine(machineID: Int) = {
     if(machinePowerState(machineID)==0 || machinePowerState(machineID)==2){
+      machineSeqNums(machineID) += 1
       if(machinePowerState(machineID)==0)
         numberOfMachinesOff -= 1
       else if (machinePowerState(machineID)==2)
@@ -992,7 +999,8 @@ class CellState(val numMachines: Int,
   }
 
   def powerOffMachine(machineID: Int) = {
-    assert(allocatedCpusPerMachine(machineID) == 0.0 && allocatedMemPerMachine(machineID) == 0.0, ("Intentando apagar una máquina en uso con ID %d ").format(machineID))
+    assert(allocatedCpusPerMachine(machineID) <= 0.00001 && allocatedMemPerMachine(machineID) <= 0.00001, ("Intentando apagar una máquina en uso con ID %d ").format(machineID))
+    machineSeqNums(machineID) += 1
     if(machinePowerState(machineID)==1 || machinePowerState(machineID)==3){
       if(machinePowerState(machineID)==1)
         numberOfMachinesOn -= 1
@@ -1047,6 +1055,7 @@ class CellState(val numMachines: Int,
     //        ("Attempting to assign more mem (%f) than " +
     //         "is currently available in CellState (%f).")
     //        .format(mem, availableMem))
+    assert(isMachineOn(machineID), "Assigning resources to a powered off machine")
     if (locked) {
       lockedCpus(scheduler.name) = lockedCpus.getOrElse(scheduler.name, 0.0) + cpus
       lockedMem(scheduler.name) = lockedMem.getOrElse(scheduler.name, 0.0) + mem
@@ -1096,6 +1105,7 @@ class CellState(val numMachines: Int,
                     cpus: Double,
                     mem: Double,
                     locked: Boolean) = {
+    assert(isMachineOn(machineID), "Freeing resources in a powered off machine")
     if (locked) {
       assert(lockedCpus.contains(scheduler.name))
       val safeToFreeCpus: Boolean = lockedCpus(scheduler.name) >= (cpus - 0.001)
