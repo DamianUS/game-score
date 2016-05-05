@@ -12,7 +12,7 @@ object DefaultPowerOffAction extends PowerOffAction{
     val state = cellState.isMachineOn(machineID)
     assert(cellState.isMachineOn(machineID), ("The machine with ID %d is not powered on when arriving to power off policy: %s").format(machineID, name))
     //println(("Entra en apagar la máquina %d cuando quedan %d máquinas encendidas").format(machineID, cellState.numberOfMachinesOn))
-    if(cellState.allocatedCpusPerMachine(machineID) == 0.0 && cellState.allocatedMemPerMachine(machineID) == 0.0) {
+    if(cellState.allocatedCpusPerMachine(machineID) <= 0.00001 && cellState.allocatedMemPerMachine(machineID) <= 0.00001) {
       cellState.powerOffMachine(machineID)
       cellState.simulator.log(("Shutting down the machine with machine ID : %d in the power off policy : %s").format(machineID, name))
       //println(("Tras apagar la máquina %d quedan %d máquinas encendidas").format(machineID, cellState.numberOfMachinesOn))
