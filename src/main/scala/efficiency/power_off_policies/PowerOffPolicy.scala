@@ -15,21 +15,23 @@ trait PowerOffPolicy {
   var initiated : Boolean = false
   def powerOff(cellState: CellState, machineID: Int)= {
     if(!initiated && shouldPerformGlobalCheck){
+      assert(globalCheckPeriod > 0.0, "Trying to perform global shut downs with incorrect period")
       initiated = true
       globalCheck(cellState)
     }
     if(powerOffDecisionPolicy.shouldPowerOff(cellState, machineID))
-      powerOffAction.powerOff(cellState, machineID)
+       powerOffAction.powerOff(cellState, machineID)
   }
   val name : String
 
   def globalCheck(cellState: CellState) :Unit ={
-    var a = 0
-    for (a <- 0 to cellState.numMachines-1){
-      powerOff(cellState, a)
-    }
     cellState.simulator.afterDelay(globalCheckPeriod){
-        globalCheck(cellState)
+      var a = 0
+      for (a <- 0 to cellState.numMachines-1){
+        if(cellState.isMachineOn(a))
+          powerOff(cellState, a)
+      }
+      globalCheck(cellState)
     }
   }
 }
