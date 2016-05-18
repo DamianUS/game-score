@@ -34,8 +34,8 @@ class GammaPowerOnAction(normalThreshold: Double, threshold : Double, windowSize
     do{
       if(jobAttributes._1 > 0.0 && jobAttributes._2 > 0.0 && jobAttributes._3 > 0.0 && jobAttributes._4 > 0.0 && jobAttributes._5 > 0.0 && jobAttributes._6 > 0.0){
         numMachinesGamma += 1
-        val alphaCpu = (cellState.availableCpus + cellState.numberOfMachinesTurningOn*cellState.cpusPerMachine + cpuFree + cellState.cpusPerMachine*numMachinesGamma) / getNormalDistributionInverseCummulativeProbability(jobAttributes._5, jobAttributes._6, normalThreshold)
-        val alphaMem = (cellState.availableMem + cellState.numberOfMachinesTurningOn*cellState.cpusPerMachine + memFree + cellState.memPerMachine*numMachinesGamma) / getNormalDistributionInverseCummulativeProbability(jobAttributes._3, jobAttributes._4, normalThreshold)
+        val alphaCpu = (cellState.availableCpus + cellState.numberOfMachinesTurningOn*cellState.cpusPerMachine + cpuFree + cellState.cpusPerMachine*numMachinesGamma) / Math.max(0.01, getNormalDistributionInverseCummulativeProbability(jobAttributes._5, jobAttributes._6, normalThreshold))
+        val alphaMem = (cellState.availableMem + cellState.numberOfMachinesTurningOn*cellState.cpusPerMachine + memFree + cellState.memPerMachine*numMachinesGamma) / Math.max(0.01, getNormalDistributionInverseCummulativeProbability(jobAttributes._3, jobAttributes._4, normalThreshold))
         var beta = getNormalDistributionInverseCummulativeProbability(jobAttributes._1, jobAttributes._2, 1-normalThreshold)
         if (true)
           beta = jobAttributes._1
@@ -45,7 +45,7 @@ class GammaPowerOnAction(normalThreshold: Double, threshold : Double, windowSize
           gammaProbability = prob
         }
       }
-    }while(jobAttributes._1 > 0.0 && jobAttributes._2 > 0.0 && jobAttributes._3 > 0.0 && jobAttributes._4 > 0.0 && jobAttributes._5 > 0.0 && jobAttributes._6 > 0.0 && gammaProbability > threshold)
+    }while(jobAttributes._1 > 0.0 && jobAttributes._2 > 0.0 && jobAttributes._3 > 0.0 && jobAttributes._4 > 0.0 && jobAttributes._5 > 0.0 && jobAttributes._6 > 0.0 && gammaProbability > threshold && (numMachinesGamma + machinesNeeded) < cellState.numMachines)
     machinesNeeded = machinesNeeded + numMachinesGamma
     if (cellState.numberOfMachinesOff >= machinesNeeded) {
       cellState.simulator.log(("There are enough machines turned off, turning on %d machines on %s policy").format(machinesNeeded, name))
