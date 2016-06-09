@@ -440,7 +440,7 @@ class ClusterSimulator(val cellState: CellState,
           result))
       result
     } else {
-      -1.0
+      0.0
     }
   }
 

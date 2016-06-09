@@ -23,7 +23,7 @@ class SpreadMarginReversePickerCandidatePower(spreadMargin : Double = 0.1, margi
         //FIXME: Putting a security margin of 0.01 because mesos is causing conflicts
         val availableCpus = cellState.availableCpusPerMachine(cellState.machinesLoad(i))
         val availableMem = cellState.availableMemPerMachine(cellState.machinesLoad(i))
-        if (availableCpus >= (marginPerc * cellState.cpusPerMachine + job.cpusPerTask + 0.01) && availableMem >= (marginPerc * cellState.memPerMachine + job.memPerTask + 0.01)) {
+        if (availableCpus >= (marginPerc * cellState.cpusPerMachine + job.cpusPerTask + 0.0001) && availableMem >= (marginPerc * cellState.memPerMachine + job.memPerTask + 0.0001)) {
           val machID=pickRandomResource(i, cellState, job)
           if(machID > -1){
             assert(cellState.isMachineOn(machID), "Trying to pick a powered off machine with picker : "+name)
