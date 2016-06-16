@@ -393,7 +393,17 @@ object Simulation {
     //val defaultPickingPolicy = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.02))
     val defaultPickingPolicy = pickingPolicies
 
-    val randomRange = (0.05 to 0.95 by 0.05).toList
+    val maxLoadOffRange = (0.05 to 0.99 by 0.1).toList
+    val defaultMaxLoadOffRange = 0.5
+    val meanLoadOffRange = (0.05 to 0.99 by 0.1).toList
+    val defaultMeanLoadOffRange = 0.5
+    val minFreeCapacityRange = (0.05 to 0.99 by 0.1).toList
+    val defaultMinFreeCapacityRange = 0.2
+    val meanFreeCapacityRange = (0.05 to 0.99 by 0.1).toList
+    val defaultMeanFreeCapacityRange = 0.2
+    val minFreeCapacityPonderatedRange = (0.05 to 0.99 by 0.1).toList
+    val defaultMinFreeCapacityPonderatedRange = 0.2
+    val randomRange = (0.05 to 0.99 by 0.1).toList
     val randomDefaultThreshold = 0.5
     val normalThresholdRange = (0.05 to 0.99 by 0.1).toList
     val defaultNormalThreshold = 0.95
@@ -410,6 +420,11 @@ object Simulation {
     val onDistributionWindowRange = (25 to 100 by 25).toList
     val onDefaultWindowSize = 100
 
+    val sweepMaxLoadOffRange = true
+    val sweepMeanLoadOffRange = true
+    val sweepMinFreeCapacityRange = true
+    val sweepMeanFreeCapacityRange = true
+    val sweepMinFreeCapacityPonderatedRange = true
     val sweepRandomThreshold = false
     val sweepdNormalThreshold = true
     val sweepdOnNormalThreshold = true
@@ -418,18 +433,24 @@ object Simulation {
     val sweepWindowSize = true
     val sweepOnWindowSize = true
     //Power Off
+    val runMaxLoadOff = true
+    val runMeanLoadOff = true
+    val runMinFreeCapacity = true
+    val runMeanFreeCapacity = true
+    val runMinFreeCapacityPonderated = false
     val runNeverOff = true
     val runAlwzOff = true
     val runRandom = true
     val runGamma = true
     val runExp = true
+    val runExpNormal = false
     val runGammaNormal = true
 
     //PowerOn
     val runNoPowerOn = false
     val runDefault = true
     val runGammaNormalOn = false
-    val runCombinedDefaultOrGammaNormal = true
+    val runCombinedDefaultOrGammaNormal = false
 
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(0.9, 0.7, 50)), "or") ))
@@ -448,6 +469,65 @@ object Simulation {
 
     var defaultPowerOnPolicy = List[PowerOnPolicy]()
     var defaultPowerOffPolicy = List[PowerOffPolicy]()
+
+    if(runMaxLoadOff){
+      if(sweepMaxLoadOffRange){
+        for (loadThreshold <- maxLoadOffRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(loadThreshold), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(defaultMaxLoadOffRange), doGlobalCheck = true)
+      }
+    }
+
+    if(runMeanLoadOff){
+      if(sweepMeanLoadOffRange){
+        for (loadThreshold <- meanLoadOffRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(loadThreshold), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(defaultMeanLoadOffRange), doGlobalCheck = true)
+      }
+    }
+
+    if(runMinFreeCapacity){
+      if(sweepMinFreeCapacityRange){
+        for (freeThreshold <- minFreeCapacityRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(freeThreshold), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(defaultMinFreeCapacityRange), doGlobalCheck = true)
+      }
+    }
+
+    if(runMeanFreeCapacity){
+      if(sweepMeanFreeCapacityRange){
+        for (freeThreshold <- meanFreeCapacityRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(freeThreshold), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(defaultMeanFreeCapacityRange), doGlobalCheck = true)
+      }
+    }
+
+    if(runMinFreeCapacityPonderated){
+      if(sweepMinFreeCapacityPonderatedRange){
+        for (freeThreshold <- minFreeCapacityPonderatedRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(freeThreshold), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(defaultMinFreeCapacityPonderatedRange), doGlobalCheck = true)
+      }
+    }
+
+    if(runExpNormal){
+
+    }
 
     if(runNeverOff){
       defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)

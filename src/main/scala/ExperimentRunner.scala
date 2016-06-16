@@ -91,6 +91,7 @@ class Experiment(
   def toString = name
 
   def run() {
+    var currentRun = 0
     // Create the output directory if it doesn't exist.
     (new File(outputDirectory)).mkdirs()
     val output =
@@ -233,6 +234,8 @@ class Experiment(
                       val success: Boolean = simulator.run(Some(simulatorDesc.runTime),
                         Some(simulationTimeout))
                       if (success) {
+                        currentRun +=1
+                        println("Terminado el experimento "+currentRun)
                         // Simulation did not time out, so record stats.
                         /**
                          * Capture statistics into a protocolbuffer.
