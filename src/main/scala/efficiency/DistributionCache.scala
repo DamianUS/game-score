@@ -13,6 +13,11 @@ object DistributionCache {
   var normalDistributionCacheCalls = 0
   var normalDistributionCacheMiss = 0
   def normalDistributionCacheHits = normalDistributionCacheCalls - normalDistributionCacheMiss
+  // Key: Avg, ts -> Value: cumulativeProbability(ts)
+  var exponentialDistributionCache =  Collections.synchronizedMap(new LFUCache[Tuple2[Double, Double], Double](2500, 0.3f))
+  var exponentialDistributionCacheCalls = 0
+  var exponentialDistributionCacheMiss = 0
+  def exponentialDistributionCacheHits = exponentialDistributionCacheCalls - exponentialDistributionCacheMiss
   // Key: Alpha, Beta, Threshold -> Value: cumulativeProbability(Threshold)
   var gammaDistributionCache =  Collections.synchronizedMap(new LFUCache[Tuple3[Double, Double, Double], Double](15000, 0.3f))
   var gammaDistributionCacheCalls = 0

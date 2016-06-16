@@ -1,8 +1,9 @@
 package efficiency.power_off_policies.decision.probabilistic
 
-import ClusterSchedulingSimulation.{Job, CellState}
+import ClusterSchedulingSimulation.{CellState, Job}
+import efficiency.DistributionUtils
 import efficiency.power_off_policies.decision.PowerOffDecision
-import org.apache.commons.math.distribution.{ExponentialDistributionImpl, ExponentialDistribution}
+import org.apache.commons.math.distribution.{ExponentialDistribution, ExponentialDistributionImpl}
 
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
@@ -10,36 +11,17 @@ import scala.collection.mutable.ListBuffer
 /**
  * Created by dfernandez on 22/1/16.
  */
-class ExponentialPowerOffDecision(threshold : Double, windowSize: Int) extends PowerOffDecision{
+class ExponentialPowerOffDecision(threshold : Double, windowSize: Int, ts : Double = 130.0) extends PowerOffDecision with DistributionUtils{
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
-    //TODO: Calculate Ts
-    val ts = 130.0
     var should = false
-    var avg = 0.0
-    var allPastTimes = ListBuffer[Double]()
-    var interArrival = Seq[Double]()
-    cellState.simulator.schedulers.map(_._2).foreach(_.cleanPastJobs(windowSize+1))
-    var pastJobsMaps = Map[Long, Tuple2[Double, Job]]()
-
-    for (mapElement <- cellState.simulator.schedulers.map(_._2).map(_.pastJobs)){
-      pastJobsMaps = pastJobsMaps ++ mapElement
-    }
-    allPastTimes = allPastTimes ++ pastJobsMaps.map(_._2).map(_._1).toSeq
-    allPastTimes = allPastTimes.sorted
-    if(allPastTimes.length >= windowSize+1){
-      allPastTimes = allPastTimes.slice(allPastTimes.length-(windowSize+2), allPastTimes.length-1)
-    }
-    for( i <- 1 to allPastTimes.length-1){
-      interArrival = interArrival :+ (allPastTimes(i) - allPastTimes(i-1))
-    }
-    avg = interArrival.sum / interArrival.length
-    if(avg > 0.0){
-      val dist = new ExponentialDistributionImpl(1/avg)
-      val prob = dist.cumulativeProbability(ts)
+    val allPastTuples = getPastTuples(cellState, windowSize)
+    val jobAttributes = getJobAttributes(allPastTuples)
+    if(jobAttributes._1 > 0.0){
+      val prob = getExponentialDistributionCummulativeProbability( jobAttributes._1, ts)
       should = prob >= threshold
     }
     should
   }
 
-  override val name: String = ("exponential-power-off-decision-with-threshold:%f-and-window-size:%d").format(threshold,windowSize)
+  override val name: String = ("exponential-power-off-decision-with-ts-:%f-threshold:%f-and-window-size:%d").format(ts,threshold,windowSize)
 }

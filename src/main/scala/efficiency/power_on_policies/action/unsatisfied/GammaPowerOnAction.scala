@@ -1,7 +1,7 @@
 package efficiency.power_on_policies.action.unsatisfied
 
 import ClusterSchedulingSimulation.{CellState, ClaimDelta, Job}
-import efficiency.GammaUtils
+import efficiency.DistributionUtils
 import efficiency.power_off_policies.decision.probabilistic.GammaNormalPowerOffDecision
 import efficiency.power_on_policies.action.PowerOnAction
 import org.apache.commons.math.distribution.{GammaDistributionImpl, NormalDistributionImpl}
@@ -11,7 +11,7 @@ import scala.util.control.Breaks
 /**
  * Created by dfernandez on 15/1/16.
  */
-class GammaPowerOnAction(normalThreshold: Double, threshold : Double, windowSize: Int) extends PowerOnAction with GammaUtils{
+class GammaPowerOnAction(normalThreshold: Double, threshold : Double, windowSize: Int) extends PowerOnAction with DistributionUtils{
   //FIXME: No tenemos en cuenta ni los conflicted delta ni el modo all or nothing, mejoras más adelante
   override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
     var numMachinesGamma = 0

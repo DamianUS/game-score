@@ -1,12 +1,12 @@
 package efficiency
 
-import ClusterSchedulingSimulation.{Job, CellState}
-import org.apache.commons.math.distribution.{NormalDistributionImpl, GammaDistributionImpl}
+import ClusterSchedulingSimulation.{CellState, Job}
+import org.apache.commons.math.distribution.{ExponentialDistributionImpl, GammaDistributionImpl, NormalDistributionImpl}
 
 /**
   * Created by dfernandez on 18/2/16.
   */
-trait GammaUtils {
+trait DistributionUtils {
   def getGammaDistributionCummulativeProbability(alpha: Double, beta: Double, ts: Double): Double ={
     var probability = 0.0
     if(alpha / (ts/beta) <= 10.00){
@@ -34,6 +34,21 @@ trait GammaUtils {
     probability
   }
 
+  def getExponentialDistributionCummulativeProbability(interArrival: Double, ts: Double): Double ={
+    var probability = 0.0
+    DistributionCache.exponentialDistributionCacheCalls += 1
+    var prob = None : Option[Double]
+    if(DistributionCache.exponentialDistributionCache.get((interArrival, ts)) == null){
+      prob = Some(generateExponentialDistributionCummulativeProbability(interArrival, ts))
+      DistributionCache.exponentialDistributionCache.put((interArrival, ts), prob.get)
+    }
+    else{
+      prob = Some(DistributionCache.exponentialDistributionCache.get(interArrival, ts))
+    }
+    probability = prob.get
+    probability
+  }
+
   /*def getGammaDistributionCummulativeProbability(alpha: Double, beta: Double, ts: Double): Double ={
     DistributionCache.gammaDistributionCacheCalls += 1
     //DistributionCache.gammaDistributionCache.getOrElseUpdate((alpha, beta, ts), generateGammaDistributionCummulativeProbability(alpha, beta, ts))
@@ -52,6 +67,11 @@ trait GammaUtils {
   def generateGammaDistributionCummulativeProbability(alpha: Double, beta: Double, ts: Double): Double ={
     DistributionCache.gammaDistributionCacheMiss += 1
     new GammaDistributionImpl(alpha, beta).cumulativeProbability(ts)
+  }
+
+  def generateExponentialDistributionCummulativeProbability(interArrival: Double, ts: Double): Double ={
+    DistributionCache.exponentialDistributionCacheMiss += 1
+    new ExponentialDistributionImpl(1/interArrival).cumulativeProbability(ts)
   }
 
 

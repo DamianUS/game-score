@@ -1,14 +1,14 @@
 package efficiency.power_off_policies.decision.probabilistic
 
 import ClusterSchedulingSimulation.{Job, CellState}
-import efficiency.{GammaUtils, DistributionCache}
+import efficiency.{DistributionUtils, DistributionCache}
 import efficiency.power_off_policies.decision.PowerOffDecision
 import org.apache.commons.math.distribution.{GammaDistributionImpl, ExponentialDistributionImpl}
 
 /**
  * Created by dfernandez on 22/1/16.
  */
-class GammaPowerOffDecision(threshold : Double, windowSize: Int, ts : Double = 130.0) extends PowerOffDecision with GammaUtils{
+class GammaPowerOffDecision(threshold : Double, windowSize: Int, ts : Double = 130.0) extends PowerOffDecision with DistributionUtils{
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
     //println(("On : %f y ocupadas: %f").format(cellState.numberOfMachinesOn.toDouble/cellState.numMachines, cellState.numMachinesOccupied.toDouble/cellState.numMachines))
     //FIXME: Esto no calcula bien

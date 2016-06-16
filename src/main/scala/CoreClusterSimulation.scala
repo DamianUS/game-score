@@ -991,9 +991,7 @@ class CellState(val numMachines: Int,
       }
       val cpuLoad = simulator.cellState.allocatedCpusPerMachine(machineID) / (simulator.cellState.cpusPerMachine)
       val memLoad = simulator.cellState.allocatedMemPerMachine(machineID) / (simulator.cellState.memPerMachine)
-      val calculatedLoad = Math.max(cpuLoad, memLoad)
-      simulator.cellState.machinesLoadFactor.update(machineID, calculatedLoad)
-      machinesLoadOrdered = false
+      simulator.sorter.updateLoadFactor(machineID, this)
     }
     assert(numberOfMachinesOff + numberOfMachinesOn + numberOfMachinesTurningOn + numberOfMachinesTurningOff == numMachines, "El número de máquinas no es correcto tras encender una máquina")
   }
@@ -1017,8 +1015,7 @@ class CellState(val numMachines: Int,
         numberOfMachinesOff += 1
       }
     }
-    simulator.cellState.machinesLoadFactor.update(machineID, 2.0)
-    machinesLoadOrdered = false
+    simulator.sorter.updateLoadFactor(machineID, this)
     assert(numberOfMachinesOff + numberOfMachinesOn + numberOfMachinesTurningOn + numberOfMachinesTurningOff == numMachines, "El número de máquinas no es correcto tras apagar una máquina")
   }
 
@@ -1070,11 +1067,6 @@ class CellState(val numMachines: Int,
       assert(occupiedMem(scheduler.name) <= totalMem + 0.000001)
       totalOccupiedCpus += cpus
       totalOccupiedMem += mem
-      val cpuLoad = (allocatedCpusPerMachine(machineID) + cpus) / cpusPerMachine
-      val memLoad = (allocatedMemPerMachine(machineID) + mem) / memPerMachine
-      val calculatedLoad = Math.max(cpuLoad, memLoad)
-      machinesLoadFactor.update(machineID, calculatedLoad)
-      machinesLoadOrdered = false
     }
     // Also track the per machine resources available.
     assert(availableCpusPerMachine(machineID) >= cpus,
@@ -1097,6 +1089,9 @@ class CellState(val numMachines: Int,
           availableMemPerMachine(machineID)))
     allocatedCpusPerMachine(machineID) += cpus
     allocatedMemPerMachine(machineID) += mem
+    if(!locked){
+      simulator.sorter.updateLoadFactor(machineID, this)
+    }
   }
 
   // Release the specified number of resources used by this scheduler.
@@ -1136,13 +1131,7 @@ class CellState(val numMachines: Int,
       occupiedMem(scheduler.name) = occupiedMem(scheduler.name) - mem
       totalOccupiedCpus -= cpus
       totalOccupiedMem -= mem
-      val cpuLoad = (allocatedCpusPerMachine(machineID) - cpus) / (cpusPerMachine)
-      val memLoad = (allocatedMemPerMachine(machineID) - mem) / (memPerMachine)
-      val calculatedLoad = Math.max(cpuLoad, memLoad)
-      machinesLoadFactor.update(machineID, calculatedLoad)
-      machinesLoadOrdered = false
     }
-
     // Also track the per machine resources available.
     assert(availableCpusPerMachine(machineID) + cpus <=
       cpusPerMachine + 0.000001)
@@ -1153,6 +1142,7 @@ class CellState(val numMachines: Int,
     //TODO : Metemos la llamada a apagar máquinas sólo a las que han sido usadas, no a las locked
     if (!locked) {
       simulator.powerOff.powerOff(this, machineID)
+      simulator.sorter.updateLoadFactor(machineID, this)
     }
   }
 

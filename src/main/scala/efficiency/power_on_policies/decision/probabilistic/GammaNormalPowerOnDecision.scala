@@ -1,7 +1,7 @@
 package efficiency.power_on_policies.decision.probabilistic
 
 import ClusterSchedulingSimulation.{ClaimDelta, CellState, Job}
-import efficiency.GammaUtils
+import efficiency.DistributionUtils
 import efficiency.power_off_policies.decision.PowerOffDecision
 import efficiency.power_on_policies.decision.PowerOnDecision
 import org.apache.commons.math.distribution.{GammaDistributionImpl, NormalDistributionImpl}
@@ -9,7 +9,7 @@ import org.apache.commons.math.distribution.{GammaDistributionImpl, NormalDistri
 /**
  * Created by dfernandez on 22/1/16.
  */
-class GammaNormalPowerOnDecision(normalThreshold: Double, threshold : Double, windowSize: Int) extends PowerOnDecision with GammaUtils{
+class GammaNormalPowerOnDecision(normalThreshold: Double, threshold : Double, windowSize: Int) extends PowerOnDecision with DistributionUtils{
 
   override def shouldPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Boolean = {
     //FIXME: Esto no calcula bien
