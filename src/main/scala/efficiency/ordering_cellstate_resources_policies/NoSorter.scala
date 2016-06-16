@@ -8,14 +8,9 @@ import ClusterSchedulingSimulation.CellState
 // Initially defined as an object for simplicity of usage
 // TODO: Become a class if necessary
 object NoSorter extends CellStateResourcesSorter{
-  override def order(cellstate: CellState): Unit = {
-    /*val load = new Array[Int](cellstate.allocatedCpusPerMachine.length)
-    for ( i <-0 to load.length-1){
-      load(i)=i
-    }
-    // Now keys should be ordered by load
-    cellstate.machinesLoad = load*/
-  }
+  override def order(cellstate: CellState): Unit = {}
 
   override val name: String = "no-sorter"
+
+  override def calculateLoad(machineID: Int, cellState: CellState): Double = {0.0}
 }
