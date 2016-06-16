@@ -26,5 +26,5 @@ class WeightedFreeCapacityMarginPowerOffDecision(percentage : Double, windowSize
     should
   }
 
-  override val name: String = ("free-capacity-margin-max-power-off-decision-with-perc:%f-and-window-size:%d").format(percentage, windowSize)
+  override val name: String = ("weighted-free-capacity-margin-max-power-off-decision-with-perc:%f-and-window-size:%d").format(percentage, windowSize)
 }

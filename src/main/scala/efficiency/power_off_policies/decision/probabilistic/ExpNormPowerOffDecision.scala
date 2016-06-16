@@ -21,5 +21,5 @@ class ExpNormPowerOffDecision(normalThreshold: Double, threshold : Double, windo
     should
   }
 
-  override val name: String = ("exponential-normal-power-off-decision-with-ts:%f-threshold:%f-and-window-size:%d").format(ts,threshold,windowSize)
+  override val name: String = ("exponential-normal-power-off-decision-with-normal-threshold:%f-ts:%f-threshold:%f-and-window-size:%d").format(normalThreshold,ts,threshold,windowSize)
 }

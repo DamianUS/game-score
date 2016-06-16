@@ -381,8 +381,8 @@ object Simulation {
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
-    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
-    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
+    //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
+    val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.05))
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
@@ -395,13 +395,15 @@ object Simulation {
     //val defaultPickingPolicy = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.02))
     val defaultPickingPolicy = pickingPolicies
 
-    val loadRange = (0.05 to 0.99 by 0.2).toList
+    val loadRange = (0.5 :: 0.7 :: 0.9 :: Nil)
+    //val loadRange = (0.1 to 0.99 by 0.2).toList
     val defaultLoadRange = 0.5
 
-    val freeCapacityRange = (0.05 to 0.99 by 0.2).toList
+    val freeCapacityRange = (0.1 :: 0.2 :: 0.3 :: Nil)
+    //val freeCapacityRange = (0.1 to 0.99 by 0.2).toList
     val defaultFreeCapacityRange = 0.2
 
-    val randomRange = (0.05 to 0.99 by 0.2).toList
+    val randomRange = (0.1 to 0.99 by 0.2).toList
     val randomDefaultThreshold = 0.5
 
     //val normalThresholdRange = (0.05 to 0.99 by 0.1).toList
