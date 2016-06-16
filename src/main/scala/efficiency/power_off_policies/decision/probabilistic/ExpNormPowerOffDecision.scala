@@ -8,7 +8,7 @@ import org.apache.commons.math.distribution.{ExponentialDistributionImpl, GammaD
 /**
  * Created by dfernandez on 22/1/16.
  */
-class ExpNormPowerOffDecision(threshold : Double, windowSize: Int, ts: Double = 130.0, normalThreshold: Double) extends PowerOffDecision with DistributionUtils{
+class ExpNormPowerOffDecision(normalThreshold: Double, threshold : Double, windowSize: Int, ts: Double = 130.0) extends PowerOffDecision with DistributionUtils{
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
     var should = false
     val allPastTuples = getPastTuples(cellState, windowSize)
