@@ -407,15 +407,16 @@ object Simulation {
     val randomDefaultThreshold = 0.5
 
     //val normalThresholdRange = (0.05 to 0.99 by 0.1).toList
-    val normalThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
+    //val normalThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
+    val normalThresholdRange = (0.05 to 0.5 by 0.05).toList
     val defaultNormalThreshold = 0.95
 
     //val distributionThresholdRange = (0.05 to 0.99 by 0.1).toList
-    val distributionThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
+    val distributionThresholdRange = (0.01 :: 0.1 :: 0.5 :: 0.9 :: 0.99 ::Nil)
     val defaultDistributionThreshold = 0.05
 
-    val distributionWindowRange = (50 to 100 by 25).toList
-    val defaultWindowSize = 100
+    val distributionWindowRange = (25 :: 50 :: 100 :: Nil)
+    val defaultWindowSize = 50
 
     val sweepMaxLoadOffRange = true
     val sweepMeanLoadOffRange = true
@@ -433,17 +434,17 @@ object Simulation {
     val sweepWindowSize = true
     val sweepOnWindowSize = true
     //Power Off
-    val runMaxLoadOff = true
-    val runMeanLoadOff = true
-    val runMinFreeCapacity = true
-    val runMeanFreeCapacity = true
-    val runMinFreeCapacityPonderated = true
-    val runNeverOff = true
-    val runAlwzOff = true
-    val runRandom = true
-    val runGamma = true
-    val runExp = true
-    val runExpNormal = true
+    val runMaxLoadOff = false
+    val runMeanLoadOff = false
+    val runMinFreeCapacity = false
+    val runMeanFreeCapacity = false
+    val runMinFreeCapacityPonderated = false
+    val runNeverOff = false
+    val runAlwzOff = false
+    val runRandom = false
+    val runGamma = false
+    val runExp = false
+    val runExpNormal = false
     val runGammaNormal = true
 
     //PowerOn
@@ -769,8 +770,8 @@ object Simulation {
       }
     }
 
-    //val constantRange = (1.0 :: Nil)
-    val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
+    val constantRange = (1.0 :: Nil)
+    //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
     // val constantRange = medConstantRange
     // val constantRange = fullConstantRange
     val perTaskRange = (0.005 :: Nil)

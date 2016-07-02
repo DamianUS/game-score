@@ -36,14 +36,18 @@ trait DistributionUtils {
 
   def getExponentialDistributionCummulativeProbability(interArrival: Double, ts: Double): Double ={
     var probability = 0.0
+    var interArr = BigDecimal(interArrival).setScale(1, BigDecimal.RoundingMode.FLOOR).toDouble
     DistributionCache.exponentialDistributionCacheCalls += 1
+    if(interArr <= 0.1){
+      interArr = 0.1
+    }
     var prob = None : Option[Double]
-    if(DistributionCache.exponentialDistributionCache.get((interArrival, ts)) == null){
-      prob = Some(generateExponentialDistributionCummulativeProbability(interArrival, ts))
-      DistributionCache.exponentialDistributionCache.put((interArrival, ts), prob.get)
+    if(DistributionCache.exponentialDistributionCache.get((interArr, ts)) == null){
+      prob = Some(generateExponentialDistributionCummulativeProbability(interArr, ts))
+      DistributionCache.exponentialDistributionCache.put((interArr, ts), prob.get)
     }
     else{
-      prob = Some(DistributionCache.exponentialDistributionCache.get(interArrival, ts))
+      prob = Some(DistributionCache.exponentialDistributionCache.get(interArr, ts))
     }
     probability = prob.get
     probability

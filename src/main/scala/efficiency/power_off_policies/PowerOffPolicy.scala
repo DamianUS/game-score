@@ -24,7 +24,7 @@ trait PowerOffPolicy {
   }
   val name : String
 
-  def globalCheck(cellState: CellState) :Unit ={
+  /*def globalCheck(cellState: CellState) :Unit ={
     cellState.simulator.afterDelay(globalCheckPeriod){
       var a = 0
       for (a <- 0 to cellState.numMachines-1){
@@ -33,5 +33,12 @@ trait PowerOffPolicy {
       }
       globalCheck(cellState)
     }
+  }*/
+  def globalCheck(cellState: CellState) :Unit ={
+      var a = 0
+      for (a <- 0 to cellState.numMachines-1){
+        if(cellState.isMachineOn(a))
+          powerOff(cellState, a)
+      }
   }
 }
