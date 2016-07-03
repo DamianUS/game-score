@@ -25,8 +25,8 @@ class GammaNormalPowerOnDecision(normalThreshold: Double, threshold : Double, wi
       //FIXME: en la implementación anterior teníamos un floor de (alphacpu+alphamem) /2 y le sumábamos 1
       if(alphaCpu > 0.0 || alphaMem > 0.0) {
         var beta = getNormalDistributionInverseCummulativeProbability(jobAttributes._1, jobAttributes._2, 1-normalThreshold)
-        if (true)
-          beta = jobAttributes._1
+        if (beta < 0)
+          beta = 0.1
         //FIXME: en la implementación anterior teníamos un floor de (alphacpu+alphamem) /2 y le sumábamos 1
         val prob = getGammaDistributionCummulativeProbability( Math.min(alphaCpu,alphaMem), beta , cellState.powerOnTime)
         should = prob > threshold

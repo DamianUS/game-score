@@ -407,16 +407,17 @@ object Simulation {
     val randomDefaultThreshold = 0.5
 
     //val normalThresholdRange = (0.05 to 0.99 by 0.1).toList
-    //val normalThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
-    val normalThresholdRange = (0.05 to 0.5 by 0.05).toList
-    val defaultNormalThreshold = 0.95
+    val normalThresholdRange = (0.5 :: 0.7 :: 0.9 ::Nil)
+   // val normalThresholdRange = (0.05 to 0.5 by 0.05).toList
+    val defaultNormalThreshold = 0.7
 
     //val distributionThresholdRange = (0.05 to 0.99 by 0.1).toList
-    val distributionThresholdRange = (0.01 :: 0.1 :: 0.5 :: 0.9 :: 0.99 ::Nil)
-    val defaultDistributionThreshold = 0.05
+    //val distributionThresholdRange = (0.01 :: 0.1 :: 0.5 :: 0.9 :: 0.99 ::Nil)
+    val distributionThresholdRange = (0.01 :: 0.1 :: 0.5 ::Nil)
+    val defaultDistributionThreshold = 0.1
 
     val distributionWindowRange = (25 :: 50 :: 100 :: Nil)
-    val defaultWindowSize = 50
+    val defaultWindowSize = 100
 
     val sweepMaxLoadOffRange = true
     val sweepMeanLoadOffRange = true
@@ -431,8 +432,8 @@ object Simulation {
     val sweepdOnNormalThreshold = true
     val sweepDistributionThreshold = true
     val sweepOnDistributionThreshold = true
-    val sweepWindowSize = true
-    val sweepOnWindowSize = true
+    val sweepWindowSize = false
+    val sweepOnWindowSize = false
     //Power Off
     val runMaxLoadOff = false
     val runMeanLoadOff = false
@@ -451,7 +452,7 @@ object Simulation {
     val runNoPowerOn = false
     val runDefault = true
     val runGammaNormalOn = false
-    val runCombinedDefaultOrGammaNormal = false
+    val runCombinedDefaultOrGammaNormal = true
 
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(0.9, 0.7, 50)), "or") ))

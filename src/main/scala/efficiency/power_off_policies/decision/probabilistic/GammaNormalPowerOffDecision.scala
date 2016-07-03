@@ -22,8 +22,8 @@ class GammaNormalPowerOffDecision(normalThreshold: Double, threshold : Double, w
       val alphaCpu = cellState.availableCpus / getNormalDistributionInverseCummulativeProbability(jobAttributes._5, jobAttributes._6, normalThreshold)
       val alphaMem = cellState.availableMem / getNormalDistributionInverseCummulativeProbability(jobAttributes._3, jobAttributes._4, normalThreshold)
       var beta = getNormalDistributionInverseCummulativeProbability(jobAttributes._1, jobAttributes._2, 1-normalThreshold)
-      if (true)
-        beta = jobAttributes._1
+      if (beta < 0 )
+        beta = 0.1
       //FIXME: en la implementación anterior teníamos un floor de (alphacpu+alphamem) /2 y le sumábamos 1
       val prob = getGammaDistributionCummulativeProbability( Math.min(alphaCpu,alphaMem), beta , ts)
       should = prob <= threshold
