@@ -44,7 +44,7 @@ class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) exten
 
   override val name: String = ("power-on-percentage-resources-free-margin-action-with-margin:%f").format(resourcesPercentageMargin)
 
-  def numMachinesNeeded(cellState: CellState, job: Job): Int = {
+  /*def numMachinesNeeded(cellState: CellState, job: Job): Int = {
     var machinesNeeded = 0
     if(job.unscheduledTasks > 0){
       val machinesCpuUnsatisfied = (job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt
@@ -61,7 +61,7 @@ class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) exten
       }
     }
     machinesNeeded
-  }
+  }*/
 
   override def numberOfMachinesToPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]()): Int = {
     var machinesNeeded = 0

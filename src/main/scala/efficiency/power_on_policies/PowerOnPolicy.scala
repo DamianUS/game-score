@@ -17,11 +17,11 @@ trait PowerOnPolicy {
     assertSchedulerName(schedType)
     if(powerOnDecisionPolicy.shouldPowerOn(cellState, job, schedType, commitedDelta, conflictedDelta)){
       var numberOfMachinesToPowerOn = powerOnAction.numberOfMachinesToPowerOn(cellState,job,schedType,commitedDelta,conflictedDelta)
-      else if (cellState.numberOfMachinesOff < numberOfMachinesToPowerOn && cellState.numberOfMachinesOff > 0) {
+      if (cellState.numberOfMachinesOff < numberOfMachinesToPowerOn && cellState.numberOfMachinesOff > 0) {
         cellState.simulator.log(("There are not enough machines turned off, turning on %d machines on %s policy").format(cellState.numberOfMachinesOff, name))
         numberOfMachinesToPowerOn = cellState.numberOfMachinesOff
       }
-      else {
+      else if(cellState.numberOfMachinesOff <= 0){
         cellState.simulator.log(("All machines are on, cant turn on any machines on %s policy").format(name))
         numberOfMachinesToPowerOn = 0
       }
