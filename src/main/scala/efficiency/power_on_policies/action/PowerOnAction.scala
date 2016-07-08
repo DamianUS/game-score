@@ -8,9 +8,9 @@ import scala.util.control.Breaks
  * Created by dfernandez on 15/1/16.
  */
 trait PowerOnAction {
-  def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]())
+  //def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]())
   val name : String
-  def powerOnMachines(cellState: CellState, numMachines: Int, schedType: String): Unit = {
+  /*def powerOnMachines(cellState: CellState, numMachines: Int, schedType: String): Unit = {
     var machinesToPowerOn = numMachines
     val loop = new Breaks;
     if((schedType == "mesos" || schedType == "omega") && machinesToPowerOn > 0){
@@ -29,5 +29,7 @@ trait PowerOnAction {
     }
     //println(("Tras encender quedan %d máquinas apagadas").format(cellState.numberOfMachinesOff))
     assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %d machines to turn on after powering on machines").format(name, machinesToPowerOn))
-  }
+  }*/
+
+  def numberOfMachinesToPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]()): Int
 }

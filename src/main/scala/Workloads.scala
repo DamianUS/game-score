@@ -73,7 +73,7 @@ object Workloads {
     */
   val exampleCellStateDesc = new CellStateDesc(numMachines = 10000,
     cpusPerMachine = 4,
-    memPerMachine = 16)
+    memPerMachine = 8)
 
 
   /**
@@ -82,17 +82,17 @@ object Workloads {
     */
   val exampleWorkloadGeneratorBatch =
     new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 11,
-      avgTasksPerJob = 220.0,
-      avgJobDuration = (100.0),
+      initAvgJobInterarrivalTime = 13,
+      avgTasksPerJob = 180.0,
+      avgJobDuration = (95.0),
       avgCpusPerTask = 0.3,
-      avgMemPerTask = 0.95)
+      avgMemPerTask = 0.4)
   val exampleWorkloadGeneratorService =
     new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-      initAvgJobInterarrivalTime = 32,
-      avgTasksPerJob = 35.0,
-      avgJobDuration = (750.0),
-      avgCpusPerTask = 1.1,
+      initAvgJobInterarrivalTime = 130,
+      avgTasksPerJob = 27.0,
+      avgJobDuration = (1250.0),
+      avgCpusPerTask = 1.5,
       avgMemPerTask = 3.1)
   val exampleWorkloadDesc = WorkloadDesc(cell = "example",
     assignmentPolicy = "CMB_PBB",
@@ -149,7 +149,7 @@ object Workloads {
       exampleJobDurationTraceFileName,
       examplePrefillTraceFileName,
       maxCpusPerTask = 3.9, // Machines in example cluster have 4 CPUs.
-      maxMemPerTask = 15.9) // Machines in example cluster have 16GB mem.
+      maxMemPerTask = 7.9) // Machines in example cluster have 16GB mem.
 
   val exampleWorkloadGeneratorTraceAllService =
     new TraceAllWLGenerator(
@@ -159,7 +159,7 @@ object Workloads {
       exampleJobDurationTraceFileName,
       examplePrefillTraceFileName,
       maxCpusPerTask = 3.9,
-      maxMemPerTask = 15.9)
+      maxMemPerTask = 7.9)
 
   val exampleTraceAllWorkloadPrefillDesc =
     WorkloadDesc(cell = "example",
@@ -182,6 +182,29 @@ object Workloads {
       cellStateDesc = exampleCellStateDesc,
       prefillWorkloadGenerators =
         List(exampleBatchServicePrefillTraceWLGenerator))
+/*Solo service
+  val exampleGeneratedWorkloadPrefillDesc =
+    WorkloadDesc(cell = "example",
+      assignmentPolicy = "CMB_PBB",
+      workloadGenerators =
+          exampleWorkloadGeneratorService ::
+          Nil,
+      cellStateDesc = exampleCellStateDesc,
+      prefillWorkloadGenerators =
+        List(exampleBatchServicePrefillTraceWLGenerator))*/
+
+  /* Solo batch
+  val exampleGeneratedWorkloadPrefillDesc =
+    WorkloadDesc(cell = "example",
+      assignmentPolicy = "CMB_PBB",
+      workloadGenerators =
+        exampleWorkloadGeneratorBatch ::
+          Nil,
+      cellStateDesc = exampleCellStateDesc,
+      prefillWorkloadGenerators =
+        List(exampleBatchServicePrefillTraceWLGenerator))
+
+        */
 
 }
 

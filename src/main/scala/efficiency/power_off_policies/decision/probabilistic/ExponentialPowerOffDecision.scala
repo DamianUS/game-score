@@ -15,11 +15,23 @@ class ExponentialPowerOffDecision(threshold : Double, windowSize: Int, ts : Doub
   override def shouldPowerOff(cellState: CellState, machineID: Int): Boolean = {
     var should = false
     val allPastTuples = getPastTuples(cellState, windowSize)
-    val jobAttributes = getJobAttributes(allPastTuples)
-    if(jobAttributes._1 > 0.0){
-      val prob = getExponentialDistributionCummulativeProbability( jobAttributes._1, ts)
-      should = prob >= threshold
+    val dangerousPastTuples = allPastTuples.filter(pastTuple => (pastTuple._2.numTasks * pastTuple._2.cpusPerTask > cellState.availableCpus) || (pastTuple._2.numTasks * pastTuple._2.memPerTask > cellState.availableMem))
+    //val jobAttributes = getJobAttributes(allPastTuples)
+    if(dangerousPastTuples.size > 0){
+      var interArrival= 0.0
+      if(dangerousPastTuples.size > 1){
+        interArrival = dangerousPastTuples(0)._1
+      }
+      else{
+        interArrival = generateJobAtributes(dangerousPastTuples)._1
+      }
+      if(interArrival > 0.0){
+        val lastDangerousTuple = dangerousPastTuples.maxBy(tuple => tuple._1)
+        val prob = getExponentialDistributionCummulativeProbability(interArrival, Math.max(ts, cellState.simulator.currentTime - lastDangerousTuple._1))
+        should = prob >= threshold
+      }
     }
+
     should
   }
 

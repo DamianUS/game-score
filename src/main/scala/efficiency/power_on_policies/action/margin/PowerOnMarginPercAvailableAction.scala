@@ -11,7 +11,7 @@ import scala.util.control.Breaks
 class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) extends PowerOnAction{
   //On this policy, we will turn on the machines needed to maintain a percentage of data center resources on once satisfied unscheduled tasks
   //FIXME: No tenemos en cuenta ni los conflicted delta ni el modo all or nothing, mejoras más adelante
-  override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
+  /*override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
     assert(resourcesPercentageMargin >= 0.0 && resourcesPercentageMargin <= 1.0, ("Security margin in %s policy must be between 0.0 and 1.0").format(name))
     var machinesToPowerOn = 0
     val machinesNeeded = numMachinesNeeded(cellState, job)
@@ -40,7 +40,7 @@ class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) exten
       }
     }
     assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %d machines to turn on after powering on machines").format(name, machinesToPowerOn))
-  }
+  }*/
 
   override val name: String = ("power-on-percentage-resources-free-margin-action-with-margin:%f").format(resourcesPercentageMargin)
 
@@ -59,6 +59,17 @@ class PowerOnMarginPercAvailableAction(resourcesPercentageMargin : Double) exten
         val newMargin = resourcesPercentageMargin - Math.min(cpuAvailablePerc, memAvailablePerc)
         machinesNeeded = (newMargin * (cellState.numberOfMachinesOn)).ceil.toInt
       }
+    }
+    machinesNeeded
+  }
+
+  override def numberOfMachinesToPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]()): Int = {
+    var machinesNeeded = 0
+    val cpuAvailablePerc = cellState.availableCpus / cellState.onCpus
+    val memAvailablePerc = cellState.availableMem / cellState.onMem
+    if(Math.min(cpuAvailablePerc, memAvailablePerc) < resourcesPercentageMargin){
+      val newMargin = resourcesPercentageMargin - Math.min(cpuAvailablePerc, memAvailablePerc)
+      machinesNeeded = (newMargin * (cellState.numberOfMachinesOn)).ceil.toInt
     }
     machinesNeeded
   }

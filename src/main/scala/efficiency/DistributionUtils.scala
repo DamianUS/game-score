@@ -75,7 +75,7 @@ trait DistributionUtils {
 
   def generateExponentialDistributionCummulativeProbability(interArrival: Double, ts: Double): Double ={
     DistributionCache.exponentialDistributionCacheMiss += 1
-    new ExponentialDistributionImpl(1/interArrival).cumulativeProbability(ts)
+    new ExponentialDistributionImpl(interArrival).cumulativeProbability(ts)
   }
 
 

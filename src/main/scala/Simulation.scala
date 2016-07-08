@@ -40,9 +40,10 @@ import efficiency.power_off_policies.decision.deterministic.security_margin.{Fre
 import efficiency.power_off_policies.decision.deterministic.{AlwzPowerOffDecision, NoPowerOffDecision}
 import efficiency.power_off_policies.decision.probabilistic._
 import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
+import efficiency.power_on_policies.action.margin.PowerOnMarginPercAvailableAction
 import efficiency.power_on_policies.action.unsatisfied.{DefaultPowerOnAction, GammaPowerOnAction}
 import efficiency.power_on_policies.decision.probabilistic.GammaNormalPowerOnDecision
-import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, NoPowerOnDecision}
+import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, MarginPowerOnDecision, NoPowerOnDecision}
 import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
 
 import scala.collection.mutable.ArrayBuffer
@@ -381,6 +382,7 @@ object Simulation {
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
+    //val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
     val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.05))
 
@@ -399,9 +401,9 @@ object Simulation {
     //val loadRange = (0.1 to 0.99 by 0.2).toList
     val defaultLoadRange = 0.5
 
-    val freeCapacityRange = (0.1 :: 0.2 :: 0.3 :: Nil)
+    val freeCapacityRange = (0.15 :: 0.17 :: 0.2 :: Nil)
     //val freeCapacityRange = (0.1 to 0.99 by 0.2).toList
-    val defaultFreeCapacityRange = 0.2
+    val defaultFreeCapacityRange = 0.3
 
     val randomRange = (0.1 to 0.99 by 0.2).toList
     val randomDefaultThreshold = 0.5
@@ -409,27 +411,28 @@ object Simulation {
     //val normalThresholdRange = (0.05 to 0.99 by 0.1).toList
     val normalThresholdRange = (0.5 :: 0.7 :: 0.9 ::Nil)
    // val normalThresholdRange = (0.05 to 0.5 by 0.05).toList
-    val defaultNormalThreshold = 0.82
+    val defaultNormalThreshold = 0.85
 
     //val distributionThresholdRange = (0.05 to 0.99 by 0.1).toList
     //val distributionThresholdRange = (0.01 :: 0.1 :: 0.5 :: 0.9 :: 0.99 ::Nil)
     val distributionThresholdRange = (0.05 :: 0.1 :: 0.15 ::Nil)
     val defaultDistributionThreshold = 0.1
-    val distributionOnThresholdRange = (0.05 :: 0.1 :: 0.15 ::Nil)
-    val defaultOnDistributionThreshold = 0.15
+    val distributionOnThresholdRange = (0.01 :: 0.1 :: 0.9 :: 0.99 ::Nil)
+    val defaultOnDistributionThreshold = 0.5
 
     val distributionWindowRange = (25 :: 50 :: 100 :: Nil)
     val defaultWindowSize = 100
 
-    val sweepMaxLoadOffRange = true
-    val sweepMeanLoadOffRange = true
+    val sweepMaxLoadOffRange = false
+    val sweepMeanLoadOffRange = false
     val sweepMinFreeCapacityRange = true
-    val sweepMeanFreeCapacityRange = true
-    val sweepMinFreeCapacityPonderatedRange = true
-    val sweepMinFreeCapacityPonderatedWindowSize = true
+    val sweepFreeCapacityRangeOn = true
+    val sweepMeanFreeCapacityRange = false
+    val sweepMinFreeCapacityPonderatedRange = false
+    val sweepMinFreeCapacityPonderatedWindowSize = false
     val sweepRandomThreshold = false
-    val sweepExponentialNormalDistributionThreshold = true
-    val sweepExponentialNormalNormalThreshold = true
+    val sweepExponentialNormalDistributionThreshold = false
+    val sweepExponentialNormalNormalThreshold = false
     val sweepdNormalThreshold = false
     val sweepdOnNormalThreshold = false
     val sweepDistributionThreshold = false
@@ -439,12 +442,12 @@ object Simulation {
     //Power Off
     val runMaxLoadOff = false
     val runMeanLoadOff = false
-    val runMinFreeCapacity = false
+    val runMinFreeCapacity = true
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
-    val runNeverOff = false
-    val runAlwzOff = false
-    val runRandom = false
+    val runNeverOff = true
+    val runAlwzOff = true
+    val runRandom = true
     val runGamma = false
     val runExp = false
     val runExpNormal = false
@@ -452,9 +455,11 @@ object Simulation {
 
     //PowerOn
     val runNoPowerOn = false
-    val runDefault = true
+    val runDefault = false
     val runGammaNormalOn = false
-    val runCombinedDefaultOrGammaNormal = true
+    val runCombinedDefaultOrGammaNormal = false
+    val runCombinedDefaultOrMargin = true
+
 
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(0.99), new MarginPowerOnDecision(0.99)))
     //val defaultPowerOnPolicy = List[PowerOnPolicy](new ComposedPowerOnPolicy(new GammaPowerOnAction(0.9, 0.7, 50), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(0.9, 0.7, 50)), "or") ))
@@ -770,6 +775,17 @@ object Simulation {
       }
       else{
         defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(defaultNormalThreshold, defaultDistributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultOnDistributionThreshold, defaultWindowSize)), "or") )
+      }
+    }
+
+    if(runCombinedDefaultOrMargin){
+      if(sweepFreeCapacityRangeOn){
+        for (freeThreshold <- freeCapacityRange){
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(freeThreshold), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new MarginPowerOnDecision(freeThreshold)), "or") )
+        }
+      }
+      else{
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new PowerOnMarginPercAvailableAction(defaultFreeCapacityRange), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new MarginPowerOnDecision(defaultFreeCapacityRange)), "or") )
       }
     }
 

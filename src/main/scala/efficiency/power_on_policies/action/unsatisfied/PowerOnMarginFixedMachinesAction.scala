@@ -11,7 +11,7 @@ import scala.util.control.Breaks
 class PowerOnMarginFixedMachinesAction(numMachinesMargin : Int) extends PowerOnAction{
   //On this policy, we will turn on the machines needed to give service to unsatisfied tasks plus a fixed number of machines as a security margin
   //FIXME: No tenemos en cuenta ni los conflicted delta ni el modo all or nothing, mejoras más adelante
-  override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
+  /*override def powerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Unit = {
     var machinesToPowerOn = 0
     val machinesNeeded = Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt) + numMachinesMargin
     if (cellState.numberOfMachinesOff >= machinesNeeded) {
@@ -38,7 +38,11 @@ class PowerOnMarginFixedMachinesAction(numMachinesMargin : Int) extends PowerOnA
       }
     }
     assert(machinesToPowerOn == 0, ("Something went wrong on %s policy, there are still %d machines to turn on after powering on machines").format(name, machinesToPowerOn))
-  }
+  }*/
 
   override val name: String = "power-on-fixed-machines-margin-action"
+
+  override def numberOfMachinesToPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Int = {
+    numMachinesMargin
+  }
 }
