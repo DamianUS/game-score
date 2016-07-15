@@ -45,7 +45,7 @@ object DefaultPowerOnAction extends PowerOnAction{
     powerOnMachines(cellState, machinesToPowerOn, schedType)
   }*/
 
-  override val name: String = "default-power-on-action"
+  override val name: String = "default"
 
   override def numberOfMachinesToPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta] = Seq[ClaimDelta](), conflictedDelta: Seq[ClaimDelta] =Seq[ClaimDelta]()): Int = {
       Math.max((job.cpusStillNeeded / cellState.cpusPerMachine).ceil.toInt, (job.memStillNeeded / cellState.memPerMachine).ceil.toInt)

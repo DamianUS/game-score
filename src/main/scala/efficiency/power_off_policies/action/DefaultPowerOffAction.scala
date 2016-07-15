@@ -23,5 +23,5 @@ object DefaultPowerOffAction extends PowerOffAction{
     }
   }
 
-  override val name: String = "default-power-off-action"
+  override val name: String = "default"
 }

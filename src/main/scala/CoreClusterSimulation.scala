@@ -220,15 +220,14 @@ class ClusterSimulator(val cellState: CellState,
         // assert(job.numTasks == claimDeltas.length,
         //        "Prefill job failed to schedule.")
         cellState.scheduleEndEvents(claimDeltas)
-
-        log(("After prefill, common cell state now has %.2f%% (%.2f) " +
-          "cpus and %.2f%% (%.2f) mem occupied.")
-          .format(cellState.totalOccupiedCpus / cellState.totalCpus * 100.0,
-            cellState.totalOccupiedCpus,
-            cellState.totalOccupiedMem / cellState.totalMem * 100.0,
-            cellState.totalOccupiedMem))
       }
     })
+    println(("After prefill, common cell state now has %.2f%% (%.2f) " +
+      "cpus and %.2f%% (%.2f) mem occupied.")
+      .format(cellState.totalOccupiedCpus / cellState.totalCpus * 100.0,
+        cellState.totalOccupiedCpus,
+        cellState.totalOccupiedMem / cellState.totalMem * 100.0,
+        cellState.totalOccupiedMem))
   })
 
   // Set up workloads
@@ -1292,7 +1291,7 @@ class CellState(val numMachines: Int,
         // regardless of whether sequence nums have changed.
         if (!simulator.cellState.isMachineOn(delta.machineID) || availableCpusPerMachine(delta.machineID) < delta.cpus ||
           availableMemPerMachine(delta.machineID) <  delta.mem) {
-            simulator.log("Resource-aware conflict occurred " +
+          simulator.log("Resource-aware conflict occurred " +
             "(sched-%s, mach-%d, cpus-%f, mem-%f)."
               .format(delta.scheduler,
                 delta.machineID,
@@ -2120,7 +2119,9 @@ object PrefillJobListsCache {
       val newJobs = collection.mutable.Map[String, Job]()
       val traceSrc = io.Source.fromFile(traceFileName)
       val lines: Iterator[String] = traceSrc.getLines()
+      var numLines = 0
       lines.foreach(line => {
+        numLines += 1
         val parsedLine = line.split(" ")
         // The following parsing code is based on the space-delimited schema
         // used in textfile. See the README Andy made for a description of it.

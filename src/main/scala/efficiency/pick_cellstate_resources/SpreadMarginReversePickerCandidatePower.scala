@@ -6,8 +6,8 @@ import scala.collection.mutable.IndexedSeq
 import scala.util.control.Breaks
 
 /**
- * Created by dfernandez on 11/1/16.
- */
+  * Created by dfernandez on 11/1/16.
+  */
 
 //Spread margin is the "bucket size" for the random machine that will be elected in percentage of numMachines in cluster
 //Margin Perc will be used as a "safety margin"
@@ -43,7 +43,7 @@ class SpreadMarginReversePickerCandidatePower(spreadMargin : Double = 0.1, margi
       }
     }
     if(machineID == -1){
-      assert(remainingCandidatesVar == 0, ("No ha encontrado un candidato en %s y sin embargo dice que hay candidatos aún disponibles").format(name))
+      assert(remainingCandidatesVar == 0, ("No ha encontrado un candidato en %s y sin embargo dice que hay %d candidatos aún disponibles").format(name, remainingCandidatesVar))
     }
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePool)
   }

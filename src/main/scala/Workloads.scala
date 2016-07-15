@@ -82,18 +82,18 @@ object Workloads {
     */
   val exampleWorkloadGeneratorBatch =
     new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 13,
+      initAvgJobInterarrivalTime = 14,
       avgTasksPerJob = 180.0,
-      avgJobDuration = (95.0),
+      avgJobDuration = (90.0),
       avgCpusPerTask = 0.3,
-      avgMemPerTask = 0.4)
+      avgMemPerTask = 0.5)
   val exampleWorkloadGeneratorService =
     new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-      initAvgJobInterarrivalTime = 130,
-      avgTasksPerJob = 27.0,
-      avgJobDuration = (1250.0),
-      avgCpusPerTask = 1.5,
-      avgMemPerTask = 3.1)
+      initAvgJobInterarrivalTime = 140,
+      avgTasksPerJob = 30.0,
+      avgJobDuration = (2000.0),
+      avgCpusPerTask = 0.5,
+      avgMemPerTask = 1.2)
   val exampleWorkloadDesc = WorkloadDesc(cell = "example",
     assignmentPolicy = "CMB_PBB",
     workloadGenerators =

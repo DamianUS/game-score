@@ -9,7 +9,7 @@ import efficiency.DistributionUtils
 class CombinedPowerOnAction(pOnActions: Seq[PowerOnAction], op: String) extends PowerOnAction with DistributionUtils{
   val powerOnActions : Seq[PowerOnAction] = pOnActions
   val operator: String = op
-  val name : String = {powerOnActions.map(_.name).mkString("combined-power-on-action with power-on-action-policies:",",","and_operator:"+operator)}
+  val name : String = {powerOnActions.map(_.name).mkString("combined-action:",",","-operator:"+operator)}
 
   override def numberOfMachinesToPowerOn(cellState: CellState, job: Job, schedType: String, commitedDelta: Seq[ClaimDelta], conflictedDelta: Seq[ClaimDelta]): Int = {
     assert(operator == "sum" || operator == "min" || operator == "max" || operator == "mean", "Operator must be sum, min, max or mean in "+name)

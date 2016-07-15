@@ -42,8 +42,8 @@ import efficiency.power_off_policies.decision.probabilistic._
 import efficiency.power_off_policies.{ComposedPowerOffPolicy, PowerOffPolicy}
 import efficiency.power_on_policies.action.CombinedPowerOnAction
 import efficiency.power_on_policies.action.margin.PowerOnMarginPercAvailableAction
-import efficiency.power_on_policies.action.probabilistic.ExponentialPowerOnAction
-import efficiency.power_on_policies.action.unsatisfied.{DefaultPowerOnAction, GammaPowerOnAction}
+import efficiency.power_on_policies.action.probabilistic.{GammaNormalPowerOnAction, GammaPowerOnAction}
+import efficiency.power_on_policies.action.unsatisfied.DefaultPowerOnAction
 import efficiency.power_on_policies.decision.probabilistic.{ExponentialPowerOnDecision, GammaNormalPowerOnDecision}
 import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, MarginPowerOnDecision, NoPowerOnDecision}
 import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
@@ -399,40 +399,51 @@ object Simulation {
     //val defaultPickingPolicy = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.02))
     val defaultPickingPolicy = pickingPolicies
 
-    val loadRange = (0.5 :: 0.7 :: 0.9 :: Nil)
+    val loadRange = (0.5 :: 0.7 :: Nil)
     //val loadRange = (0.1 to 0.99 by 0.2).toList
     val defaultLoadRange = 0.5
 
-    val freeCapacityRange = (0.15 :: 0.17 :: 0.2 :: Nil)
+    val freeCapacityRange = (0.2 :: 0.25 :: 0.3 :: 0.35 :: Nil)
+    val freeCapacityOnRange = (0.15 :: 0.2 :: 0.25 :: Nil)
+
     //val freeCapacityRange = (0.1 to 0.99 by 0.2).toList
     val defaultFreeCapacityRange = 0.3
+    val defaultFreeCapacityOnRange = 0.15
 
     val randomRange = (0.1 to 0.99 by 0.2).toList
     val randomDefaultThreshold = 0.5
 
     //val normalThresholdRange = (0.05 to 0.99 by 0.1).toList
-    val normalThresholdRange = (0.5 :: 0.7 :: 0.9 ::Nil)
+    val normalThresholdRange = (0.8 :: 0.85 :: 0.9 ::Nil)
    // val normalThresholdRange = (0.05 to 0.5 by 0.05).toList
     val defaultNormalThreshold = 0.85
-
+/*
     //val distributionThresholdRange = (0.05 to 0.99 by 0.1).toList
     //val distributionThresholdRange = (0.01 :: 0.1 :: 0.5 :: 0.9 :: 0.99 ::Nil)
     val distributionThresholdRange = (0.05 :: 0.1 :: 0.15 ::Nil)
-    val defaultDistributionThreshold = 0.1
+    val defaultDistributionThreshold = 0.05
     val distributionOnThresholdRange = (0.01 :: 0.1 :: 0.9 :: 0.99 ::Nil)
     val defaultOnDistributionThreshold = 0.5
-
+*/
     val distributionWindowRange = (25 :: 50 :: 100 :: Nil)
     val defaultWindowSize = 100
 
-    val exponentialOffDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
+    val exponentialOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
     val exponentialOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
-    val defaultExponentialOffDistributionThreshold = 0.6
-    val defaultExponentialOnDistributionThreshold = 0.8
+    val defaultExponentialOffDistributionThreshold = 0.05
+    val defaultExponentialOnDistributionThreshold = 0.5
 
-    val sweepMaxLoadOffRange = false
+    val gammaOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 ::Nil)
+    val gammaOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
+    val defaultGammaOffDistributionThreshold = 0.05
+    val defaultGammaOnDistributionThreshold = 0.5
+
+    val dataCenterLostFactorRange = (0.1 :: 0.2 :: 0.3 :: Nil)
+    val dataCenterLostFactorDefault = 0.3
+
+    val sweepMaxLoadOffRange = true
     val sweepMeanLoadOffRange = false
-    val sweepMinFreeCapacityRange = false
+    val sweepMinFreeCapacityRange = true
     val sweepFreeCapacityRangeOn = false
     val sweepMeanFreeCapacityRange = false
     val sweepMinFreeCapacityPonderatedRange = false
@@ -444,20 +455,24 @@ object Simulation {
     val sweepExponentialNormalNormalThreshold = false
     val sweepdNormalThreshold = false
     val sweepdOnNormalThreshold = false
-    val sweepDistributionThreshold = false
+    val sweepDistributionThreshold = true // Gamma Off distribution threshold
     val sweepOnDistributionThreshold = false
-    val sweepWindowSize = false
+    val sweepWindowSize = true
     val sweepOnWindowSize = false
+    val sweepGammaLostFactor = true
+    val sweepExponentialLostFactor = true
+    val sweepGammaNormalLostFactor = true
+    val sweepExponentialNormalLostFactor = true
     //Power Off
-    val runMaxLoadOff = false
+    val runMaxLoadOff = true
     val runMeanLoadOff = false
     val runMinFreeCapacity = true
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
     val runAlwzOff = true
-    val runRandom = false
-    val runGamma = false
+    val runRandom = true
+    val runGamma = true
     val runExp = true
     val runExpNormal = false
     val runGammaNormal = false
@@ -488,6 +503,26 @@ object Simulation {
 
     var defaultPowerOnPolicy = List[PowerOnPolicy]()
     var defaultPowerOffPolicy = List[PowerOffPolicy]()
+
+    if(runNeverOff){
+      defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
+    }
+
+
+    if(runAlwzOff){
+      defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision, doGlobalCheck = true)
+    }
+
+    if(runRandom){
+      if(sweepRandomThreshold){
+        for (randomThreshold <- randomRange){
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(randomThreshold), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(randomDefaultThreshold), doGlobalCheck = true)
+      }
+    }
 
     if(runMaxLoadOff){
       if(sweepMaxLoadOffRange){
@@ -552,147 +587,167 @@ object Simulation {
 
     if(runExpNormal){
       if(sweepExponentialNormalDistributionThreshold && sweepExponentialNormalNormalThreshold && sweepWindowSize){
-        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+        for(distributionThreshold <- exponentialOffDistributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(normalThreshold, distributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepExponentialNormalDistributionThreshold && sweepExponentialNormalNormalThreshold){
-        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange) {
+        for(distributionThreshold <- exponentialOffDistributionThresholdRange; normalThreshold <- normalThresholdRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(normalThreshold, distributionThreshold, defaultWindowSize), doGlobalCheck = true)
         }
       }
       else if(sweepExponentialNormalDistributionThreshold && sweepWindowSize){
-        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
+        for(distributionThreshold <- exponentialOffDistributionThresholdRange; windowSize <-distributionWindowRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(defaultNormalThreshold, distributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepExponentialNormalNormalThreshold && sweepWindowSize){
         for(normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(normalThreshold, defaultDistributionThreshold, windowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(normalThreshold, defaultExponentialOffDistributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepExponentialNormalNormalThreshold){
         for(normalThreshold <- normalThresholdRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(normalThreshold, defaultDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(normalThreshold, defaultExponentialOffDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
         }
       }
       else if(sweepWindowSize){
         for(windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(defaultNormalThreshold, defaultDistributionThreshold, windowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(defaultNormalThreshold, defaultExponentialOffDistributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepExponentialNormalDistributionThreshold){
-        for(distributionThreshold <- distributionThresholdRange) {
+        for(distributionThreshold <- exponentialOffDistributionThresholdRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize), doGlobalCheck = true)
         }
       }
       else{
-        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(defaultNormalThreshold, defaultDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExpNormPowerOffDecision(defaultNormalThreshold, defaultExponentialOffDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
       }
     }
 
-    if(runNeverOff){
-      defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
-    }
-
-
-    if(runAlwzOff){
-      defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision, doGlobalCheck = true)
-    }
-
-
-    if(runRandom){
-      if(sweepRandomThreshold){
-        for (randomThreshold <- randomRange){
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(randomThreshold), doGlobalCheck = true)
-        }
-      }
-      else{
-        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new RandomPowerOffDecision(randomDefaultThreshold), doGlobalCheck = true)
-      }
-    }
-
-
-    if(runGamma){
-      if(sweepDistributionThreshold && sweepWindowSize){
-        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, windowSize), doGlobalCheck = true)
-        }
-      }
-      else if(sweepDistributionThreshold){
-        for(distributionThreshold <- distributionThresholdRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, defaultWindowSize), doGlobalCheck = true)
-        }
-      }
-      else if(sweepWindowSize){
-        for(windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultDistributionThreshold, windowSize), doGlobalCheck = true)
-        }
-      }
-      else{
-        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
-      }
-    }
 
     if(runExp){
-      if(sweepExponentialOffDistributionThreshold && sweepWindowSize){
+      if(sweepExponentialOffDistributionThreshold && sweepWindowSize && sweepExponentialLostFactor){
+        for(distributionThreshold <- exponentialOffDistributionThresholdRange; windowSize <-distributionWindowRange; lostFactor <- dataCenterLostFactorRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, windowSize, lostFactor), doGlobalCheck = true)
+        }
+      }
+      else if(sweepExponentialOffDistributionThreshold && sweepExponentialLostFactor){
+        for(distributionThreshold <- exponentialOffDistributionThresholdRange; lostFactor <- dataCenterLostFactorRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, defaultWindowSize, lostFactor), doGlobalCheck = true)
+        }
+      }
+      else if(sweepWindowSize && sweepExponentialLostFactor){
+        for(windowSize <-distributionWindowRange; lostFactor <- dataCenterLostFactorRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultExponentialOffDistributionThreshold, windowSize, lostFactor), doGlobalCheck = true)
+        }
+      }
+      else if(sweepExponentialOffDistributionThreshold && sweepWindowSize){
         for(distributionThreshold <- exponentialOffDistributionThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, windowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, windowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
+        }
+      }
+      else if(sweepExponentialLostFactor){
+        for(lostFactor <- dataCenterLostFactorRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultExponentialOffDistributionThreshold, defaultWindowSize, lostFactor), doGlobalCheck = true)
         }
       }
       else if(sweepExponentialOffDistributionThreshold){
         for(distributionThreshold <- exponentialOffDistributionThresholdRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, defaultWindowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(distributionThreshold, defaultWindowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
         }
       }
       else if(sweepWindowSize){
         for(windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultExponentialOffDistributionThreshold, windowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultExponentialOffDistributionThreshold, windowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
         }
       }
       else{
-        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultExponentialOffDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new ExponentialPowerOffDecision(defaultExponentialOffDistributionThreshold, defaultWindowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
+      }
+    }
+
+    if(runGamma){
+
+      if(sweepGammaLostFactor && sweepDistributionThreshold && sweepWindowSize){
+        for(distributionThreshold <- gammaOffDistributionThresholdRange; lostFactor <- dataCenterLostFactorRange; windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, windowSize, lostFactor), doGlobalCheck = true)
+        }
+      }
+      else if(sweepGammaLostFactor && sweepDistributionThreshold){
+        for(distributionThreshold <- gammaOffDistributionThresholdRange; lostFactor <- dataCenterLostFactorRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, defaultWindowSize, lostFactor), doGlobalCheck = true)
+        }
+      }
+      else if(sweepGammaLostFactor && sweepWindowSize){
+        for(windowSize <- distributionWindowRange; lostFactor <- dataCenterLostFactorRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultGammaOffDistributionThreshold, windowSize, lostFactor), doGlobalCheck = true)
+        }
+      }
+      else if(sweepDistributionThreshold && sweepWindowSize){
+        for(distributionThreshold <- gammaOffDistributionThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, windowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
+        }
+      }
+      else if(sweepGammaLostFactor){
+        for(lostFactor <- dataCenterLostFactorRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultGammaOffDistributionThreshold, defaultWindowSize, lostFactor), doGlobalCheck = true)
+        }
+      }
+      else if(sweepDistributionThreshold){
+        for(distributionThreshold <- gammaOffDistributionThresholdRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(distributionThreshold, defaultWindowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
+        }
+      }
+      else if(sweepWindowSize){
+        for(windowSize <-distributionWindowRange) {
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultGammaOffDistributionThreshold, windowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
+        }
+      }
+      else{
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaPowerOffDecision(defaultGammaOffDistributionThreshold, defaultWindowSize, dataCenterLostFactorDefault), doGlobalCheck = true)
       }
     }
 
     if(runGammaNormal){
       if(sweepDistributionThreshold && sweepdNormalThreshold && sweepWindowSize){
-        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+        for(distributionThreshold <- gammaOffDistributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, distributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepDistributionThreshold && sweepdNormalThreshold){
-        for(distributionThreshold <- distributionThresholdRange; normalThreshold <- normalThresholdRange) {
+        for(distributionThreshold <- gammaOffDistributionThresholdRange; normalThreshold <- normalThresholdRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, distributionThreshold, defaultWindowSize), doGlobalCheck = true)
         }
       }
       else if(sweepDistributionThreshold && sweepWindowSize){
-        for(distributionThreshold <- distributionThresholdRange; windowSize <-distributionWindowRange) {
+        for(distributionThreshold <- gammaOffDistributionThresholdRange; windowSize <-distributionWindowRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, distributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepdNormalThreshold && sweepWindowSize){
         for(normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, defaultDistributionThreshold, windowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, defaultGammaOffDistributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepdNormalThreshold){
         for(normalThreshold <- normalThresholdRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, defaultDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(normalThreshold, defaultGammaOffDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
         }
       }
       else if(sweepWindowSize){
         for(windowSize <-distributionWindowRange) {
-          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, defaultDistributionThreshold, windowSize), doGlobalCheck = true)
+          defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, defaultGammaOffDistributionThreshold, windowSize), doGlobalCheck = true)
         }
       }
       else if(sweepDistributionThreshold){
-        for(distributionThreshold <- distributionThresholdRange) {
+        for(distributionThreshold <- gammaOffDistributionThresholdRange) {
           defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize), doGlobalCheck = true)
         }
       }
       else{
-        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, defaultDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
+        defaultPowerOffPolicy = defaultPowerOffPolicy :+ new ComposedPowerOffPolicy(DefaultPowerOffAction, new GammaNormalPowerOffDecision(defaultNormalThreshold, defaultGammaOffDistributionThreshold, defaultWindowSize), doGlobalCheck = true)
       }
     }
 
@@ -708,83 +763,83 @@ object Simulation {
 
     if(runGammaNormalOn){
       if(sweepOnDistributionThreshold && sweepdOnNormalThreshold && sweepOnWindowSize){
-        for(distributionThreshold <- distributionOnThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+        for(distributionThreshold <- gammaOnDistributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
           defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, windowSize))
         }
       }
       else if(sweepOnDistributionThreshold && sweepdOnNormalThreshold){
-        for(distributionThreshold <- distributionOnThresholdRange; normalThreshold <- normalThresholdRange) {
+        for(distributionThreshold <- gammaOnDistributionThresholdRange; normalThreshold <- normalThresholdRange) {
           defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, defaultWindowSize))
         }
       }
       else if(sweepOnDistributionThreshold && sweepOnWindowSize){
-        for(distributionThreshold <- distributionOnThresholdRange; windowSize <-distributionWindowRange) {
+        for(distributionThreshold <- gammaOnDistributionThresholdRange; windowSize <-distributionWindowRange) {
           defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, windowSize))
         }
       }
       else if(sweepdOnNormalThreshold && sweepOnWindowSize){
         for(normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, defaultOnDistributionThreshold, windowSize))
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, defaultGammaOnDistributionThreshold, windowSize))
         }
       }
       else if(sweepdOnNormalThreshold){
         for(normalThreshold <- normalThresholdRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, defaultOnDistributionThreshold, defaultWindowSize))
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(normalThreshold, defaultGammaOnDistributionThreshold, defaultWindowSize))
         }
       }
       else if(sweepOnWindowSize){
         for(windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultOnDistributionThreshold, windowSize))
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultGammaOnDistributionThreshold, windowSize))
         }
       }
       else if(sweepOnDistributionThreshold){
-        for(distributionThreshold <- distributionOnThresholdRange) {
+        for(distributionThreshold <- gammaOnDistributionThresholdRange) {
           defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize))
         }
       }
       else{
-        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultOnDistributionThreshold, defaultWindowSize))
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(DefaultPowerOnAction, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultGammaOnDistributionThreshold, defaultWindowSize))
       }
     }
 
     if(runCombinedDefaultOrGammaNormal){
       if(sweepOnDistributionThreshold && sweepdOnNormalThreshold && sweepOnWindowSize){
-        for(distributionThreshold <- distributionOnThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(normalThreshold, distributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, windowSize)), "or") )
+        for(distributionThreshold <- gammaOnDistributionThresholdRange; normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(normalThreshold, distributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, windowSize)), "or") )
         }
       }
       else if(sweepOnDistributionThreshold && sweepdOnNormalThreshold){
-        for(distributionThreshold <- distributionOnThresholdRange; normalThreshold <- normalThresholdRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(normalThreshold, distributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, defaultWindowSize)), "or") )
+        for(distributionThreshold <- gammaOnDistributionThresholdRange; normalThreshold <- normalThresholdRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(normalThreshold, distributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, distributionThreshold, defaultWindowSize)), "or") )
         }
       }
       else if(sweepOnDistributionThreshold && sweepOnWindowSize){
-        for(distributionThreshold <- distributionOnThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(defaultNormalThreshold, distributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, windowSize)), "or") )
+        for(distributionThreshold <- gammaOnDistributionThresholdRange; windowSize <-distributionWindowRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(defaultNormalThreshold, distributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, windowSize)), "or") )
         }
       }
       else if(sweepdOnNormalThreshold && sweepOnWindowSize){
         for(normalThreshold <- normalThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(normalThreshold, defaultDistributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, defaultOnDistributionThreshold, windowSize)), "or") )
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(normalThreshold, defaultGammaOnDistributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, defaultGammaOnDistributionThreshold, windowSize)), "or") )
         }
       }
       else if(sweepdOnNormalThreshold){
         for(normalThreshold <- normalThresholdRange) {
-          defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(normalThreshold, defaultOnDistributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, defaultOnDistributionThreshold, defaultWindowSize)), "or") )
+          defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(normalThreshold, defaultGammaOnDistributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(normalThreshold, defaultGammaOnDistributionThreshold, defaultWindowSize)), "or") )
         }
       }
       else if(sweepOnWindowSize){
         for(windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(defaultNormalThreshold, defaultOnDistributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultOnDistributionThreshold, windowSize)), "or") )
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(defaultNormalThreshold, defaultGammaOnDistributionThreshold, windowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultGammaOnDistributionThreshold, windowSize)), "or") )
         }
       }
       else if(sweepOnDistributionThreshold){
-        for(distributionThreshold <- distributionOnThresholdRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(defaultNormalThreshold, distributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize)), "or") )
+        for(distributionThreshold <- gammaOnDistributionThresholdRange) {
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(defaultNormalThreshold, distributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, distributionThreshold, defaultWindowSize)), "or") )
         }
       }
       else{
-        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaPowerOnAction(defaultNormalThreshold, defaultDistributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultOnDistributionThreshold, defaultWindowSize)), "or") )
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new GammaNormalPowerOnAction(defaultNormalThreshold, defaultGammaOnDistributionThreshold, defaultWindowSize), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new GammaNormalPowerOnDecision(defaultNormalThreshold, defaultGammaOnDistributionThreshold, defaultWindowSize)), "or") )
       }
     }
 
@@ -796,28 +851,28 @@ object Simulation {
       }
       else{
         new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new PowerOnMarginPercAvailableAction(defaultFreeCapacityRange)), "sum")
-        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new PowerOnMarginPercAvailableAction(defaultFreeCapacityRange)), "sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new MarginPowerOnDecision(defaultFreeCapacityRange)), "or") )
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new PowerOnMarginPercAvailableAction(defaultFreeCapacityOnRange)), "sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new MarginPowerOnDecision(defaultFreeCapacityOnRange)), "or") )
       }
     }
 
     if(runCombinedDefaultOrExponential){
       if(sweepExponentialOnDistributionThreshold && sweepWindowSize){
         for(distributionThreshold <- exponentialOnDistributionThresholdRange; windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new ExponentialPowerOnAction(distributionThreshold, windowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(distributionThreshold, windowSize)), "or"))
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new GammaPowerOnAction(distributionThreshold, windowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(distributionThreshold, windowSize)), "or"))
         }
       }
       else if(sweepExponentialOnDistributionThreshold){
         for(distributionThreshold <- exponentialOnDistributionThresholdRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new ExponentialPowerOnAction(distributionThreshold, defaultWindowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(distributionThreshold, defaultWindowSize)), "or"))
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new GammaPowerOnAction(distributionThreshold, defaultWindowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(distributionThreshold, defaultWindowSize)), "or"))
         }
       }
       else if(sweepWindowSize){
         for(windowSize <-distributionWindowRange) {
-          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new ExponentialPowerOnAction(defaultExponentialOnDistributionThreshold, windowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(defaultExponentialOnDistributionThreshold, windowSize)), "or"))
+          defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new GammaPowerOnAction(defaultExponentialOnDistributionThreshold, windowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(defaultExponentialOnDistributionThreshold, windowSize)), "or"))
         }
       }
       else{
-        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new ExponentialPowerOnAction(defaultExponentialOnDistributionThreshold, defaultWindowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(defaultExponentialOnDistributionThreshold, defaultWindowSize)), "or"))
+        defaultPowerOnPolicy = defaultPowerOnPolicy :+ new ComposedPowerOnPolicy(new CombinedPowerOnAction(Seq(DefaultPowerOnAction, new GammaPowerOnAction(defaultExponentialOnDistributionThreshold, defaultWindowSize)),"sum"), new CombinedPowerOnDecision(Seq(DefaultPowerOnDecision, new ExponentialPowerOnDecision(defaultExponentialOnDistributionThreshold, defaultWindowSize)), "or"))
       }
     }
 
@@ -832,7 +887,7 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillCpuLim = Map("PrefillBatch" -> 0.25, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.55)
+    val prefillCpuLim = Map("PrefillBatch" -> 0.55, "PrefillService" -> 0.55, "PrefillBatchService" -> 0.55)
     val doLogging = false
     val timeout = 60.0 * 60.0 *10000.0 // In seconds.
 

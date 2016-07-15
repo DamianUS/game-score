@@ -17,5 +17,5 @@ object DefaultPowerOnDecision extends PowerOnDecision{
 
   }
 
-  override val name: String = "default-power-on-decision"
+  override val name: String = "default"
 }

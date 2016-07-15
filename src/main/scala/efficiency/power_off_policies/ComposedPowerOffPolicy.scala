@@ -13,6 +13,6 @@ class ComposedPowerOffPolicy(action : PowerOffAction, decision : PowerOffDecisio
   override val shouldPerformGlobalCheck : Boolean = doGlobalCheck
   override val globalCheckPeriod : Double = globalPeriod
 
-  override val name: String = ("composed_power_off_policy_with_decision:%s_and_action:%s").format(powerOffDecisionPolicy.name, powerOffAction.name)
+  override val name: String = ("composed-off-decision:%s-action:%s").format(powerOffDecisionPolicy.name, powerOffAction.name)
 
 }
