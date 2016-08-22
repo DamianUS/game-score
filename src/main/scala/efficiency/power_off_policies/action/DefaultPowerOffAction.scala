@@ -10,9 +10,9 @@ import scala.util.control.Breaks
 object DefaultPowerOffAction extends PowerOffAction{
   override def powerOff(cellState: CellState, machineID: Int): Unit = {
     val state = cellState.isMachineOn(machineID)
-    assert(cellState.isMachineOn(machineID), ("The machine with ID %d is not powered on when arriving to power off policy: %s").format(machineID, name))
+    //assert(cellState.isMachineOn(machineID), ("The machine with ID %d is not powered on when arriving to power off policy: %s").format(machineID, name))
     //println(("Entra en apagar la máquina %d cuando quedan %d máquinas encendidas").format(machineID, cellState.numberOfMachinesOn))
-    if(cellState.allocatedCpusPerMachine(machineID) <= 0.00001 && cellState.allocatedMemPerMachine(machineID) <= 0.00001) {
+    if(cellState.isMachineOn(machineID) && cellState.allocatedCpusPerMachine(machineID) <= 0.00001 && cellState.allocatedMemPerMachine(machineID) <= 0.00001) {
       cellState.powerOffMachine(machineID)
       cellState.simulator.log(("Shutting down the machine with machine ID : %d in the power off policy : %s").format(machineID, name))
       //println(("Tras apagar la máquina %d quedan %d máquinas encendidas").format(machineID, cellState.numberOfMachinesOn))

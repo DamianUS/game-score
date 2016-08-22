@@ -677,7 +677,7 @@ abstract class Scheduler(val name: String,
     for(mID <- 0 to cellState.numMachines - 1) {
       val cpusAvail = cellState.availableCpusPerMachine(mID)
       val memAvail = cellState.availableMemPerMachine(mID)
-      if (cellState.isMachineOn(mID) && (cpusAvail > 0.0 || memAvail > 0.0)) {
+      if (cellState.isMachineOn(mID) && (cpusAvail > 0.0001 || memAvail > 0.0001)) {
         // Create and apply a claim delta.
         assert(mID >= 0 && mID < cellState.machineSeqNums.length)
         //TODO(andyk): Clean up semantics around taskDuration in ClaimDelta
@@ -1089,7 +1089,14 @@ class CellState(val numMachines: Int,
     allocatedCpusPerMachine(machineID) += cpus
     allocatedMemPerMachine(machineID) += mem
     if(!locked){
-      simulator.sorter.updateLoadFactor(machineID, this)
+      if(simulator==null){
+        //Omega, Mesos
+        scheduler.simulator.sorter.updateLoadFactor(machineID, this)
+      }
+      else{
+        //MOnolithic
+        simulator.sorter.updateLoadFactor(machineID, this)
+      }
     }
   }
 
@@ -1099,6 +1106,16 @@ class CellState(val numMachines: Int,
                     cpus: Double,
                     mem: Double,
                     locked: Boolean) = {
+    if(!isMachineOn(machineID)){
+      println("la maquina "+machineID)
+      println("Esta en un cellstate")
+      if(this.simulator!=null){
+        println("EL GORDO")
+      }
+      else{
+        println("COPIA")
+      }
+    }
     assert(isMachineOn(machineID), "Freeing resources in a powered off machine")
     if (locked) {
       assert(lockedCpus.contains(scheduler.name))

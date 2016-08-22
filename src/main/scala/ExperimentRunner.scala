@@ -207,18 +207,38 @@ class Experiment(
 
                     powerOffPolicies.foreach(powerOffPolicy => {
                       println ("\nSet power off strategy "+powerOffPolicy.name)
-                      var numBatchTasks = 0
+                      /*var numBatchTasks = 0
                       var numServiceTasks = 0
                       var numCpuBatch = 0.0
                       var numCpuService = 0.0
                       var numMemBatch = 0.0
                       var numMemService = 0.0
+                      val pw = new PrintWriter(new File("/Users/dfernandez/IdeaProjects/efficiency-cluster-scheduler-simulator/experiment_results/datosjobs.csv"));
+                      val sb = new StringBuilder();
+                      sb.append("submitted,");
+                      sb.append("numtasks,");
+                      sb.append("taskduration,");
+                      sb.append("jobcpu,");
+                      sb.append("jobram,");
+                      sb.append("tipo,");
+                      sb.append('\n');*/
                       // Make a copy of the workloads that this run of the simulator
                       // will modify by using them to track statistics.
                       val workloads = ListBuffer[Workload]()
                       commonWorkloadSet.foreach(workload => {
-                        workload.getJobs.foreach(job => {
-
+                        /*workload.getJobs.foreach(job => {
+                          sb.append(f"${job.submitted}%1.2f")
+                          sb.append(",")
+                          sb.append(job.numTasks)
+                          sb.append(",")
+                          sb.append(f"${job.taskDuration}%1.2f")
+                          sb.append(",")
+                          sb.append(f"${job.numTasks * job.cpusPerTask}%1.2f")
+                          sb.append(",")
+                          sb.append(f"${job.numTasks * job.memPerTask}%1.2f")
+                          sb.append(",")
+                          sb.append(workload.name)
+                          sb.append('\n');
                           if (workload.name == "Batch") {
                             numBatchTasks += job.numTasks
                             numCpuBatch += job.numTasks * job.cpusPerTask
@@ -229,9 +249,12 @@ class Experiment(
                             numCpuService += job.numTasks * job.cpusPerTask
                             numMemService += job.numTasks * job.memPerTask
                           }
-                        })
+                        })*/
+
                         workloads.append(workload.copy)
                       })
+                      /*pw.write(sb.toString());
+                      pw.close();*/
                       // Setup and and run the simulator.
                       val simulator =
                         simulatorDesc.newSimulator(constantThinkTime,

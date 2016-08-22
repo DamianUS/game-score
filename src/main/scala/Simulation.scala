@@ -340,8 +340,8 @@ object Simulation {
           conflictMode <- Seq("resource-fit");
           //conflictMode <- Seq("sequence-numbers");
           //transactionMode <- Seq("all-or-nothing")) yield {
-          transactionMode <- Seq("all-or-nothing", "incremental")) yield {
-          //transactionMode <- Seq("incremental")) yield {
+          //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
+          transactionMode <- Seq("incremental")) yield {
             new OmegaSimulatorDesc(
               generateOmegaSchedulerDescs(numOmegaServiceScheds,
                 numOmegaBatchScheds),
@@ -379,8 +379,8 @@ object Simulation {
     val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = false
-    val runOmega = false
+    val runMesos = true
+    val runOmega = true
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
@@ -403,12 +403,12 @@ object Simulation {
     //val loadRange = (0.1 to 0.99 by 0.2).toList
     val defaultLoadRange = 0.5
 
-    val freeCapacityRange = (0.2 :: 0.25 :: 0.3 :: 0.35 :: Nil)
-    val freeCapacityOnRange = (0.15 :: 0.2 :: 0.25 :: Nil)
+    val freeCapacityRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
+    val freeCapacityOnRange = (0.05 :: 0.1 :: Nil)
 
     //val freeCapacityRange = (0.1 to 0.99 by 0.2).toList
-    val defaultFreeCapacityRange = 0.3
-    val defaultFreeCapacityOnRange = 0.15
+    val defaultFreeCapacityRange = 0.2
+    val defaultFreeCapacityOnRange = 0.1
 
     val randomRange = (0.1 to 0.99 by 0.2).toList
     val randomDefaultThreshold = 0.5
@@ -438,8 +438,8 @@ object Simulation {
     val defaultGammaOffDistributionThreshold = 0.05
     val defaultGammaOnDistributionThreshold = 0.5
 
-    val dataCenterLostFactorRange = (0.1 :: 0.2 :: 0.3 :: Nil)
-    val dataCenterLostFactorDefault = 0.3
+    val dataCenterLostFactorRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
+    val dataCenterLostFactorDefault = 0.2
 
     val sweepMaxLoadOffRange = true
     val sweepMeanLoadOffRange = false
