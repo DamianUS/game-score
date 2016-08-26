@@ -16,7 +16,7 @@ class SpreadMarginReversePickerCandidatePower(spreadMargin : Double = 0.1, margi
     assert(marginPerc >= 0.00 && marginPerc <= 1.00, "Margin in MarginReversePickerCandidatePower must be between 0 and 1")
     var machineID = -1
     var numTries =0
-    var remainingCandidatesVar= remainingCandidates
+    var remainingCandidatesVar= cellState.numMachines
     val loop = new Breaks;
     loop.breakable {
       for(i <- remainingCandidatesVar-1 to 0 by -1){
@@ -54,7 +54,7 @@ class SpreadMarginReversePickerCandidatePower(spreadMargin : Double = 0.1, margi
     val rnd = new scala.util.Random
     var machineID = -1
     loop.breakable {
-      for (i <- 0 to (cellState.numMachines * spreadMargin).toInt by 1) {
+      for (i <- 0 to 5 by 1) {
         val pseudoRandomMachine = range(rnd.nextInt(range length))
         val mID = cellState.machinesLoad(pseudoRandomMachine)
         if (cellState.isMachineOn(mID) && cellState.availableCpusPerMachine(mID) >= (marginPerc * cellState.cpusPerMachine + job.cpusPerTask + 0.01) && cellState.availableMemPerMachine(mID) >= (marginPerc * cellState.memPerMachine + job.memPerTask + 0.01)) {

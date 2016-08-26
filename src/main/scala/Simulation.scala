@@ -385,6 +385,7 @@ object Simulation {
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
     //val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
+    //val pickingPolicies = List[CellStateResourcesPicker] (BasicReversePickerCandidatePower)
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
     val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.05))
 

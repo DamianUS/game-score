@@ -14,10 +14,10 @@ object BasicReversePickerCandidatePower extends CellStateResourcesPicker{
   override def pickResource(cellState: CellState, job: Job, candidatePool: IndexedSeq[Int], remainingCandidates: Int) = {
     var machineID = -1
     var numTries =0
-    var remainingCandidatesVar= remainingCandidates
+    var remainingCandidatesVar= cellState.numMachines
     val loop = new Breaks;
     loop.breakable {
-      for(i <- remainingCandidatesVar-1 to 0 by -1){
+      for(i <-  cellState.numMachines-1 to 0 by -1){
         //FIXME: Putting a security margin of 0.01 because mesos is causing conflicts
         val mID = cellState.machinesLoad(i)
         if (cellState.isMachineOn(mID) && cellState.availableCpusPerMachine(mID) >= (job.cpusPerTask + 0.0001) && cellState.availableMemPerMachine(mID) >= (job.memPerTask + 0.0001)) {
@@ -32,9 +32,7 @@ object BasicReversePickerCandidatePower extends CellStateResourcesPicker{
 
       }
     }
-    if(machineID == -1){
-      assert(remainingCandidatesVar == 0, ("No ha encontrado un candidato en %s y sin embargo dice que hay candidatos aún disponibles").format(name))
-    }
+
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePool)
   }
   override val name: String = "reverse-power-picker-candidate"
