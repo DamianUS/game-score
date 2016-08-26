@@ -102,6 +102,7 @@ for env in experiment_result_set.experiment_env:
         logging.debug("Handling experiment result with C = %f and L = %f."
                       % (exp_result.constant_think_time,
                          exp_result.per_task_think_time))
+
         for sched_stat in exp_result.scheduler_stats:
             logging.debug("Handling scheduler stat for %s."
                           % sched_stat.scheduler_name)
@@ -175,6 +176,30 @@ for env in experiment_result_set.experiment_env:
             scheduler_stats_key = (env.cell_name, sched_stat.scheduler_name, "scheduler_stats")
             #TODO: Cambiar esta guarrería de for anidados, pero como son pocos workloads la complejidad da igual
 
+            #Measurements
+            for measurement in exp_result.measurements:
+                measurement_key = (env.cell_name, sched_stat.scheduler_name, exp_result.efficiency_stats.power_off_policy.name, "measurement")
+
+                #measurements_outfile_name = ("meas-" + "-off:" + exp_result.efficiency_stats.power_off_policy.name + ".txt")
+                #logging.info("Creating meas_output file: %s" % measurements_outfile_name)
+                #measurements_outfile = open(measurements_outfile_name, "w")
+
+
+                output_strings[measurement_key] += \
+                    "%s%.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f %.4f\n" % (opt_extra_newline,
+                                                                                         measurement.cpuUtilization,
+                                                                                         measurement.cpuTotallyIdle,
+                                                                                         measurement.cpuPartiallyIdle,
+                                                                                         measurement.mpuLocked,
+                                                                                         measurement.memUtilization,
+                                                                                         measurement.memTotallyIdle,
+                                                                                         measurement.memPartiallyIdle,
+                                                                                         measurement.memLocked,
+                                                                                         measurement.machinesOff,
+                                                                                         measurement.machinesOn,
+                                                                                         measurement.machinesTurningOff,
+                                                                                         measurement.machinesTurningOn)
+
             for workload_stat in exp_result.workload_stats:
                 #if workload_stat.workload_name == exp_result.sweep_workload:
                 for per_workload_busy_time in sched_stat.per_workload_busy_time:
@@ -247,7 +272,7 @@ for env in experiment_result_set.experiment_env:
                                                                                                                                                                                                                                                                                                                                         exp_result.efficiency_stats.avg_number_machines_off,
                                                                                                                                                                                                                                                                                                                                         exp_result.efficiency_stats.avg_number_machines_turning_on,
                                                                                                                                                                                                                                                                                                                                         exp_result.efficiency_stats.avg_number_machines_turning_off,
-                                                                                                                                                                                                                                                                                                                                        exp_result.efficiency_stats.avg_number_machines_on/10000 - max(exp_result.cell_state_avg_cpu_utilization, exp_result.cell_state_avg_mem_utilization))
+                                                                                                                                                                                                                                                                                                                                           exp_result.efficiency_stats.avg_number_machines_on/10000 - max(exp_result.cell_state_avg_cpu_utilization, exp_result.cell_state_avg_mem_utilization))
 
 # Create output files.
 # One output file for each unique (cell_name, scheduler_name, metric) tuple.
@@ -257,7 +282,21 @@ for key_tuple, out_str in output_strings.iteritems():
                     "." + "_".join([str(i) for i in key_tuple]) + ".txt")
     logging.info("Creating output file: %s" % outfile_name)
     outfile = open(outfile_name, "w")
-    if "scheduler_stats" in outfile_name and outfile_name not in printed_headers:
+    if "measurement" in outfile_name and outfile_name not in printed_headers:
+        outfile.write("%s%s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
+                                                                                "used_cpu",
+                                                                                "cpu_totally_idle",
+                                                                                "cpu_partially_idle",
+                                                                                "locked_cpu",
+                                                                                "used_mem",
+                                                                                "mem_totally_idle",
+                                                                                "mem_partially_idle",
+                                                                                "locked_mem",
+                                                                                "off",
+                                                                                "on",
+                                                                                "turning_off",
+                                                                                "turning_on"))
+    elif "scheduler_stats" in outfile_name and outfile_name not in printed_headers:
         outfile.write("%s%s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s\n" % (opt_extra_newline,
                                                                                                                                                                                                                           "env.cell_name",
                                                                                                                                                                                                                           "env.is_prefilled",

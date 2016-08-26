@@ -308,14 +308,31 @@ class ClusterSimulator(val cellState: CellState,
   def avgMachinesOn: Double = (sumMachinesOn.toDouble / numMonitoringMeasurements.toDouble)
 
   var sumCpuUtilization: Double = 0.0
+  //Used in the measurement
+  var measuredCpuUtilization: Array[Double] = Array[Double]()
+  //Cpu on totally idle machines
+  var measuredCpuTotallyIdle: Array[Double] = Array[Double]()
+  //Cpu on partially idle machines
+  var measuredCpuPartiallyIdle: Array[Double] = Array[Double]()
   var sumMemUtilization: Double = 0.0
+  var measuredMemUtilization: Array[Double] = Array[Double]()
+  //Mem on totally idle machines
+  var measuredMemTotallyIdle: Array[Double] = Array[Double]()
+  //Cpu on partially idle machines
+  var measuredMemPartiallyIdle: Array[Double] = Array[Double]()
   var sumCpuLocked: Double = 0.0
+  var measuredCpuLocked: Array[Double] = Array[Double]()
   var sumMemLocked: Double = 0.0
+  var measuredMemLocked: Array[Double] = Array[Double]()
   var numMonitoringMeasurements: Long = 0
   var sumMachinesOn = 0
+  var measuredMachinesOn: Array[Double] = Array[Double]()
   var sumMachinesOff = 0
+  var measuredMachinesOff: Array[Double] = Array[Double]()
   var sumMachinesTurningOn = 0
+  var measuredMachinesTurningOn: Array[Double] = Array[Double]()
   var sumMachinesTurningOff = 0
+  var measuredMachinesTurningOff: Array[Double] = Array[Double]()
   var totalMachinePowerStates = Seq[Array[Int]]()
   var sumMachinesOccupied = 0
   var sumCpuIdle = 0.0
@@ -487,15 +504,38 @@ class ClusterSimulator(val cellState: CellState,
 
   def measureUtilization: Unit = {
     numMonitoringMeasurements += 1
-    sumCpuUtilization += cellState.totalOccupiedCpus
-    sumMemUtilization += cellState.totalOccupiedMem
-    sumCpuLocked += cellState.totalLockedCpus
-    sumMemLocked += cellState.totalLockedMem
-    sumMachinesOn += cellState.numberOfMachinesOn
-    sumMachinesOff += cellState.numberOfMachinesOff
-    sumMachinesTurningOff += cellState.numberOfMachinesTurningOff
-    sumMachinesTurningOn += cellState.numberOfMachinesTurningOn
-    sumMachinesOccupied += cellState.numMachinesOccupied
+    val totalOccupiedCpus = cellState.totalOccupiedCpus
+    val totalOccupiedMem = cellState.totalOccupiedMem
+    val numMachinesOccupied = cellState.numMachinesOccupied
+    val numMachinesOn = cellState.numberOfMachinesOn
+    val numMachinesOff = cellState.numberOfMachinesOff
+    val numMachinesTurningOn = cellState.numberOfMachinesTurningOn
+    val numMachinesTurningOff = cellState.numberOfMachinesTurningOff
+    val cpuLocked = cellState.totalLockedCpus
+    val memLocked = cellState.totalLockedMem
+    val totallyIdleCpu = (numMachinesOn - numMachinesOccupied)*cellState.cpusPerMachine.toDouble / cellState.totalCpus.toDouble
+    val totallyIdleMem = (numMachinesOn - numMachinesOccupied)*cellState.memPerMachine.toDouble / cellState.totalMem.toDouble
+    measuredCpuUtilization = measuredCpuUtilization :+ totalOccupiedCpus.toDouble / cellState.totalCpus.toDouble
+    measuredCpuTotallyIdle = measuredCpuTotallyIdle :+ totallyIdleCpu
+    measuredCpuPartiallyIdle = measuredCpuPartiallyIdle :+ (numMachinesOn * cellState.cpusPerMachine - totalOccupiedCpus - totallyIdleCpu).toDouble / cellState.totalCpus.toDouble
+    measuredMemUtilization = measuredMemUtilization :+ totalOccupiedMem.toDouble / cellState.totalMem.toDouble
+    measuredMemTotallyIdle = measuredMemTotallyIdle :+ totallyIdleMem
+    measuredMemPartiallyIdle = measuredMemPartiallyIdle :+ (numMachinesOn * cellState.memPerMachine - totalOccupiedMem - totallyIdleMem).toDouble / cellState.totalMem.toDouble
+    measuredMachinesOff = measuredMachinesOff :+ numMachinesOff.toDouble / cellState.numMachines.toDouble
+    measuredMachinesOn = measuredMachinesOn :+ numMachinesOn.toDouble / cellState.numMachines.toDouble
+    measuredMachinesTurningOff = measuredMachinesTurningOff :+ numMachinesTurningOff.toDouble / cellState.numMachines.toDouble
+    measuredMachinesTurningOn = measuredMachinesTurningOn :+ numMachinesTurningOn.toDouble / cellState.numMachines.toDouble
+    measuredCpuLocked = measuredCpuLocked :+ cpuLocked.toDouble / cellState.totalCpus.toDouble
+    measuredMemLocked = measuredMemLocked :+ memLocked.toDouble / cellState.totalMem.toDouble
+    sumCpuUtilization += totalOccupiedCpus
+    sumMemUtilization += totalOccupiedMem
+    sumCpuLocked += cpuLocked
+    sumMemLocked += memLocked
+    sumMachinesOn += numMachinesOn
+    sumMachinesOff += numMachinesOff
+    sumMachinesTurningOff += numMachinesTurningOff
+    sumMachinesTurningOn += numMachinesTurningOn
+    sumMachinesOccupied += numMachinesOccupied
     //totalMachinePowerStates = totalMachinePowerStates :+ cellState.machinePowerState
     log("Avg cpu utilization (adding measurement %d of %f): %f."
       .format(numMonitoringMeasurements,
@@ -873,7 +913,9 @@ class ClaimDelta(val scheduler: Scheduler,
   }
 
   def unApply(cellState: CellState, locked: Boolean = false): Unit = {
-    cellState.freeResources(scheduler, machineID, cpus, mem, locked)
+    this.synchronized{
+      cellState.freeResources(scheduler, machineID, cpus, mem, locked)
+    }
   }
 }
 
@@ -1106,16 +1148,6 @@ class CellState(val numMachines: Int,
                     cpus: Double,
                     mem: Double,
                     locked: Boolean) = {
-    if(!isMachineOn(machineID)){
-      println("la maquina "+machineID)
-      println("Esta en un cellstate")
-      if(this.simulator!=null){
-        println("EL GORDO")
-      }
-      else{
-        println("COPIA")
-      }
-    }
     assert(isMachineOn(machineID), "Freeing resources in a powered off machine")
     if (locked) {
       assert(lockedCpus.contains(scheduler.name))

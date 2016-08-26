@@ -379,8 +379,8 @@ object Simulation {
     val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = true
-    val runOmega = true
+    val runMesos = false
+    val runOmega = false
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
@@ -464,16 +464,16 @@ object Simulation {
     val sweepGammaNormalLostFactor = true
     val sweepExponentialNormalLostFactor = true
     //Power Off
-    val runMaxLoadOff = true
+    val runMaxLoadOff = false//true
     val runMeanLoadOff = false
-    val runMinFreeCapacity = true
+    val runMinFreeCapacity = false//true
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
-    val runNeverOff = true
+    val runNeverOff = false//true
     val runAlwzOff = true
-    val runRandom = true
-    val runGamma = true
-    val runExp = true
+    val runRandom = false//true
+    val runGamma = false//true
+    val runExp = false//true
     val runExpNormal = false
     val runGammaNormal = false
 

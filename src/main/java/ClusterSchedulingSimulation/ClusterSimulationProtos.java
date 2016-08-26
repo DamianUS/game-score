@@ -601,28 +601,60 @@ public final class ClusterSimulationProtos {
 
         /**
          * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-         *
-         * <pre>
-         * Next field number: 15
-         * </pre>
          */
         boolean hasEfficiencyStats();
         /**
          * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-         *
-         * <pre>
-         * Next field number: 15
-         * </pre>
          */
         ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats getEfficiencyStats();
         /**
          * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
+         */
+        ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStatsOrBuilder getEfficiencyStatsOrBuilder();
+
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
          *
          * <pre>
          * Next field number: 15
          * </pre>
          */
-        ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStatsOrBuilder getEfficiencyStatsOrBuilder();
+        java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement> 
+            getMeasurementsList();
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement getMeasurements(int index);
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        int getMeasurementsCount();
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        java.util.List<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder> 
+            getMeasurementsOrBuilderList();
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder getMeasurementsOrBuilder(
+            int index);
       }
       /**
        * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult}
@@ -758,6 +790,14 @@ public final class ClusterSimulationProtos {
                   bitField0_ |= 0x00000100;
                   break;
                 }
+                case 130: {
+                  if (!((mutable_bitField0_ & 0x00001000) == 0x00001000)) {
+                    measurements_ = new java.util.ArrayList<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement>();
+                    mutable_bitField0_ |= 0x00001000;
+                  }
+                  measurements_.add(input.readMessage(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.PARSER, extensionRegistry));
+                  break;
+                }
               }
             }
           } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -774,6 +814,9 @@ public final class ClusterSimulationProtos {
             }
             if (((mutable_bitField0_ & 0x00000100) == 0x00000100)) {
               sweepSchedulerWorkload_ = java.util.Collections.unmodifiableList(sweepSchedulerWorkload_);
+            }
+            if (((mutable_bitField0_ & 0x00001000) == 0x00001000)) {
+              measurements_ = java.util.Collections.unmodifiableList(measurements_);
             }
             this.unknownFields = unknownFields.build();
             makeExtensionsImmutable();
@@ -10062,6 +10105,1261 @@ public final class ClusterSimulationProtos {
           // @@protoc_insertion_point(class_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats)
         }
 
+        public interface MeasurementOrBuilder extends
+            // @@protoc_insertion_point(interface_extends:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)
+            com.google.protobuf.MessageOrBuilder {
+
+          /**
+           * <code>optional double cpuUtilization = 1;</code>
+           */
+          boolean hasCpuUtilization();
+          /**
+           * <code>optional double cpuUtilization = 1;</code>
+           */
+          double getCpuUtilization();
+
+          /**
+           * <code>optional double cpuTotallyIdle = 2;</code>
+           */
+          boolean hasCpuTotallyIdle();
+          /**
+           * <code>optional double cpuTotallyIdle = 2;</code>
+           */
+          double getCpuTotallyIdle();
+
+          /**
+           * <code>optional double cpuPartiallyIdle = 3;</code>
+           */
+          boolean hasCpuPartiallyIdle();
+          /**
+           * <code>optional double cpuPartiallyIdle = 3;</code>
+           */
+          double getCpuPartiallyIdle();
+
+          /**
+           * <code>optional double memUtilization = 4;</code>
+           */
+          boolean hasMemUtilization();
+          /**
+           * <code>optional double memUtilization = 4;</code>
+           */
+          double getMemUtilization();
+
+          /**
+           * <code>optional double memTotallyIdle = 5;</code>
+           */
+          boolean hasMemTotallyIdle();
+          /**
+           * <code>optional double memTotallyIdle = 5;</code>
+           */
+          double getMemTotallyIdle();
+
+          /**
+           * <code>optional double memPartiallyIdle = 6;</code>
+           */
+          boolean hasMemPartiallyIdle();
+          /**
+           * <code>optional double memPartiallyIdle = 6;</code>
+           */
+          double getMemPartiallyIdle();
+
+          /**
+           * <code>optional double machinesOff = 7;</code>
+           */
+          boolean hasMachinesOff();
+          /**
+           * <code>optional double machinesOff = 7;</code>
+           */
+          double getMachinesOff();
+
+          /**
+           * <code>optional double machinesOn = 8;</code>
+           */
+          boolean hasMachinesOn();
+          /**
+           * <code>optional double machinesOn = 8;</code>
+           */
+          double getMachinesOn();
+
+          /**
+           * <code>optional double machinesTurningOff = 9;</code>
+           */
+          boolean hasMachinesTurningOff();
+          /**
+           * <code>optional double machinesTurningOff = 9;</code>
+           */
+          double getMachinesTurningOff();
+
+          /**
+           * <code>optional double machinesTurningOn = 10;</code>
+           */
+          boolean hasMachinesTurningOn();
+          /**
+           * <code>optional double machinesTurningOn = 10;</code>
+           */
+          double getMachinesTurningOn();
+
+          /**
+           * <code>optional double mpuLocked = 11;</code>
+           */
+          boolean hasMpuLocked();
+          /**
+           * <code>optional double mpuLocked = 11;</code>
+           */
+          double getMpuLocked();
+
+          /**
+           * <code>optional double memLocked = 12;</code>
+           */
+          boolean hasMemLocked();
+          /**
+           * <code>optional double memLocked = 12;</code>
+           */
+          double getMemLocked();
+        }
+        /**
+         * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement}
+         */
+        public static final class Measurement extends
+            com.google.protobuf.GeneratedMessage implements
+            // @@protoc_insertion_point(message_implements:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)
+            MeasurementOrBuilder {
+          // Use Measurement.newBuilder() to construct.
+          private Measurement(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+            super(builder);
+            this.unknownFields = builder.getUnknownFields();
+          }
+          private Measurement(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+          private static final Measurement defaultInstance;
+          public static Measurement getDefaultInstance() {
+            return defaultInstance;
+          }
+
+          public Measurement getDefaultInstanceForType() {
+            return defaultInstance;
+          }
+
+          private final com.google.protobuf.UnknownFieldSet unknownFields;
+          @java.lang.Override
+          public final com.google.protobuf.UnknownFieldSet
+              getUnknownFields() {
+            return this.unknownFields;
+          }
+          private Measurement(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            initFields();
+            int mutable_bitField0_ = 0;
+            com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                com.google.protobuf.UnknownFieldSet.newBuilder();
+            try {
+              boolean done = false;
+              while (!done) {
+                int tag = input.readTag();
+                switch (tag) {
+                  case 0:
+                    done = true;
+                    break;
+                  default: {
+                    if (!parseUnknownField(input, unknownFields,
+                                           extensionRegistry, tag)) {
+                      done = true;
+                    }
+                    break;
+                  }
+                  case 9: {
+                    bitField0_ |= 0x00000001;
+                    cpuUtilization_ = input.readDouble();
+                    break;
+                  }
+                  case 17: {
+                    bitField0_ |= 0x00000002;
+                    cpuTotallyIdle_ = input.readDouble();
+                    break;
+                  }
+                  case 25: {
+                    bitField0_ |= 0x00000004;
+                    cpuPartiallyIdle_ = input.readDouble();
+                    break;
+                  }
+                  case 33: {
+                    bitField0_ |= 0x00000008;
+                    memUtilization_ = input.readDouble();
+                    break;
+                  }
+                  case 41: {
+                    bitField0_ |= 0x00000010;
+                    memTotallyIdle_ = input.readDouble();
+                    break;
+                  }
+                  case 49: {
+                    bitField0_ |= 0x00000020;
+                    memPartiallyIdle_ = input.readDouble();
+                    break;
+                  }
+                  case 57: {
+                    bitField0_ |= 0x00000040;
+                    machinesOff_ = input.readDouble();
+                    break;
+                  }
+                  case 65: {
+                    bitField0_ |= 0x00000080;
+                    machinesOn_ = input.readDouble();
+                    break;
+                  }
+                  case 73: {
+                    bitField0_ |= 0x00000100;
+                    machinesTurningOff_ = input.readDouble();
+                    break;
+                  }
+                  case 81: {
+                    bitField0_ |= 0x00000200;
+                    machinesTurningOn_ = input.readDouble();
+                    break;
+                  }
+                  case 89: {
+                    bitField0_ |= 0x00000400;
+                    mpuLocked_ = input.readDouble();
+                    break;
+                  }
+                  case 97: {
+                    bitField0_ |= 0x00000800;
+                    memLocked_ = input.readDouble();
+                    break;
+                  }
+                }
+              }
+            } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+              throw e.setUnfinishedMessage(this);
+            } catch (java.io.IOException e) {
+              throw new com.google.protobuf.InvalidProtocolBufferException(
+                  e.getMessage()).setUnfinishedMessage(this);
+            } finally {
+              this.unknownFields = unknownFields.build();
+              makeExtensionsImmutable();
+            }
+          }
+          public static final com.google.protobuf.Descriptors.Descriptor
+              getDescriptor() {
+            return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor;
+          }
+
+          protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+              internalGetFieldAccessorTable() {
+            return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_fieldAccessorTable
+                .ensureFieldAccessorsInitialized(
+                    ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.class, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder.class);
+          }
+
+          public static com.google.protobuf.Parser<Measurement> PARSER =
+              new com.google.protobuf.AbstractParser<Measurement>() {
+            public Measurement parsePartialFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+              return new Measurement(input, extensionRegistry);
+            }
+          };
+
+          @java.lang.Override
+          public com.google.protobuf.Parser<Measurement> getParserForType() {
+            return PARSER;
+          }
+
+          private int bitField0_;
+          public static final int CPUUTILIZATION_FIELD_NUMBER = 1;
+          private double cpuUtilization_;
+          /**
+           * <code>optional double cpuUtilization = 1;</code>
+           */
+          public boolean hasCpuUtilization() {
+            return ((bitField0_ & 0x00000001) == 0x00000001);
+          }
+          /**
+           * <code>optional double cpuUtilization = 1;</code>
+           */
+          public double getCpuUtilization() {
+            return cpuUtilization_;
+          }
+
+          public static final int CPUTOTALLYIDLE_FIELD_NUMBER = 2;
+          private double cpuTotallyIdle_;
+          /**
+           * <code>optional double cpuTotallyIdle = 2;</code>
+           */
+          public boolean hasCpuTotallyIdle() {
+            return ((bitField0_ & 0x00000002) == 0x00000002);
+          }
+          /**
+           * <code>optional double cpuTotallyIdle = 2;</code>
+           */
+          public double getCpuTotallyIdle() {
+            return cpuTotallyIdle_;
+          }
+
+          public static final int CPUPARTIALLYIDLE_FIELD_NUMBER = 3;
+          private double cpuPartiallyIdle_;
+          /**
+           * <code>optional double cpuPartiallyIdle = 3;</code>
+           */
+          public boolean hasCpuPartiallyIdle() {
+            return ((bitField0_ & 0x00000004) == 0x00000004);
+          }
+          /**
+           * <code>optional double cpuPartiallyIdle = 3;</code>
+           */
+          public double getCpuPartiallyIdle() {
+            return cpuPartiallyIdle_;
+          }
+
+          public static final int MEMUTILIZATION_FIELD_NUMBER = 4;
+          private double memUtilization_;
+          /**
+           * <code>optional double memUtilization = 4;</code>
+           */
+          public boolean hasMemUtilization() {
+            return ((bitField0_ & 0x00000008) == 0x00000008);
+          }
+          /**
+           * <code>optional double memUtilization = 4;</code>
+           */
+          public double getMemUtilization() {
+            return memUtilization_;
+          }
+
+          public static final int MEMTOTALLYIDLE_FIELD_NUMBER = 5;
+          private double memTotallyIdle_;
+          /**
+           * <code>optional double memTotallyIdle = 5;</code>
+           */
+          public boolean hasMemTotallyIdle() {
+            return ((bitField0_ & 0x00000010) == 0x00000010);
+          }
+          /**
+           * <code>optional double memTotallyIdle = 5;</code>
+           */
+          public double getMemTotallyIdle() {
+            return memTotallyIdle_;
+          }
+
+          public static final int MEMPARTIALLYIDLE_FIELD_NUMBER = 6;
+          private double memPartiallyIdle_;
+          /**
+           * <code>optional double memPartiallyIdle = 6;</code>
+           */
+          public boolean hasMemPartiallyIdle() {
+            return ((bitField0_ & 0x00000020) == 0x00000020);
+          }
+          /**
+           * <code>optional double memPartiallyIdle = 6;</code>
+           */
+          public double getMemPartiallyIdle() {
+            return memPartiallyIdle_;
+          }
+
+          public static final int MACHINESOFF_FIELD_NUMBER = 7;
+          private double machinesOff_;
+          /**
+           * <code>optional double machinesOff = 7;</code>
+           */
+          public boolean hasMachinesOff() {
+            return ((bitField0_ & 0x00000040) == 0x00000040);
+          }
+          /**
+           * <code>optional double machinesOff = 7;</code>
+           */
+          public double getMachinesOff() {
+            return machinesOff_;
+          }
+
+          public static final int MACHINESON_FIELD_NUMBER = 8;
+          private double machinesOn_;
+          /**
+           * <code>optional double machinesOn = 8;</code>
+           */
+          public boolean hasMachinesOn() {
+            return ((bitField0_ & 0x00000080) == 0x00000080);
+          }
+          /**
+           * <code>optional double machinesOn = 8;</code>
+           */
+          public double getMachinesOn() {
+            return machinesOn_;
+          }
+
+          public static final int MACHINESTURNINGOFF_FIELD_NUMBER = 9;
+          private double machinesTurningOff_;
+          /**
+           * <code>optional double machinesTurningOff = 9;</code>
+           */
+          public boolean hasMachinesTurningOff() {
+            return ((bitField0_ & 0x00000100) == 0x00000100);
+          }
+          /**
+           * <code>optional double machinesTurningOff = 9;</code>
+           */
+          public double getMachinesTurningOff() {
+            return machinesTurningOff_;
+          }
+
+          public static final int MACHINESTURNINGON_FIELD_NUMBER = 10;
+          private double machinesTurningOn_;
+          /**
+           * <code>optional double machinesTurningOn = 10;</code>
+           */
+          public boolean hasMachinesTurningOn() {
+            return ((bitField0_ & 0x00000200) == 0x00000200);
+          }
+          /**
+           * <code>optional double machinesTurningOn = 10;</code>
+           */
+          public double getMachinesTurningOn() {
+            return machinesTurningOn_;
+          }
+
+          public static final int MPULOCKED_FIELD_NUMBER = 11;
+          private double mpuLocked_;
+          /**
+           * <code>optional double mpuLocked = 11;</code>
+           */
+          public boolean hasMpuLocked() {
+            return ((bitField0_ & 0x00000400) == 0x00000400);
+          }
+          /**
+           * <code>optional double mpuLocked = 11;</code>
+           */
+          public double getMpuLocked() {
+            return mpuLocked_;
+          }
+
+          public static final int MEMLOCKED_FIELD_NUMBER = 12;
+          private double memLocked_;
+          /**
+           * <code>optional double memLocked = 12;</code>
+           */
+          public boolean hasMemLocked() {
+            return ((bitField0_ & 0x00000800) == 0x00000800);
+          }
+          /**
+           * <code>optional double memLocked = 12;</code>
+           */
+          public double getMemLocked() {
+            return memLocked_;
+          }
+
+          private void initFields() {
+            cpuUtilization_ = 0D;
+            cpuTotallyIdle_ = 0D;
+            cpuPartiallyIdle_ = 0D;
+            memUtilization_ = 0D;
+            memTotallyIdle_ = 0D;
+            memPartiallyIdle_ = 0D;
+            machinesOff_ = 0D;
+            machinesOn_ = 0D;
+            machinesTurningOff_ = 0D;
+            machinesTurningOn_ = 0D;
+            mpuLocked_ = 0D;
+            memLocked_ = 0D;
+          }
+          private byte memoizedIsInitialized = -1;
+          public final boolean isInitialized() {
+            byte isInitialized = memoizedIsInitialized;
+            if (isInitialized == 1) return true;
+            if (isInitialized == 0) return false;
+
+            memoizedIsInitialized = 1;
+            return true;
+          }
+
+          public void writeTo(com.google.protobuf.CodedOutputStream output)
+                              throws java.io.IOException {
+            getSerializedSize();
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+              output.writeDouble(1, cpuUtilization_);
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+              output.writeDouble(2, cpuTotallyIdle_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+              output.writeDouble(3, cpuPartiallyIdle_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+              output.writeDouble(4, memUtilization_);
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+              output.writeDouble(5, memTotallyIdle_);
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+              output.writeDouble(6, memPartiallyIdle_);
+            }
+            if (((bitField0_ & 0x00000040) == 0x00000040)) {
+              output.writeDouble(7, machinesOff_);
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+              output.writeDouble(8, machinesOn_);
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
+              output.writeDouble(9, machinesTurningOff_);
+            }
+            if (((bitField0_ & 0x00000200) == 0x00000200)) {
+              output.writeDouble(10, machinesTurningOn_);
+            }
+            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+              output.writeDouble(11, mpuLocked_);
+            }
+            if (((bitField0_ & 0x00000800) == 0x00000800)) {
+              output.writeDouble(12, memLocked_);
+            }
+            getUnknownFields().writeTo(output);
+          }
+
+          private int memoizedSerializedSize = -1;
+          public int getSerializedSize() {
+            int size = memoizedSerializedSize;
+            if (size != -1) return size;
+
+            size = 0;
+            if (((bitField0_ & 0x00000001) == 0x00000001)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(1, cpuUtilization_);
+            }
+            if (((bitField0_ & 0x00000002) == 0x00000002)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(2, cpuTotallyIdle_);
+            }
+            if (((bitField0_ & 0x00000004) == 0x00000004)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(3, cpuPartiallyIdle_);
+            }
+            if (((bitField0_ & 0x00000008) == 0x00000008)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(4, memUtilization_);
+            }
+            if (((bitField0_ & 0x00000010) == 0x00000010)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(5, memTotallyIdle_);
+            }
+            if (((bitField0_ & 0x00000020) == 0x00000020)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(6, memPartiallyIdle_);
+            }
+            if (((bitField0_ & 0x00000040) == 0x00000040)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(7, machinesOff_);
+            }
+            if (((bitField0_ & 0x00000080) == 0x00000080)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(8, machinesOn_);
+            }
+            if (((bitField0_ & 0x00000100) == 0x00000100)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(9, machinesTurningOff_);
+            }
+            if (((bitField0_ & 0x00000200) == 0x00000200)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(10, machinesTurningOn_);
+            }
+            if (((bitField0_ & 0x00000400) == 0x00000400)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(11, mpuLocked_);
+            }
+            if (((bitField0_ & 0x00000800) == 0x00000800)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(12, memLocked_);
+            }
+            size += getUnknownFields().getSerializedSize();
+            memoizedSerializedSize = size;
+            return size;
+          }
+
+          private static final long serialVersionUID = 0L;
+          @java.lang.Override
+          protected java.lang.Object writeReplace()
+              throws java.io.ObjectStreamException {
+            return super.writeReplace();
+          }
+
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(
+              com.google.protobuf.ByteString data)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(
+              com.google.protobuf.ByteString data,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(byte[] data)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(
+              byte[] data,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws com.google.protobuf.InvalidProtocolBufferException {
+            return PARSER.parseFrom(data, extensionRegistry);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(java.io.InputStream input)
+              throws java.io.IOException {
+            return PARSER.parseFrom(input);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(
+              java.io.InputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseDelimitedFrom(java.io.InputStream input)
+              throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseDelimitedFrom(
+              java.io.InputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+            return PARSER.parseDelimitedFrom(input, extensionRegistry);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(
+              com.google.protobuf.CodedInputStream input)
+              throws java.io.IOException {
+            return PARSER.parseFrom(input);
+          }
+          public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parseFrom(
+              com.google.protobuf.CodedInputStream input,
+              com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+              throws java.io.IOException {
+            return PARSER.parseFrom(input, extensionRegistry);
+          }
+
+          public static Builder newBuilder() { return Builder.create(); }
+          public Builder newBuilderForType() { return newBuilder(); }
+          public static Builder newBuilder(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement prototype) {
+            return newBuilder().mergeFrom(prototype);
+          }
+          public Builder toBuilder() { return newBuilder(this); }
+
+          @java.lang.Override
+          protected Builder newBuilderForType(
+              com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+            Builder builder = new Builder(parent);
+            return builder;
+          }
+          /**
+           * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement}
+           */
+          public static final class Builder extends
+              com.google.protobuf.GeneratedMessage.Builder<Builder> implements
+              // @@protoc_insertion_point(builder_implements:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)
+              ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder {
+            public static final com.google.protobuf.Descriptors.Descriptor
+                getDescriptor() {
+              return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor;
+            }
+
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                internalGetFieldAccessorTable() {
+              return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_fieldAccessorTable
+                  .ensureFieldAccessorsInitialized(
+                      ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.class, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder.class);
+            }
+
+            // Construct using ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.newBuilder()
+            private Builder() {
+              maybeForceBuilderInitialization();
+            }
+
+            private Builder(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+              super(parent);
+              maybeForceBuilderInitialization();
+            }
+            private void maybeForceBuilderInitialization() {
+              if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+              }
+            }
+            private static Builder create() {
+              return new Builder();
+            }
+
+            public Builder clear() {
+              super.clear();
+              cpuUtilization_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000001);
+              cpuTotallyIdle_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000002);
+              cpuPartiallyIdle_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000004);
+              memUtilization_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000008);
+              memTotallyIdle_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000010);
+              memPartiallyIdle_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000020);
+              machinesOff_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000040);
+              machinesOn_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000080);
+              machinesTurningOff_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000100);
+              machinesTurningOn_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000200);
+              mpuLocked_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000400);
+              memLocked_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00000800);
+              return this;
+            }
+
+            public Builder clone() {
+              return create().mergeFrom(buildPartial());
+            }
+
+            public com.google.protobuf.Descriptors.Descriptor
+                getDescriptorForType() {
+              return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor;
+            }
+
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement getDefaultInstanceForType() {
+              return ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.getDefaultInstance();
+            }
+
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement build() {
+              ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement result = buildPartial();
+              if (!result.isInitialized()) {
+                throw newUninitializedMessageException(result);
+              }
+              return result;
+            }
+
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement buildPartial() {
+              ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement result = new ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement(this);
+              int from_bitField0_ = bitField0_;
+              int to_bitField0_ = 0;
+              if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                to_bitField0_ |= 0x00000001;
+              }
+              result.cpuUtilization_ = cpuUtilization_;
+              if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                to_bitField0_ |= 0x00000002;
+              }
+              result.cpuTotallyIdle_ = cpuTotallyIdle_;
+              if (((from_bitField0_ & 0x00000004) == 0x00000004)) {
+                to_bitField0_ |= 0x00000004;
+              }
+              result.cpuPartiallyIdle_ = cpuPartiallyIdle_;
+              if (((from_bitField0_ & 0x00000008) == 0x00000008)) {
+                to_bitField0_ |= 0x00000008;
+              }
+              result.memUtilization_ = memUtilization_;
+              if (((from_bitField0_ & 0x00000010) == 0x00000010)) {
+                to_bitField0_ |= 0x00000010;
+              }
+              result.memTotallyIdle_ = memTotallyIdle_;
+              if (((from_bitField0_ & 0x00000020) == 0x00000020)) {
+                to_bitField0_ |= 0x00000020;
+              }
+              result.memPartiallyIdle_ = memPartiallyIdle_;
+              if (((from_bitField0_ & 0x00000040) == 0x00000040)) {
+                to_bitField0_ |= 0x00000040;
+              }
+              result.machinesOff_ = machinesOff_;
+              if (((from_bitField0_ & 0x00000080) == 0x00000080)) {
+                to_bitField0_ |= 0x00000080;
+              }
+              result.machinesOn_ = machinesOn_;
+              if (((from_bitField0_ & 0x00000100) == 0x00000100)) {
+                to_bitField0_ |= 0x00000100;
+              }
+              result.machinesTurningOff_ = machinesTurningOff_;
+              if (((from_bitField0_ & 0x00000200) == 0x00000200)) {
+                to_bitField0_ |= 0x00000200;
+              }
+              result.machinesTurningOn_ = machinesTurningOn_;
+              if (((from_bitField0_ & 0x00000400) == 0x00000400)) {
+                to_bitField0_ |= 0x00000400;
+              }
+              result.mpuLocked_ = mpuLocked_;
+              if (((from_bitField0_ & 0x00000800) == 0x00000800)) {
+                to_bitField0_ |= 0x00000800;
+              }
+              result.memLocked_ = memLocked_;
+              result.bitField0_ = to_bitField0_;
+              onBuilt();
+              return result;
+            }
+
+            public Builder mergeFrom(com.google.protobuf.Message other) {
+              if (other instanceof ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement) {
+                return mergeFrom((ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)other);
+              } else {
+                super.mergeFrom(other);
+                return this;
+              }
+            }
+
+            public Builder mergeFrom(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement other) {
+              if (other == ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.getDefaultInstance()) return this;
+              if (other.hasCpuUtilization()) {
+                setCpuUtilization(other.getCpuUtilization());
+              }
+              if (other.hasCpuTotallyIdle()) {
+                setCpuTotallyIdle(other.getCpuTotallyIdle());
+              }
+              if (other.hasCpuPartiallyIdle()) {
+                setCpuPartiallyIdle(other.getCpuPartiallyIdle());
+              }
+              if (other.hasMemUtilization()) {
+                setMemUtilization(other.getMemUtilization());
+              }
+              if (other.hasMemTotallyIdle()) {
+                setMemTotallyIdle(other.getMemTotallyIdle());
+              }
+              if (other.hasMemPartiallyIdle()) {
+                setMemPartiallyIdle(other.getMemPartiallyIdle());
+              }
+              if (other.hasMachinesOff()) {
+                setMachinesOff(other.getMachinesOff());
+              }
+              if (other.hasMachinesOn()) {
+                setMachinesOn(other.getMachinesOn());
+              }
+              if (other.hasMachinesTurningOff()) {
+                setMachinesTurningOff(other.getMachinesTurningOff());
+              }
+              if (other.hasMachinesTurningOn()) {
+                setMachinesTurningOn(other.getMachinesTurningOn());
+              }
+              if (other.hasMpuLocked()) {
+                setMpuLocked(other.getMpuLocked());
+              }
+              if (other.hasMemLocked()) {
+                setMemLocked(other.getMemLocked());
+              }
+              this.mergeUnknownFields(other.getUnknownFields());
+              return this;
+            }
+
+            public final boolean isInitialized() {
+              return true;
+            }
+
+            public Builder mergeFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+              ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement parsedMessage = null;
+              try {
+                parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+              } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                parsedMessage = (ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement) e.getUnfinishedMessage();
+                throw e;
+              } finally {
+                if (parsedMessage != null) {
+                  mergeFrom(parsedMessage);
+                }
+              }
+              return this;
+            }
+            private int bitField0_;
+
+            private double cpuUtilization_ ;
+            /**
+             * <code>optional double cpuUtilization = 1;</code>
+             */
+            public boolean hasCpuUtilization() {
+              return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+            /**
+             * <code>optional double cpuUtilization = 1;</code>
+             */
+            public double getCpuUtilization() {
+              return cpuUtilization_;
+            }
+            /**
+             * <code>optional double cpuUtilization = 1;</code>
+             */
+            public Builder setCpuUtilization(double value) {
+              bitField0_ |= 0x00000001;
+              cpuUtilization_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double cpuUtilization = 1;</code>
+             */
+            public Builder clearCpuUtilization() {
+              bitField0_ = (bitField0_ & ~0x00000001);
+              cpuUtilization_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double cpuTotallyIdle_ ;
+            /**
+             * <code>optional double cpuTotallyIdle = 2;</code>
+             */
+            public boolean hasCpuTotallyIdle() {
+              return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+            /**
+             * <code>optional double cpuTotallyIdle = 2;</code>
+             */
+            public double getCpuTotallyIdle() {
+              return cpuTotallyIdle_;
+            }
+            /**
+             * <code>optional double cpuTotallyIdle = 2;</code>
+             */
+            public Builder setCpuTotallyIdle(double value) {
+              bitField0_ |= 0x00000002;
+              cpuTotallyIdle_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double cpuTotallyIdle = 2;</code>
+             */
+            public Builder clearCpuTotallyIdle() {
+              bitField0_ = (bitField0_ & ~0x00000002);
+              cpuTotallyIdle_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double cpuPartiallyIdle_ ;
+            /**
+             * <code>optional double cpuPartiallyIdle = 3;</code>
+             */
+            public boolean hasCpuPartiallyIdle() {
+              return ((bitField0_ & 0x00000004) == 0x00000004);
+            }
+            /**
+             * <code>optional double cpuPartiallyIdle = 3;</code>
+             */
+            public double getCpuPartiallyIdle() {
+              return cpuPartiallyIdle_;
+            }
+            /**
+             * <code>optional double cpuPartiallyIdle = 3;</code>
+             */
+            public Builder setCpuPartiallyIdle(double value) {
+              bitField0_ |= 0x00000004;
+              cpuPartiallyIdle_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double cpuPartiallyIdle = 3;</code>
+             */
+            public Builder clearCpuPartiallyIdle() {
+              bitField0_ = (bitField0_ & ~0x00000004);
+              cpuPartiallyIdle_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double memUtilization_ ;
+            /**
+             * <code>optional double memUtilization = 4;</code>
+             */
+            public boolean hasMemUtilization() {
+              return ((bitField0_ & 0x00000008) == 0x00000008);
+            }
+            /**
+             * <code>optional double memUtilization = 4;</code>
+             */
+            public double getMemUtilization() {
+              return memUtilization_;
+            }
+            /**
+             * <code>optional double memUtilization = 4;</code>
+             */
+            public Builder setMemUtilization(double value) {
+              bitField0_ |= 0x00000008;
+              memUtilization_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double memUtilization = 4;</code>
+             */
+            public Builder clearMemUtilization() {
+              bitField0_ = (bitField0_ & ~0x00000008);
+              memUtilization_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double memTotallyIdle_ ;
+            /**
+             * <code>optional double memTotallyIdle = 5;</code>
+             */
+            public boolean hasMemTotallyIdle() {
+              return ((bitField0_ & 0x00000010) == 0x00000010);
+            }
+            /**
+             * <code>optional double memTotallyIdle = 5;</code>
+             */
+            public double getMemTotallyIdle() {
+              return memTotallyIdle_;
+            }
+            /**
+             * <code>optional double memTotallyIdle = 5;</code>
+             */
+            public Builder setMemTotallyIdle(double value) {
+              bitField0_ |= 0x00000010;
+              memTotallyIdle_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double memTotallyIdle = 5;</code>
+             */
+            public Builder clearMemTotallyIdle() {
+              bitField0_ = (bitField0_ & ~0x00000010);
+              memTotallyIdle_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double memPartiallyIdle_ ;
+            /**
+             * <code>optional double memPartiallyIdle = 6;</code>
+             */
+            public boolean hasMemPartiallyIdle() {
+              return ((bitField0_ & 0x00000020) == 0x00000020);
+            }
+            /**
+             * <code>optional double memPartiallyIdle = 6;</code>
+             */
+            public double getMemPartiallyIdle() {
+              return memPartiallyIdle_;
+            }
+            /**
+             * <code>optional double memPartiallyIdle = 6;</code>
+             */
+            public Builder setMemPartiallyIdle(double value) {
+              bitField0_ |= 0x00000020;
+              memPartiallyIdle_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double memPartiallyIdle = 6;</code>
+             */
+            public Builder clearMemPartiallyIdle() {
+              bitField0_ = (bitField0_ & ~0x00000020);
+              memPartiallyIdle_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double machinesOff_ ;
+            /**
+             * <code>optional double machinesOff = 7;</code>
+             */
+            public boolean hasMachinesOff() {
+              return ((bitField0_ & 0x00000040) == 0x00000040);
+            }
+            /**
+             * <code>optional double machinesOff = 7;</code>
+             */
+            public double getMachinesOff() {
+              return machinesOff_;
+            }
+            /**
+             * <code>optional double machinesOff = 7;</code>
+             */
+            public Builder setMachinesOff(double value) {
+              bitField0_ |= 0x00000040;
+              machinesOff_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double machinesOff = 7;</code>
+             */
+            public Builder clearMachinesOff() {
+              bitField0_ = (bitField0_ & ~0x00000040);
+              machinesOff_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double machinesOn_ ;
+            /**
+             * <code>optional double machinesOn = 8;</code>
+             */
+            public boolean hasMachinesOn() {
+              return ((bitField0_ & 0x00000080) == 0x00000080);
+            }
+            /**
+             * <code>optional double machinesOn = 8;</code>
+             */
+            public double getMachinesOn() {
+              return machinesOn_;
+            }
+            /**
+             * <code>optional double machinesOn = 8;</code>
+             */
+            public Builder setMachinesOn(double value) {
+              bitField0_ |= 0x00000080;
+              machinesOn_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double machinesOn = 8;</code>
+             */
+            public Builder clearMachinesOn() {
+              bitField0_ = (bitField0_ & ~0x00000080);
+              machinesOn_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double machinesTurningOff_ ;
+            /**
+             * <code>optional double machinesTurningOff = 9;</code>
+             */
+            public boolean hasMachinesTurningOff() {
+              return ((bitField0_ & 0x00000100) == 0x00000100);
+            }
+            /**
+             * <code>optional double machinesTurningOff = 9;</code>
+             */
+            public double getMachinesTurningOff() {
+              return machinesTurningOff_;
+            }
+            /**
+             * <code>optional double machinesTurningOff = 9;</code>
+             */
+            public Builder setMachinesTurningOff(double value) {
+              bitField0_ |= 0x00000100;
+              machinesTurningOff_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double machinesTurningOff = 9;</code>
+             */
+            public Builder clearMachinesTurningOff() {
+              bitField0_ = (bitField0_ & ~0x00000100);
+              machinesTurningOff_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double machinesTurningOn_ ;
+            /**
+             * <code>optional double machinesTurningOn = 10;</code>
+             */
+            public boolean hasMachinesTurningOn() {
+              return ((bitField0_ & 0x00000200) == 0x00000200);
+            }
+            /**
+             * <code>optional double machinesTurningOn = 10;</code>
+             */
+            public double getMachinesTurningOn() {
+              return machinesTurningOn_;
+            }
+            /**
+             * <code>optional double machinesTurningOn = 10;</code>
+             */
+            public Builder setMachinesTurningOn(double value) {
+              bitField0_ |= 0x00000200;
+              machinesTurningOn_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double machinesTurningOn = 10;</code>
+             */
+            public Builder clearMachinesTurningOn() {
+              bitField0_ = (bitField0_ & ~0x00000200);
+              machinesTurningOn_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double mpuLocked_ ;
+            /**
+             * <code>optional double mpuLocked = 11;</code>
+             */
+            public boolean hasMpuLocked() {
+              return ((bitField0_ & 0x00000400) == 0x00000400);
+            }
+            /**
+             * <code>optional double mpuLocked = 11;</code>
+             */
+            public double getMpuLocked() {
+              return mpuLocked_;
+            }
+            /**
+             * <code>optional double mpuLocked = 11;</code>
+             */
+            public Builder setMpuLocked(double value) {
+              bitField0_ |= 0x00000400;
+              mpuLocked_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double mpuLocked = 11;</code>
+             */
+            public Builder clearMpuLocked() {
+              bitField0_ = (bitField0_ & ~0x00000400);
+              mpuLocked_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            private double memLocked_ ;
+            /**
+             * <code>optional double memLocked = 12;</code>
+             */
+            public boolean hasMemLocked() {
+              return ((bitField0_ & 0x00000800) == 0x00000800);
+            }
+            /**
+             * <code>optional double memLocked = 12;</code>
+             */
+            public double getMemLocked() {
+              return memLocked_;
+            }
+            /**
+             * <code>optional double memLocked = 12;</code>
+             */
+            public Builder setMemLocked(double value) {
+              bitField0_ |= 0x00000800;
+              memLocked_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double memLocked = 12;</code>
+             */
+            public Builder clearMemLocked() {
+              bitField0_ = (bitField0_ & ~0x00000800);
+              memLocked_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            // @@protoc_insertion_point(builder_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)
+          }
+
+          static {
+            defaultInstance = new Measurement(true);
+            defaultInstance.initFields();
+          }
+
+          // @@protoc_insertion_point(class_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)
+        }
+
         private int bitField0_;
         public static final int CELL_STATE_AVG_CPU_UTILIZATION_FIELD_NUMBER = 4;
         private double cellStateAvgCpuUtilization_;
@@ -10409,33 +11707,76 @@ public final class ClusterSimulationProtos {
         private ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiencyStats_;
         /**
          * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-         *
-         * <pre>
-         * Next field number: 15
-         * </pre>
          */
         public boolean hasEfficiencyStats() {
           return ((bitField0_ & 0x00000100) == 0x00000100);
         }
         /**
          * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-         *
-         * <pre>
-         * Next field number: 15
-         * </pre>
          */
         public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats getEfficiencyStats() {
           return efficiencyStats_;
         }
         /**
          * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
+         */
+        public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStatsOrBuilder getEfficiencyStatsOrBuilder() {
+          return efficiencyStats_;
+        }
+
+        public static final int MEASUREMENTS_FIELD_NUMBER = 16;
+        private java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement> measurements_;
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
          *
          * <pre>
          * Next field number: 15
          * </pre>
          */
-        public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStatsOrBuilder getEfficiencyStatsOrBuilder() {
-          return efficiencyStats_;
+        public java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement> getMeasurementsList() {
+          return measurements_;
+        }
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        public java.util.List<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder> 
+            getMeasurementsOrBuilderList() {
+          return measurements_;
+        }
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        public int getMeasurementsCount() {
+          return measurements_.size();
+        }
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement getMeasurements(int index) {
+          return measurements_.get(index);
+        }
+        /**
+         * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+         *
+         * <pre>
+         * Next field number: 15
+         * </pre>
+         */
+        public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder getMeasurementsOrBuilder(
+            int index) {
+          return measurements_.get(index);
         }
 
         private void initFields() {
@@ -10451,6 +11792,7 @@ public final class ClusterSimulationProtos {
           constantThinkTime_ = 0D;
           perTaskThinkTime_ = 0D;
           efficiencyStats_ = ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.getDefaultInstance();
+          measurements_ = java.util.Collections.emptyList();
         }
         private byte memoizedIsInitialized = -1;
         public final boolean isInitialized() {
@@ -10500,6 +11842,9 @@ public final class ClusterSimulationProtos {
           }
           if (((bitField0_ & 0x00000100) == 0x00000100)) {
             output.writeMessage(15, efficiencyStats_);
+          }
+          for (int i = 0; i < measurements_.size(); i++) {
+            output.writeMessage(16, measurements_.get(i));
           }
           getUnknownFields().writeTo(output);
         }
@@ -10557,6 +11902,10 @@ public final class ClusterSimulationProtos {
           if (((bitField0_ & 0x00000100) == 0x00000100)) {
             size += com.google.protobuf.CodedOutputStream
               .computeMessageSize(15, efficiencyStats_);
+          }
+          for (int i = 0; i < measurements_.size(); i++) {
+            size += com.google.protobuf.CodedOutputStream
+              .computeMessageSize(16, measurements_.get(i));
           }
           size += getUnknownFields().getSerializedSize();
           memoizedSerializedSize = size;
@@ -10675,6 +12024,7 @@ public final class ClusterSimulationProtos {
               getSchedulerStatsFieldBuilder();
               getSweepSchedulerWorkloadFieldBuilder();
               getEfficiencyStatsFieldBuilder();
+              getMeasurementsFieldBuilder();
             }
           }
           private static Builder create() {
@@ -10723,6 +12073,12 @@ public final class ClusterSimulationProtos {
               efficiencyStatsBuilder_.clear();
             }
             bitField0_ = (bitField0_ & ~0x00000800);
+            if (measurementsBuilder_ == null) {
+              measurements_ = java.util.Collections.emptyList();
+              bitField0_ = (bitField0_ & ~0x00001000);
+            } else {
+              measurementsBuilder_.clear();
+            }
             return this;
           }
 
@@ -10817,6 +12173,15 @@ public final class ClusterSimulationProtos {
               result.efficiencyStats_ = efficiencyStats_;
             } else {
               result.efficiencyStats_ = efficiencyStatsBuilder_.build();
+            }
+            if (measurementsBuilder_ == null) {
+              if (((bitField0_ & 0x00001000) == 0x00001000)) {
+                measurements_ = java.util.Collections.unmodifiableList(measurements_);
+                bitField0_ = (bitField0_ & ~0x00001000);
+              }
+              result.measurements_ = measurements_;
+            } else {
+              result.measurements_ = measurementsBuilder_.build();
             }
             result.bitField0_ = to_bitField0_;
             onBuilt();
@@ -10940,6 +12305,32 @@ public final class ClusterSimulationProtos {
             }
             if (other.hasEfficiencyStats()) {
               mergeEfficiencyStats(other.getEfficiencyStats());
+            }
+            if (measurementsBuilder_ == null) {
+              if (!other.measurements_.isEmpty()) {
+                if (measurements_.isEmpty()) {
+                  measurements_ = other.measurements_;
+                  bitField0_ = (bitField0_ & ~0x00001000);
+                } else {
+                  ensureMeasurementsIsMutable();
+                  measurements_.addAll(other.measurements_);
+                }
+                onChanged();
+              }
+            } else {
+              if (!other.measurements_.isEmpty()) {
+                if (measurementsBuilder_.isEmpty()) {
+                  measurementsBuilder_.dispose();
+                  measurementsBuilder_ = null;
+                  measurements_ = other.measurements_;
+                  bitField0_ = (bitField0_ & ~0x00001000);
+                  measurementsBuilder_ = 
+                    com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                       getMeasurementsFieldBuilder() : null;
+                } else {
+                  measurementsBuilder_.addAllMessages(other.measurements_);
+                }
+              }
             }
             this.mergeUnknownFields(other.getUnknownFields());
             return this;
@@ -12269,20 +13660,12 @@ public final class ClusterSimulationProtos {
               ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStatsOrBuilder> efficiencyStatsBuilder_;
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public boolean hasEfficiencyStats() {
             return ((bitField0_ & 0x00000800) == 0x00000800);
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats getEfficiencyStats() {
             if (efficiencyStatsBuilder_ == null) {
@@ -12293,10 +13676,6 @@ public final class ClusterSimulationProtos {
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public Builder setEfficiencyStats(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats value) {
             if (efficiencyStatsBuilder_ == null) {
@@ -12313,10 +13692,6 @@ public final class ClusterSimulationProtos {
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public Builder setEfficiencyStats(
               ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.Builder builderForValue) {
@@ -12331,10 +13706,6 @@ public final class ClusterSimulationProtos {
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public Builder mergeEfficiencyStats(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats value) {
             if (efficiencyStatsBuilder_ == null) {
@@ -12354,10 +13725,6 @@ public final class ClusterSimulationProtos {
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public Builder clearEfficiencyStats() {
             if (efficiencyStatsBuilder_ == null) {
@@ -12371,10 +13738,6 @@ public final class ClusterSimulationProtos {
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.Builder getEfficiencyStatsBuilder() {
             bitField0_ |= 0x00000800;
@@ -12383,10 +13746,6 @@ public final class ClusterSimulationProtos {
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStatsOrBuilder getEfficiencyStatsOrBuilder() {
             if (efficiencyStatsBuilder_ != null) {
@@ -12397,10 +13756,6 @@ public final class ClusterSimulationProtos {
           }
           /**
            * <code>optional .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats efficiency_stats = 15;</code>
-           *
-           * <pre>
-           * Next field number: 15
-           * </pre>
            */
           private com.google.protobuf.SingleFieldBuilder<
               ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStatsOrBuilder> 
@@ -12414,6 +13769,318 @@ public final class ClusterSimulationProtos {
               efficiencyStats_ = null;
             }
             return efficiencyStatsBuilder_;
+          }
+
+          private java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement> measurements_ =
+            java.util.Collections.emptyList();
+          private void ensureMeasurementsIsMutable() {
+            if (!((bitField0_ & 0x00001000) == 0x00001000)) {
+              measurements_ = new java.util.ArrayList<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement>(measurements_);
+              bitField0_ |= 0x00001000;
+             }
+          }
+
+          private com.google.protobuf.RepeatedFieldBuilder<
+              ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder> measurementsBuilder_;
+
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement> getMeasurementsList() {
+            if (measurementsBuilder_ == null) {
+              return java.util.Collections.unmodifiableList(measurements_);
+            } else {
+              return measurementsBuilder_.getMessageList();
+            }
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public int getMeasurementsCount() {
+            if (measurementsBuilder_ == null) {
+              return measurements_.size();
+            } else {
+              return measurementsBuilder_.getCount();
+            }
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement getMeasurements(int index) {
+            if (measurementsBuilder_ == null) {
+              return measurements_.get(index);
+            } else {
+              return measurementsBuilder_.getMessage(index);
+            }
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder setMeasurements(
+              int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement value) {
+            if (measurementsBuilder_ == null) {
+              if (value == null) {
+                throw new NullPointerException();
+              }
+              ensureMeasurementsIsMutable();
+              measurements_.set(index, value);
+              onChanged();
+            } else {
+              measurementsBuilder_.setMessage(index, value);
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder setMeasurements(
+              int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder builderForValue) {
+            if (measurementsBuilder_ == null) {
+              ensureMeasurementsIsMutable();
+              measurements_.set(index, builderForValue.build());
+              onChanged();
+            } else {
+              measurementsBuilder_.setMessage(index, builderForValue.build());
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder addMeasurements(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement value) {
+            if (measurementsBuilder_ == null) {
+              if (value == null) {
+                throw new NullPointerException();
+              }
+              ensureMeasurementsIsMutable();
+              measurements_.add(value);
+              onChanged();
+            } else {
+              measurementsBuilder_.addMessage(value);
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder addMeasurements(
+              int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement value) {
+            if (measurementsBuilder_ == null) {
+              if (value == null) {
+                throw new NullPointerException();
+              }
+              ensureMeasurementsIsMutable();
+              measurements_.add(index, value);
+              onChanged();
+            } else {
+              measurementsBuilder_.addMessage(index, value);
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder addMeasurements(
+              ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder builderForValue) {
+            if (measurementsBuilder_ == null) {
+              ensureMeasurementsIsMutable();
+              measurements_.add(builderForValue.build());
+              onChanged();
+            } else {
+              measurementsBuilder_.addMessage(builderForValue.build());
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder addMeasurements(
+              int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder builderForValue) {
+            if (measurementsBuilder_ == null) {
+              ensureMeasurementsIsMutable();
+              measurements_.add(index, builderForValue.build());
+              onChanged();
+            } else {
+              measurementsBuilder_.addMessage(index, builderForValue.build());
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder addAllMeasurements(
+              java.lang.Iterable<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement> values) {
+            if (measurementsBuilder_ == null) {
+              ensureMeasurementsIsMutable();
+              com.google.protobuf.AbstractMessageLite.Builder.addAll(
+                  values, measurements_);
+              onChanged();
+            } else {
+              measurementsBuilder_.addAllMessages(values);
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder clearMeasurements() {
+            if (measurementsBuilder_ == null) {
+              measurements_ = java.util.Collections.emptyList();
+              bitField0_ = (bitField0_ & ~0x00001000);
+              onChanged();
+            } else {
+              measurementsBuilder_.clear();
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public Builder removeMeasurements(int index) {
+            if (measurementsBuilder_ == null) {
+              ensureMeasurementsIsMutable();
+              measurements_.remove(index);
+              onChanged();
+            } else {
+              measurementsBuilder_.remove(index);
+            }
+            return this;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder getMeasurementsBuilder(
+              int index) {
+            return getMeasurementsFieldBuilder().getBuilder(index);
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder getMeasurementsOrBuilder(
+              int index) {
+            if (measurementsBuilder_ == null) {
+              return measurements_.get(index);  } else {
+              return measurementsBuilder_.getMessageOrBuilder(index);
+            }
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public java.util.List<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder> 
+               getMeasurementsOrBuilderList() {
+            if (measurementsBuilder_ != null) {
+              return measurementsBuilder_.getMessageOrBuilderList();
+            } else {
+              return java.util.Collections.unmodifiableList(measurements_);
+            }
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder addMeasurementsBuilder() {
+            return getMeasurementsFieldBuilder().addBuilder(
+                ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.getDefaultInstance());
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder addMeasurementsBuilder(
+              int index) {
+            return getMeasurementsFieldBuilder().addBuilder(
+                index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.getDefaultInstance());
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement measurements = 16;</code>
+           *
+           * <pre>
+           * Next field number: 15
+           * </pre>
+           */
+          public java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder> 
+               getMeasurementsBuilderList() {
+            return getMeasurementsFieldBuilder().getBuilderList();
+          }
+          private com.google.protobuf.RepeatedFieldBuilder<
+              ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder> 
+              getMeasurementsFieldBuilder() {
+            if (measurementsBuilder_ == null) {
+              measurementsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                  ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.MeasurementOrBuilder>(
+                      measurements_,
+                      ((bitField0_ & 0x00001000) == 0x00001000),
+                      getParentForChildren(),
+                      isClean());
+              measurements_ = null;
+            }
+            return measurementsBuilder_;
           }
 
           // @@protoc_insertion_point(builder_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult)
@@ -14071,6 +15738,11 @@ public final class ClusterSimulationProtos {
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_PowerOnPolicy_fieldAccessorTable;
+  private static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_fieldAccessorTable;
 
   public static com.google.protobuf.Descriptors.FileDescriptor
       getDescriptor() {
@@ -14081,15 +15753,15 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\333\037\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\370\"\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\353\036\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\210\"\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
-      "tSet.ExperimentEnv.ExperimentResult\032\216\035\n\020",
+      "tSet.ExperimentEnv.ExperimentResult\032\253 \n\020",
       "ExperimentResult\022&\n\036cell_state_avg_cpu_u" +
       "tilization\030\004 \001(\001\022&\n\036cell_state_avg_mem_u" +
       "tilization\030\005 \001(\001\022!\n\031cell_state_avg_cpu_l" +
@@ -14109,81 +15781,91 @@ public final class ClusterSimulationProtos {
       "_think_time\030\014 \001(\001\022y\n\020efficiency_stats\030\017 " +
       "\001(\0132_.ClusterSchedulingSimulation.Experi" +
       "mentResultSet.ExperimentEnv.ExperimentRe" +
-      "sult.EfficiencyStats\032\233\004\n\rWorkloadStats\022\025",
-      "\n\rworkload_name\030\001 \001(\t\022\020\n\010num_jobs\030\002 \001(\003\022" +
-      "\032\n\022num_jobs_scheduled\030\003 \001(\003\022%\n\035job_think" +
-      "_times_90_percentile\030\004 \001(\001\0220\n(avg_job_qu" +
-      "eue_times_till_first_scheduled\030\005 \001(\001\0220\n(" +
-      "avg_job_queue_times_till_fully_scheduled" +
-      "\030\006 \001(\001\0229\n1job_queue_time_till_first_sche" +
-      "duled_90_percentile\030\007 \001(\001\0229\n1job_queue_t" +
-      "ime_till_fully_scheduled_90_percentile\030\010" +
-      " \001(\001\022-\n%num_scheduling_attempts_90_perce" +
-      "ntile\030\t \001(\001\022-\n%num_scheduling_attempts_9",
-      "9_percentile\030\n \001(\001\0222\n*num_task_schedulin" +
-      "g_attempts_90_percentile\030\013 \001(\001\0222\n*num_ta" +
-      "sk_scheduling_attempts_99_percentile\030\014 \001" +
-      "(\001\032\341\007\n\016SchedulerStats\022\026\n\016scheduler_name\030" +
-      "\001 \001(\t\022\030\n\020useful_busy_time\030\003 \001(\001\022\030\n\020waste" +
-      "d_busy_time\030\004 \001(\001\022\201\001\n\rper_day_stats\030\020 \003(" +
-      "\0132j.ClusterSchedulingSimulation.Experime" +
-      "ntResultSet.ExperimentEnv.ExperimentResu" +
-      "lt.SchedulerStats.PerDayStats\022\222\001\n\026per_wo" +
-      "rkload_busy_time\030\005 \003(\0132r.ClusterScheduli",
-      "ngSimulation.ExperimentResultSet.Experim" +
-      "entEnv.ExperimentResult.SchedulerStats.P" +
-      "erWorkloadBusyTime\022#\n\033num_successful_tra" +
-      "nsactions\030\006 \001(\003\022\037\n\027num_failed_transactio" +
-      "ns\030\007 \001(\003\0222\n*num_no_resources_found_sched" +
-      "uling_attempts\030\r \001(\003\022 \n\030num_retried_tran" +
-      "sactions\030\013 \001(\003\022%\n\035num_jobs_timed_out_sch" +
-      "eduling\030\021 \001(\003\022(\n num_successful_task_tra" +
-      "nsactions\030\t \001(\003\022$\n\034num_failed_task_trans" +
-      "actions\030\n \001(\003\022\025\n\ris_multi_path\030\010 \001(\010\022\036\n\026",
-      "num_jobs_left_in_queue\030\014 \001(\003\022#\n\033failed_f" +
-      "ind_victim_attempts\030\016 \001(\003\032\230\001\n\013PerDayStat" +
-      "s\022\017\n\007day_num\030\001 \001(\003\022\030\n\020useful_busy_time\030\002" +
-      " \001(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\022#\n\033num_su" +
-      "ccessful_transactions\030\004 \001(\003\022\037\n\027num_faile" +
-      "d_transactions\030\005 \001(\003\032`\n\023PerWorkloadBusyT" +
-      "ime\022\025\n\rworkload_name\030\001 \001(\t\022\030\n\020useful_bus" +
-      "y_time\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\032@" +
-      "\n\021SchedulerWorkload\022\025\n\rschedulerName\030\001 \001" +
-      "(\t\022\024\n\014workloadName\030\002 \001(\t\032\271\n\n\017EfficiencyS",
-      "tats\022\035\n\025total_energy_consumed\030\001 \001(\001\022\032\n\022t" +
-      "otal_energy_saved\030\002 \001(\001\022\036\n\026total_power_o" +
-      "ff_number\030\003 \001(\001\022\036\n\026kwh_saved_per_shuttin" +
-      "g\030\004 \001(\001\022!\n\031avg_shuttings_per_machine\030\005 \001" +
-      "(\001\022!\n\031max_shuttings_per_machine\030\006 \001(\001\022!\n" +
-      "\031min_shuttings_per_machine\030\007 \001(\001\022+\n#shut" +
-      "tings_per_machine_90_percentile\030\010 \001(\001\022+\n" +
-      "#shuttings_per_machine_99_percentile\030\t \001" +
-      "(\001\022\'\n\037avg_time_shutted_down_per_cycle\030\n " +
-      "\001(\001\022\'\n\037max_time_shutted_down_per_cycle\030\013",
-      " \001(\001\022\'\n\037min_time_shutted_down_per_cycle\030" +
-      "\014 \001(\001\0221\n)time_shutted_down_per_cycle_90_" +
-      "percentile\030\r \001(\001\0221\n)time_shutted_down_pe" +
-      "r_cycle_99_percentile\030\016 \001(\001\022)\n!avg_time_" +
-      "shutted_down_per_machine\030\017 \001(\001\022)\n!max_ti" +
-      "me_shutted_down_per_machine\030\020 \001(\001\022)\n!min" +
-      "_time_shutted_down_per_machine\030\021 \001(\001\0223\n+" +
-      "time_shutted_down_per_machine_90_percent" +
-      "ile\030\022 \001(\001\0223\n+time_shutted_down_per_machi" +
-      "ne_99_percentile\030\023 \001(\001\022\036\n\026avg_number_mac",
-      "hines_on\030\024 \001(\001\022\037\n\027avg_number_machines_of" +
-      "f\030\025 \001(\001\022&\n\036avg_number_machines_turning_o" +
-      "n\030\026 \001(\001\022\'\n\037avg_number_machines_turning_o" +
-      "ff\030\027 \001(\001\022\210\001\n\020power_off_policy\030\030 \001(\0132n.Cl" +
-      "usterSchedulingSimulation.ExperimentResu" +
-      "ltSet.ExperimentEnv.ExperimentResult.Eff" +
-      "iciencyStats.PowerOffPolicy\022\206\001\n\017power_on" +
-      "_policy\030\031 \001(\0132m.ClusterSchedulingSimulat" +
-      "ion.ExperimentResultSet.ExperimentEnv.Ex" +
-      "perimentResult.EfficiencyStats.PowerOnPo",
-      "licy\022\037\n\027current_energy_consumed\030\032 \001(\001\022\026\n" +
-      "\016picking_policy\030\033 \001(\t\032\036\n\016PowerOffPolicy\022" +
-      "\014\n\004name\030\001 \001(\t\032\035\n\rPowerOnPolicy\022\014\n\004name\030\001" +
-      " \001(\t"
+      "sult.EfficiencyStats\022q\n\014measurements\030\020 \003",
+      "(\0132[.ClusterSchedulingSimulation.Experim" +
+      "entResultSet.ExperimentEnv.ExperimentRes" +
+      "ult.Measurement\032\233\004\n\rWorkloadStats\022\025\n\rwor" +
+      "kload_name\030\001 \001(\t\022\020\n\010num_jobs\030\002 \001(\003\022\032\n\022nu" +
+      "m_jobs_scheduled\030\003 \001(\003\022%\n\035job_think_time" +
+      "s_90_percentile\030\004 \001(\001\0220\n(avg_job_queue_t" +
+      "imes_till_first_scheduled\030\005 \001(\001\0220\n(avg_j" +
+      "ob_queue_times_till_fully_scheduled\030\006 \001(" +
+      "\001\0229\n1job_queue_time_till_first_scheduled" +
+      "_90_percentile\030\007 \001(\001\0229\n1job_queue_time_t",
+      "ill_fully_scheduled_90_percentile\030\010 \001(\001\022" +
+      "-\n%num_scheduling_attempts_90_percentile" +
+      "\030\t \001(\001\022-\n%num_scheduling_attempts_99_per" +
+      "centile\030\n \001(\001\0222\n*num_task_scheduling_att" +
+      "empts_90_percentile\030\013 \001(\001\0222\n*num_task_sc" +
+      "heduling_attempts_99_percentile\030\014 \001(\001\032\341\007" +
+      "\n\016SchedulerStats\022\026\n\016scheduler_name\030\001 \001(\t" +
+      "\022\030\n\020useful_busy_time\030\003 \001(\001\022\030\n\020wasted_bus" +
+      "y_time\030\004 \001(\001\022\201\001\n\rper_day_stats\030\020 \003(\0132j.C" +
+      "lusterSchedulingSimulation.ExperimentRes",
+      "ultSet.ExperimentEnv.ExperimentResult.Sc" +
+      "hedulerStats.PerDayStats\022\222\001\n\026per_workloa" +
+      "d_busy_time\030\005 \003(\0132r.ClusterSchedulingSim" +
+      "ulation.ExperimentResultSet.ExperimentEn" +
+      "v.ExperimentResult.SchedulerStats.PerWor" +
+      "kloadBusyTime\022#\n\033num_successful_transact" +
+      "ions\030\006 \001(\003\022\037\n\027num_failed_transactions\030\007 " +
+      "\001(\003\0222\n*num_no_resources_found_scheduling" +
+      "_attempts\030\r \001(\003\022 \n\030num_retried_transacti" +
+      "ons\030\013 \001(\003\022%\n\035num_jobs_timed_out_scheduli",
+      "ng\030\021 \001(\003\022(\n num_successful_task_transact" +
+      "ions\030\t \001(\003\022$\n\034num_failed_task_transactio" +
+      "ns\030\n \001(\003\022\025\n\ris_multi_path\030\010 \001(\010\022\036\n\026num_j" +
+      "obs_left_in_queue\030\014 \001(\003\022#\n\033failed_find_v" +
+      "ictim_attempts\030\016 \001(\003\032\230\001\n\013PerDayStats\022\017\n\007" +
+      "day_num\030\001 \001(\003\022\030\n\020useful_busy_time\030\002 \001(\001\022" +
+      "\030\n\020wasted_busy_time\030\003 \001(\001\022#\n\033num_success" +
+      "ful_transactions\030\004 \001(\003\022\037\n\027num_failed_tra" +
+      "nsactions\030\005 \001(\003\032`\n\023PerWorkloadBusyTime\022\025" +
+      "\n\rworkload_name\030\001 \001(\t\022\030\n\020useful_busy_tim",
+      "e\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\032@\n\021Sch" +
+      "edulerWorkload\022\025\n\rschedulerName\030\001 \001(\t\022\024\n" +
+      "\014workloadName\030\002 \001(\t\032\271\n\n\017EfficiencyStats\022" +
+      "\035\n\025total_energy_consumed\030\001 \001(\001\022\032\n\022total_" +
+      "energy_saved\030\002 \001(\001\022\036\n\026total_power_off_nu" +
+      "mber\030\003 \001(\001\022\036\n\026kwh_saved_per_shutting\030\004 \001" +
+      "(\001\022!\n\031avg_shuttings_per_machine\030\005 \001(\001\022!\n" +
+      "\031max_shuttings_per_machine\030\006 \001(\001\022!\n\031min_" +
+      "shuttings_per_machine\030\007 \001(\001\022+\n#shuttings" +
+      "_per_machine_90_percentile\030\010 \001(\001\022+\n#shut",
+      "tings_per_machine_99_percentile\030\t \001(\001\022\'\n" +
+      "\037avg_time_shutted_down_per_cycle\030\n \001(\001\022\'" +
+      "\n\037max_time_shutted_down_per_cycle\030\013 \001(\001\022" +
+      "\'\n\037min_time_shutted_down_per_cycle\030\014 \001(\001" +
+      "\0221\n)time_shutted_down_per_cycle_90_perce" +
+      "ntile\030\r \001(\001\0221\n)time_shutted_down_per_cyc" +
+      "le_99_percentile\030\016 \001(\001\022)\n!avg_time_shutt" +
+      "ed_down_per_machine\030\017 \001(\001\022)\n!max_time_sh" +
+      "utted_down_per_machine\030\020 \001(\001\022)\n!min_time" +
+      "_shutted_down_per_machine\030\021 \001(\001\0223\n+time_",
+      "shutted_down_per_machine_90_percentile\030\022" +
+      " \001(\001\0223\n+time_shutted_down_per_machine_99" +
+      "_percentile\030\023 \001(\001\022\036\n\026avg_number_machines" +
+      "_on\030\024 \001(\001\022\037\n\027avg_number_machines_off\030\025 \001" +
+      "(\001\022&\n\036avg_number_machines_turning_on\030\026 \001" +
+      "(\001\022\'\n\037avg_number_machines_turning_off\030\027 " +
+      "\001(\001\022\210\001\n\020power_off_policy\030\030 \001(\0132n.Cluster" +
+      "SchedulingSimulation.ExperimentResultSet" +
+      ".ExperimentEnv.ExperimentResult.Efficien" +
+      "cyStats.PowerOffPolicy\022\206\001\n\017power_on_poli",
+      "cy\030\031 \001(\0132m.ClusterSchedulingSimulation.E" +
+      "xperimentResultSet.ExperimentEnv.Experim" +
+      "entResult.EfficiencyStats.PowerOnPolicy\022" +
+      "\037\n\027current_energy_consumed\030\032 \001(\001\022\026\n\016pick" +
+      "ing_policy\030\033 \001(\t\032\036\n\016PowerOffPolicy\022\014\n\004na" +
+      "me\030\001 \001(\t\032\035\n\rPowerOnPolicy\022\014\n\004name\030\001 \001(\t\032" +
+      "\247\002\n\013Measurement\022\026\n\016cpuUtilization\030\001 \001(\001\022" +
+      "\026\n\016cpuTotallyIdle\030\002 \001(\001\022\030\n\020cpuPartiallyI" +
+      "dle\030\003 \001(\001\022\026\n\016memUtilization\030\004 \001(\001\022\026\n\016mem" +
+      "TotallyIdle\030\005 \001(\001\022\030\n\020memPartiallyIdle\030\006 ",
+      "\001(\001\022\023\n\013machinesOff\030\007 \001(\001\022\022\n\nmachinesOn\030\010" +
+      " \001(\001\022\032\n\022machinesTurningOff\030\t \001(\001\022\031\n\021mach" +
+      "inesTurningOn\030\n \001(\001\022\021\n\tmpuLocked\030\013 \001(\001\022\021" +
+      "\n\tmemLocked\030\014 \001(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -14214,7 +15896,7 @@ public final class ClusterSimulationProtos {
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_descriptor,
-        new java.lang.String[] { "CellStateAvgCpuUtilization", "CellStateAvgMemUtilization", "CellStateAvgCpuLocked", "CellStateAvgMemLocked", "WorkloadStats", "SweepWorkload", "AvgJobInterarrivalTime", "SchedulerStats", "SweepSchedulerWorkload", "ConstantThinkTime", "PerTaskThinkTime", "EfficiencyStats", });
+        new java.lang.String[] { "CellStateAvgCpuUtilization", "CellStateAvgMemUtilization", "CellStateAvgCpuLocked", "CellStateAvgMemLocked", "WorkloadStats", "SweepWorkload", "AvgJobInterarrivalTime", "SchedulerStats", "SweepSchedulerWorkload", "ConstantThinkTime", "PerTaskThinkTime", "EfficiencyStats", "Measurements", });
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_descriptor =
       internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_descriptor.getNestedTypes().get(0);
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_fieldAccessorTable = new
@@ -14263,6 +15945,12 @@ public final class ClusterSimulationProtos {
       com.google.protobuf.GeneratedMessage.FieldAccessorTable(
         internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_EfficiencyStats_PowerOnPolicy_descriptor,
         new java.lang.String[] { "Name", });
+    internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor =
+      internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_descriptor.getNestedTypes().get(4);
+    internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+        internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_Measurement_descriptor,
+        new java.lang.String[] { "CpuUtilization", "CpuTotallyIdle", "CpuPartiallyIdle", "MemUtilization", "MemTotallyIdle", "MemPartiallyIdle", "MachinesOff", "MachinesOn", "MachinesTurningOff", "MachinesTurningOn", "MpuLocked", "MemLocked", });
   }
 
   // @@protoc_insertion_point(outer_class_scope)

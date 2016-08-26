@@ -18,7 +18,7 @@ _sym_db = _symbol_database.Default()
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='cluster_simulation_protos.proto',
   package='ClusterSchedulingSimulation',
-  serialized_pb=_b('\n\x1f\x63luster_simulation_protos.proto\x12\x1b\x43lusterSchedulingSimulation\"\xdb\x1f\n\x13\x45xperimentResultSet\x12V\n\x0e\x65xperiment_env\x18\x01 \x03(\x0b\x32>.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv\x1a\xeb\x1e\n\rExperimentEnv\x12\x11\n\tcell_name\x18\x01 \x01(\t\x12\x1b\n\x13workload_split_type\x18\x02 \x01(\t\x12\x1b\n\x0cis_prefilled\x18\x05 \x01(\x08:\x05\x66\x61lse\x12\x10\n\x08run_time\x18\x03 \x01(\x01\x12j\n\x11\x65xperiment_result\x18\x04 \x03(\x0b\x32O.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult\x1a\x8e\x1d\n\x10\x45xperimentResult\x12&\n\x1e\x63\x65ll_state_avg_cpu_utilization\x18\x04 \x01(\x01\x12&\n\x1e\x63\x65ll_state_avg_mem_utilization\x18\x05 \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_cpu_locked\x18\r \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_mem_locked\x18\x0e \x01(\x01\x12u\n\x0eworkload_stats\x18\x06 \x03(\x0b\x32].ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats\x12\x16\n\x0esweep_workload\x18\x08 \x01(\t\x12!\n\x19\x61vg_job_interarrival_time\x18\t \x01(\x01\x12w\n\x0fscheduler_stats\x18\x07 \x03(\x0b\x32^.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats\x12\x83\x01\n\x18sweep_scheduler_workload\x18\n \x03(\x0b\x32\x61.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerWorkload\x12\x1b\n\x13\x63onstant_think_time\x18\x0b \x01(\x01\x12\x1b\n\x13per_task_think_time\x18\x0c \x01(\x01\x12y\n\x10\x65\x66\x66iciency_stats\x18\x0f \x01(\x0b\x32_.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats\x1a\x9b\x04\n\rWorkloadStats\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x10\n\x08num_jobs\x18\x02 \x01(\x03\x12\x1a\n\x12num_jobs_scheduled\x18\x03 \x01(\x03\x12%\n\x1djob_think_times_90_percentile\x18\x04 \x01(\x01\x12\x30\n(avg_job_queue_times_till_first_scheduled\x18\x05 \x01(\x01\x12\x30\n(avg_job_queue_times_till_fully_scheduled\x18\x06 \x01(\x01\x12\x39\n1job_queue_time_till_first_scheduled_90_percentile\x18\x07 \x01(\x01\x12\x39\n1job_queue_time_till_fully_scheduled_90_percentile\x18\x08 \x01(\x01\x12-\n%num_scheduling_attempts_90_percentile\x18\t \x01(\x01\x12-\n%num_scheduling_attempts_99_percentile\x18\n \x01(\x01\x12\x32\n*num_task_scheduling_attempts_90_percentile\x18\x0b \x01(\x01\x12\x32\n*num_task_scheduling_attempts_99_percentile\x18\x0c \x01(\x01\x1a\xe1\x07\n\x0eSchedulerStats\x12\x16\n\x0escheduler_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x03 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x04 \x01(\x01\x12\x81\x01\n\rper_day_stats\x18\x10 \x03(\x0b\x32j.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerDayStats\x12\x92\x01\n\x16per_workload_busy_time\x18\x05 \x03(\x0b\x32r.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerWorkloadBusyTime\x12#\n\x1bnum_successful_transactions\x18\x06 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x07 \x01(\x03\x12\x32\n*num_no_resources_found_scheduling_attempts\x18\r \x01(\x03\x12 \n\x18num_retried_transactions\x18\x0b \x01(\x03\x12%\n\x1dnum_jobs_timed_out_scheduling\x18\x11 \x01(\x03\x12(\n num_successful_task_transactions\x18\t \x01(\x03\x12$\n\x1cnum_failed_task_transactions\x18\n \x01(\x03\x12\x15\n\ris_multi_path\x18\x08 \x01(\x08\x12\x1e\n\x16num_jobs_left_in_queue\x18\x0c \x01(\x03\x12#\n\x1b\x66\x61iled_find_victim_attempts\x18\x0e \x01(\x03\x1a\x98\x01\n\x0bPerDayStats\x12\x0f\n\x07\x64\x61y_num\x18\x01 \x01(\x03\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x12#\n\x1bnum_successful_transactions\x18\x04 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x05 \x01(\x03\x1a`\n\x13PerWorkloadBusyTime\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x1a@\n\x11SchedulerWorkload\x12\x15\n\rschedulerName\x18\x01 \x01(\t\x12\x14\n\x0cworkloadName\x18\x02 \x01(\t\x1a\xb9\n\n\x0f\x45\x66\x66iciencyStats\x12\x1d\n\x15total_energy_consumed\x18\x01 \x01(\x01\x12\x1a\n\x12total_energy_saved\x18\x02 \x01(\x01\x12\x1e\n\x16total_power_off_number\x18\x03 \x01(\x01\x12\x1e\n\x16kwh_saved_per_shutting\x18\x04 \x01(\x01\x12!\n\x19\x61vg_shuttings_per_machine\x18\x05 \x01(\x01\x12!\n\x19max_shuttings_per_machine\x18\x06 \x01(\x01\x12!\n\x19min_shuttings_per_machine\x18\x07 \x01(\x01\x12+\n#shuttings_per_machine_90_percentile\x18\x08 \x01(\x01\x12+\n#shuttings_per_machine_99_percentile\x18\t \x01(\x01\x12\'\n\x1f\x61vg_time_shutted_down_per_cycle\x18\n \x01(\x01\x12\'\n\x1fmax_time_shutted_down_per_cycle\x18\x0b \x01(\x01\x12\'\n\x1fmin_time_shutted_down_per_cycle\x18\x0c \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_90_percentile\x18\r \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_99_percentile\x18\x0e \x01(\x01\x12)\n!avg_time_shutted_down_per_machine\x18\x0f \x01(\x01\x12)\n!max_time_shutted_down_per_machine\x18\x10 \x01(\x01\x12)\n!min_time_shutted_down_per_machine\x18\x11 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_90_percentile\x18\x12 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_99_percentile\x18\x13 \x01(\x01\x12\x1e\n\x16\x61vg_number_machines_on\x18\x14 \x01(\x01\x12\x1f\n\x17\x61vg_number_machines_off\x18\x15 \x01(\x01\x12&\n\x1e\x61vg_number_machines_turning_on\x18\x16 \x01(\x01\x12\'\n\x1f\x61vg_number_machines_turning_off\x18\x17 \x01(\x01\x12\x88\x01\n\x10power_off_policy\x18\x18 \x01(\x0b\x32n.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy\x12\x86\x01\n\x0fpower_on_policy\x18\x19 \x01(\x0b\x32m.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy\x12\x1f\n\x17\x63urrent_energy_consumed\x18\x1a \x01(\x01\x12\x16\n\x0epicking_policy\x18\x1b \x01(\t\x1a\x1e\n\x0ePowerOffPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t\x1a\x1d\n\rPowerOnPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t')
+  serialized_pb=_b('\n\x1f\x63luster_simulation_protos.proto\x12\x1b\x43lusterSchedulingSimulation\"\xf8\"\n\x13\x45xperimentResultSet\x12V\n\x0e\x65xperiment_env\x18\x01 \x03(\x0b\x32>.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv\x1a\x88\"\n\rExperimentEnv\x12\x11\n\tcell_name\x18\x01 \x01(\t\x12\x1b\n\x13workload_split_type\x18\x02 \x01(\t\x12\x1b\n\x0cis_prefilled\x18\x05 \x01(\x08:\x05\x66\x61lse\x12\x10\n\x08run_time\x18\x03 \x01(\x01\x12j\n\x11\x65xperiment_result\x18\x04 \x03(\x0b\x32O.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult\x1a\xab \n\x10\x45xperimentResult\x12&\n\x1e\x63\x65ll_state_avg_cpu_utilization\x18\x04 \x01(\x01\x12&\n\x1e\x63\x65ll_state_avg_mem_utilization\x18\x05 \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_cpu_locked\x18\r \x01(\x01\x12!\n\x19\x63\x65ll_state_avg_mem_locked\x18\x0e \x01(\x01\x12u\n\x0eworkload_stats\x18\x06 \x03(\x0b\x32].ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats\x12\x16\n\x0esweep_workload\x18\x08 \x01(\t\x12!\n\x19\x61vg_job_interarrival_time\x18\t \x01(\x01\x12w\n\x0fscheduler_stats\x18\x07 \x03(\x0b\x32^.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats\x12\x83\x01\n\x18sweep_scheduler_workload\x18\n \x03(\x0b\x32\x61.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerWorkload\x12\x1b\n\x13\x63onstant_think_time\x18\x0b \x01(\x01\x12\x1b\n\x13per_task_think_time\x18\x0c \x01(\x01\x12y\n\x10\x65\x66\x66iciency_stats\x18\x0f \x01(\x0b\x32_.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats\x12q\n\x0cmeasurements\x18\x10 \x03(\x0b\x32[.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement\x1a\x9b\x04\n\rWorkloadStats\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x10\n\x08num_jobs\x18\x02 \x01(\x03\x12\x1a\n\x12num_jobs_scheduled\x18\x03 \x01(\x03\x12%\n\x1djob_think_times_90_percentile\x18\x04 \x01(\x01\x12\x30\n(avg_job_queue_times_till_first_scheduled\x18\x05 \x01(\x01\x12\x30\n(avg_job_queue_times_till_fully_scheduled\x18\x06 \x01(\x01\x12\x39\n1job_queue_time_till_first_scheduled_90_percentile\x18\x07 \x01(\x01\x12\x39\n1job_queue_time_till_fully_scheduled_90_percentile\x18\x08 \x01(\x01\x12-\n%num_scheduling_attempts_90_percentile\x18\t \x01(\x01\x12-\n%num_scheduling_attempts_99_percentile\x18\n \x01(\x01\x12\x32\n*num_task_scheduling_attempts_90_percentile\x18\x0b \x01(\x01\x12\x32\n*num_task_scheduling_attempts_99_percentile\x18\x0c \x01(\x01\x1a\xe1\x07\n\x0eSchedulerStats\x12\x16\n\x0escheduler_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x03 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x04 \x01(\x01\x12\x81\x01\n\rper_day_stats\x18\x10 \x03(\x0b\x32j.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerDayStats\x12\x92\x01\n\x16per_workload_busy_time\x18\x05 \x03(\x0b\x32r.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.SchedulerStats.PerWorkloadBusyTime\x12#\n\x1bnum_successful_transactions\x18\x06 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x07 \x01(\x03\x12\x32\n*num_no_resources_found_scheduling_attempts\x18\r \x01(\x03\x12 \n\x18num_retried_transactions\x18\x0b \x01(\x03\x12%\n\x1dnum_jobs_timed_out_scheduling\x18\x11 \x01(\x03\x12(\n num_successful_task_transactions\x18\t \x01(\x03\x12$\n\x1cnum_failed_task_transactions\x18\n \x01(\x03\x12\x15\n\ris_multi_path\x18\x08 \x01(\x08\x12\x1e\n\x16num_jobs_left_in_queue\x18\x0c \x01(\x03\x12#\n\x1b\x66\x61iled_find_victim_attempts\x18\x0e \x01(\x03\x1a\x98\x01\n\x0bPerDayStats\x12\x0f\n\x07\x64\x61y_num\x18\x01 \x01(\x03\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x12#\n\x1bnum_successful_transactions\x18\x04 \x01(\x03\x12\x1f\n\x17num_failed_transactions\x18\x05 \x01(\x03\x1a`\n\x13PerWorkloadBusyTime\x12\x15\n\rworkload_name\x18\x01 \x01(\t\x12\x18\n\x10useful_busy_time\x18\x02 \x01(\x01\x12\x18\n\x10wasted_busy_time\x18\x03 \x01(\x01\x1a@\n\x11SchedulerWorkload\x12\x15\n\rschedulerName\x18\x01 \x01(\t\x12\x14\n\x0cworkloadName\x18\x02 \x01(\t\x1a\xb9\n\n\x0f\x45\x66\x66iciencyStats\x12\x1d\n\x15total_energy_consumed\x18\x01 \x01(\x01\x12\x1a\n\x12total_energy_saved\x18\x02 \x01(\x01\x12\x1e\n\x16total_power_off_number\x18\x03 \x01(\x01\x12\x1e\n\x16kwh_saved_per_shutting\x18\x04 \x01(\x01\x12!\n\x19\x61vg_shuttings_per_machine\x18\x05 \x01(\x01\x12!\n\x19max_shuttings_per_machine\x18\x06 \x01(\x01\x12!\n\x19min_shuttings_per_machine\x18\x07 \x01(\x01\x12+\n#shuttings_per_machine_90_percentile\x18\x08 \x01(\x01\x12+\n#shuttings_per_machine_99_percentile\x18\t \x01(\x01\x12\'\n\x1f\x61vg_time_shutted_down_per_cycle\x18\n \x01(\x01\x12\'\n\x1fmax_time_shutted_down_per_cycle\x18\x0b \x01(\x01\x12\'\n\x1fmin_time_shutted_down_per_cycle\x18\x0c \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_90_percentile\x18\r \x01(\x01\x12\x31\n)time_shutted_down_per_cycle_99_percentile\x18\x0e \x01(\x01\x12)\n!avg_time_shutted_down_per_machine\x18\x0f \x01(\x01\x12)\n!max_time_shutted_down_per_machine\x18\x10 \x01(\x01\x12)\n!min_time_shutted_down_per_machine\x18\x11 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_90_percentile\x18\x12 \x01(\x01\x12\x33\n+time_shutted_down_per_machine_99_percentile\x18\x13 \x01(\x01\x12\x1e\n\x16\x61vg_number_machines_on\x18\x14 \x01(\x01\x12\x1f\n\x17\x61vg_number_machines_off\x18\x15 \x01(\x01\x12&\n\x1e\x61vg_number_machines_turning_on\x18\x16 \x01(\x01\x12\'\n\x1f\x61vg_number_machines_turning_off\x18\x17 \x01(\x01\x12\x88\x01\n\x10power_off_policy\x18\x18 \x01(\x0b\x32n.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy\x12\x86\x01\n\x0fpower_on_policy\x18\x19 \x01(\x0b\x32m.ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy\x12\x1f\n\x17\x63urrent_energy_consumed\x18\x1a \x01(\x01\x12\x16\n\x0epicking_policy\x18\x1b \x01(\t\x1a\x1e\n\x0ePowerOffPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t\x1a\x1d\n\rPowerOnPolicy\x12\x0c\n\x04name\x18\x01 \x01(\t\x1a\xa7\x02\n\x0bMeasurement\x12\x16\n\x0e\x63puUtilization\x18\x01 \x01(\x01\x12\x16\n\x0e\x63puTotallyIdle\x18\x02 \x01(\x01\x12\x18\n\x10\x63puPartiallyIdle\x18\x03 \x01(\x01\x12\x16\n\x0ememUtilization\x18\x04 \x01(\x01\x12\x16\n\x0ememTotallyIdle\x18\x05 \x01(\x01\x12\x18\n\x10memPartiallyIdle\x18\x06 \x01(\x01\x12\x13\n\x0bmachinesOff\x18\x07 \x01(\x01\x12\x12\n\nmachinesOn\x18\x08 \x01(\x01\x12\x1a\n\x12machinesTurningOff\x18\t \x01(\x01\x12\x19\n\x11machinesTurningOn\x18\n \x01(\x01\x12\x11\n\tmpuLocked\x18\x0b \x01(\x01\x12\x11\n\tmemLocked\x18\x0c \x01(\x01')
 )
 _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 
@@ -127,8 +127,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS = _descriptor.
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1183,
-  serialized_end=1722,
+  serialized_start=1298,
+  serialized_end=1837,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERDAYSTATS = _descriptor.Descriptor(
@@ -184,8 +184,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERDAYSTATS =
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2468,
-  serialized_end=2620,
+  serialized_start=2583,
+  serialized_end=2735,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERWORKLOADBUSYTIME = _descriptor.Descriptor(
@@ -227,8 +227,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS_PERWORKLOADBU
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2622,
-  serialized_end=2718,
+  serialized_start=2737,
+  serialized_end=2833,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS = _descriptor.Descriptor(
@@ -354,8 +354,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS = _descriptor
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1725,
-  serialized_end=2718,
+  serialized_start=1840,
+  serialized_end=2833,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERWORKLOAD = _descriptor.Descriptor(
@@ -390,8 +390,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERWORKLOAD = _descrip
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2720,
-  serialized_end=2784,
+  serialized_start=2835,
+  serialized_end=2899,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWEROFFPOLICY = _descriptor.Descriptor(
@@ -419,8 +419,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWEROFFPOLI
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4063,
-  serialized_end=4093,
+  serialized_start=4178,
+  serialized_end=4208,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWERONPOLICY = _descriptor.Descriptor(
@@ -448,8 +448,8 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWERONPOLIC
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=4095,
-  serialized_end=4124,
+  serialized_start=4210,
+  serialized_end=4239,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS = _descriptor.Descriptor(
@@ -659,8 +659,114 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS = _descripto
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2787,
-  serialized_end=4124,
+  serialized_start=2902,
+  serialized_end=4239,
+)
+
+_EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_MEASUREMENT = _descriptor.Descriptor(
+  name='Measurement',
+  full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='cpuUtilization', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.cpuUtilization', index=0,
+      number=1, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='cpuTotallyIdle', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.cpuTotallyIdle', index=1,
+      number=2, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='cpuPartiallyIdle', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.cpuPartiallyIdle', index=2,
+      number=3, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='memUtilization', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.memUtilization', index=3,
+      number=4, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='memTotallyIdle', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.memTotallyIdle', index=4,
+      number=5, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='memPartiallyIdle', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.memPartiallyIdle', index=5,
+      number=6, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='machinesOff', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.machinesOff', index=6,
+      number=7, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='machinesOn', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.machinesOn', index=7,
+      number=8, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='machinesTurningOff', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.machinesTurningOff', index=8,
+      number=9, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='machinesTurningOn', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.machinesTurningOn', index=9,
+      number=10, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='mpuLocked', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.mpuLocked', index=10,
+      number=11, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+    _descriptor.FieldDescriptor(
+      name='memLocked', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.memLocked', index=11,
+      number=12, type=1, cpp_type=5, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=None,
+  is_extendable=False,
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=4242,
+  serialized_end=4537,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT = _descriptor.Descriptor(
@@ -754,10 +860,17 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None),
+    _descriptor.FieldDescriptor(
+      name='measurements', full_name='ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.measurements', index=12,
+      number=16, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None),
   ],
   extensions=[
   ],
-  nested_types=[_EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS, _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS, _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERWORKLOAD, _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS, ],
+  nested_types=[_EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS, _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS, _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERWORKLOAD, _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS, _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_MEASUREMENT, ],
   enum_types=[
   ],
   options=None,
@@ -766,7 +879,7 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=398,
-  serialized_end=4124,
+  serialized_end=4537,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV = _descriptor.Descriptor(
@@ -823,7 +936,7 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=177,
-  serialized_end=4124,
+  serialized_end=4537,
 )
 
 _EXPERIMENTRESULTSET = _descriptor.Descriptor(
@@ -852,7 +965,7 @@ _EXPERIMENTRESULTSET = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=65,
-  serialized_end=4124,
+  serialized_end=4537,
 )
 
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS.containing_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT
@@ -867,10 +980,12 @@ _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWERONPOLIC
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS.fields_by_name['power_off_policy'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWEROFFPOLICY
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS.fields_by_name['power_on_policy'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS_POWERONPOLICY
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS.containing_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT
+_EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_MEASUREMENT.containing_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT.fields_by_name['workload_stats'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_WORKLOADSTATS
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT.fields_by_name['scheduler_stats'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERSTATS
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT.fields_by_name['sweep_scheduler_workload'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_SCHEDULERWORKLOAD
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT.fields_by_name['efficiency_stats'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_EFFICIENCYSTATS
+_EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT.fields_by_name['measurements'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_MEASUREMENT
 _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT.containing_type = _EXPERIMENTRESULTSET_EXPERIMENTENV
 _EXPERIMENTRESULTSET_EXPERIMENTENV.fields_by_name['experiment_result'].message_type = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT
 _EXPERIMENTRESULTSET_EXPERIMENTENV.containing_type = _EXPERIMENTRESULTSET
@@ -938,6 +1053,13 @@ ExperimentResultSet = _reflection.GeneratedProtocolMessageType('ExperimentResult
         # @@protoc_insertion_point(class_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats)
         ))
       ,
+
+      Measurement = _reflection.GeneratedProtocolMessageType('Measurement', (_message.Message,), dict(
+        DESCRIPTOR = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT_MEASUREMENT,
+        __module__ = 'cluster_simulation_protos_pb2'
+        # @@protoc_insertion_point(class_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)
+        ))
+      ,
       DESCRIPTOR = _EXPERIMENTRESULTSET_EXPERIMENTENV_EXPERIMENTRESULT,
       __module__ = 'cluster_simulation_protos_pb2'
       # @@protoc_insertion_point(class_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult)
@@ -963,6 +1085,7 @@ _sym_db.RegisterMessage(ExperimentResultSet.ExperimentEnv.ExperimentResult.Sched
 _sym_db.RegisterMessage(ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats)
 _sym_db.RegisterMessage(ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOffPolicy)
 _sym_db.RegisterMessage(ExperimentResultSet.ExperimentEnv.ExperimentResult.EfficiencyStats.PowerOnPolicy)
+_sym_db.RegisterMessage(ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement)
 
 
 # @@protoc_insertion_point(module_scope)
