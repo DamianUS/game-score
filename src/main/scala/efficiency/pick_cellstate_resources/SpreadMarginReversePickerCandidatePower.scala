@@ -52,11 +52,10 @@ class SpreadMarginReversePickerCandidatePower(spreadMargin : Double = 0.1, margi
   def pickRandomResource (pivot : Int, cellState : CellState, job : Job): Int ={
     val range = Math.max(0 , (pivot - (cellState.numMachines * spreadMargin).toInt)) to pivot
     val loop = new Breaks;
-    val rnd = new scala.util.Random
     var machineID = -1
     loop.breakable {
       for (i <- 0 to 5 by 1) {
-        val pseudoRandomMachine = range(rnd.nextInt(range length))
+        val pseudoRandomMachine = range(scala.util.Random.nextInt(range length))
         val mID = cellState.machinesLoad(pseudoRandomMachine)
         if (cellState.isMachineOn(mID) && cellState.availableCpusPerMachine(mID) >= (marginPerc * cellState.cpusPerMachine + job.cpusPerTask + 0.01) && cellState.availableMemPerMachine(mID) >= (marginPerc * cellState.memPerMachine + job.memPerTask + 0.01)) {
           machineID=mID
