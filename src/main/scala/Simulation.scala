@@ -442,26 +442,26 @@ object Simulation {
     val dataCenterLostFactorRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
     val dataCenterLostFactorDefault = 0.2
 
-    val sweepMaxLoadOffRange = false//true
+    val sweepMaxLoadOffRange = true
     val sweepMeanLoadOffRange = false
-    val sweepMinFreeCapacityRange = false//true
+    val sweepMinFreeCapacityRange = true
     val sweepFreeCapacityRangeOn = false
     val sweepMeanFreeCapacityRange = false
     val sweepMinFreeCapacityPonderatedRange = false
     val sweepMinFreeCapacityPonderatedWindowSize = false
     val sweepRandomThreshold = false
-    val sweepExponentialOffDistributionThreshold = false//true
+    val sweepExponentialOffDistributionThreshold = true
     val sweepExponentialOnDistributionThreshold = false
     val sweepExponentialNormalDistributionThreshold = false
     val sweepExponentialNormalNormalThreshold = false
     val sweepdNormalThreshold = false
     val sweepdOnNormalThreshold = false
-    val sweepDistributionThreshold = false//true // Gamma Off distribution threshold
+    val sweepDistributionThreshold = true // Gamma Off distribution threshold
     val sweepOnDistributionThreshold = false
-    val sweepWindowSize = false//true
+    val sweepWindowSize = true
     val sweepOnWindowSize = false
-    val sweepGammaLostFactor = false//true
-    val sweepExponentialLostFactor = false//true
+    val sweepGammaLostFactor = true
+    val sweepExponentialLostFactor = true
     val sweepGammaNormalLostFactor = true
     val sweepExponentialNormalLostFactor = true
     //Power Off

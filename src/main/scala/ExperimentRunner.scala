@@ -292,8 +292,8 @@ class Experiment(
                           simulator.avgCpuLocked / simulator.cellState.totalCpus)
                         experimentResult.setCellStateAvgMemLocked(
                           simulator.avgMemLocked / simulator.cellState.totalMem)
-                        /*//Measurement stats
-                        for(i <- 0 to simulator.measuredCpuLocked.length-1){
+                        //Measurement stats
+                        for(i <- 0 to simulator.measuredMachinesOn.length-1){
                           val measurement = ExperimentResultSet.ExperimentEnv.ExperimentResult.Measurement.newBuilder()
                           measurement.setCpuUtilization(simulator.measuredCpuUtilization(i))
                           measurement.setCpuTotallyIdle(simulator.measuredCpuTotallyIdle(i))
@@ -308,7 +308,7 @@ class Experiment(
                           measurement.setMachinesTurningOff(simulator.measuredMachinesTurningOff(i))
                           measurement.setMachinesTurningOn(simulator.measuredMachinesTurningOn(i))
                           experimentResult.addMeasurements(measurement)
-                        }*/
+                        }
 
 
                         //EfficiencyStats
