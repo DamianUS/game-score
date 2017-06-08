@@ -13,8 +13,11 @@ While the simulator will simulate job arrival, scheduler decision making and tas
 ## Core concepts
 
 **CellState**: The actual cluster. It is defined by the general **CellStateDesc** and overloaded and created by the different ClusterSimulatorDesc (Omega, Mesos, Monolithic).
+
 **ClaimDelta**: Represents a "transaction" in the parallel schedulers (Omega and Mesos). It claims an amount of cpu and memory from the **CellState** (cluster).
+
 **Job**: That unit of work that is enqueued. Each job is composed of many tasks. Each of these tasks are equal in duration, cpu and memory consumption. There are **Batch** and **Service** jobs, which are only distinguished by their duration and ram/cpu consumption and a label. At the execution level, they work the same way, although at the results level (queue times and so on), they are separated according to this type.
+
 
 
 ## Workflow
