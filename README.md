@@ -18,7 +18,23 @@ While the simulator will simulate job arrival, scheduler decision making and tas
 
 **Job**: That unit of work that is enqueued. Each job is composed of many tasks. Each of these tasks are equal in duration, cpu and memory consumption. There are **Batch** and **Service** jobs, which are only distinguished by their duration and ram/cpu consumption and a label. At the execution level, they work the same way, although at the results level (queue times and so on), they are separated according to this type.
 
+**Simulator**: The actual simulator that can be run. IT has the current simulation time and the job that must be executed. This is the superclass of one of the most important classes of the simulator, i.e.: **ClusterSimulator**.
 
+**ClusterSimulator**: Child of **Simulator**, this class receives the **CellState**, the set of **Scheduler**s, **Workload**s, and (added by us), the **Sorter**, **Picker**, **Power Off Policy** and **Power On Policy**  used in that experiment. This class hold almost all the energy-efficiency related data of the simulation, i.e: average cpu and memory utilization, average number of machines on, kWh saved per shut-down, and so on. This class does measure the cluster state every X seconds in order to produce the results.  
+
+**Workload**: Set of jobs of one type (Batch or Service). This class has the aggregated attributes as queue times, average inter arrival times, and so on.
+
+**Scheduler**:
+ 
+ ADDED BY US (can be found in /src/main/scala/efficiency):
+ 
+**Power Off Policy**: The strategy used in order to shut down a machine when a task is finished (if there are no more tasks running in this server). The **Power Off Policy** is composed of: A **Decision** that tells whether a machine should be turned off; and an **Action** that actually performs the shut-down process.  
+
+**Power On Policy**: The strategy used in order to power a (set of) machine(s) when a task is scheduled It is responsible of actually perform the powering on process. The **Power On Policy** is composed of: A **Decision** that tells whether current machines are not sufficient to perform the load; and an **Action** that tells the number of machines that should be powered on.  
+
+**Sorter**: Performs a sorting of the machines according to the suitability to host an incoming task.
+
+**Picker**: Decides which machine should be the right candidate to host a task after the sorting process.
 
 ## Workflow
 
