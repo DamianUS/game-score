@@ -328,7 +328,7 @@ object Simulation {
 
     // ------------------Omega------------------
     val numOmegaServiceSchedsRange = Seq(1)
-    val numOmegaBatchSchedsRange = Seq(1)
+    val numOmegaBatchSchedsRange = Seq(4)
 
     val omegaSimulatorSetups =
       for (numOmegaServiceScheds <- numOmegaServiceSchedsRange;
@@ -340,8 +340,8 @@ object Simulation {
           conflictMode <- Seq("resource-fit");
           //conflictMode <- Seq("sequence-numbers");
           //transactionMode <- Seq("all-or-nothing")) yield {
-          //transactionMode <- Seq("all-or-nothing", "incremental")) yield {
-          transactionMode <- Seq("incremental")) yield {
+          transactionMode <- Seq("all-or-nothing", "incremental")) yield {
+          //transactionMode <- Seq("incremental")) yield {
             new OmegaSimulatorDesc(
               generateOmegaSchedulerDescs(numOmegaServiceScheds,
                 numOmegaBatchScheds),
@@ -363,8 +363,8 @@ object Simulation {
       }
 
     // ------------------Mesos------------------
-    // val mesosSimulatorDesc = mesosSimulator4BatchDesc
-    val mesosSimulatorDesc = mesosSimulator1BatchDesc
+      val mesosSimulatorDesc = mesosSimulator4BatchDesc
+    //val mesosSimulatorDesc = mesosSimulator1BatchDesc
 
     // val mesosSchedulerWorkloadMap = mesos4BatchSchedulerWorkloadMap
     val mesosSchedulerWorkloadMap = mesos1BatchSchedulerWorkloadMap
@@ -378,9 +378,9 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = true
-    val runMesos = false
-    val runOmega = false
+    val runMonolithic = false
+    val runMesos = true
+    val runOmega = true
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
@@ -426,20 +426,23 @@ object Simulation {
     val distributionOnThresholdRange = (0.01 :: 0.1 :: 0.9 :: 0.99 ::Nil)
     val defaultOnDistributionThreshold = 0.5
 */
-    val distributionWindowRange = (25 :: 50 :: 100 :: Nil)
+    val distributionWindowRange = (100 :: 500 :: 1000 :: Nil)
     val defaultWindowSize = 100
 
-    val exponentialOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
+    //val exponentialOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
+    val exponentialOffDistributionThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
     val exponentialOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
     val defaultExponentialOffDistributionThreshold = 0.05
     val defaultExponentialOnDistributionThreshold = 0.5
 
-    val gammaOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 ::Nil)
+    //val gammaOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 ::Nil)
+    val gammaOffDistributionThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
     val gammaOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
     val defaultGammaOffDistributionThreshold = 0.05
     val defaultGammaOnDistributionThreshold = 0.5
 
-    val dataCenterLostFactorRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
+    //val dataCenterLostFactorRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
+    val dataCenterLostFactorRange = (0.15 :: 0.16 :: 0.17 :: 0.18 :: 0.19 :: 0.20 :: Nil)
     val dataCenterLostFactorDefault = 0.2
 
     val sweepMaxLoadOffRange = true
@@ -888,7 +891,7 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillCpuLim = Map("PrefillBatch" -> 0.55, "PrefillService" -> 0.55, "PrefillBatchService" -> 0.55)
+    val prefillCpuLim = Map("PrefillBatch" -> 0.4, "PrefillService" -> 0.4, "PrefillBatchService" -> 0.4)
     val doLogging = false
     val timeout = 60.0 * 60.0 *10000.0 // In seconds.
 

@@ -37,6 +37,8 @@ import scala.collection.mutable.IndexedSeq
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.math.distribution.ExponentialDistributionImpl
 
+import scala.util.Random
+
 /**
   * A simple, generic, discrete event simulator. A modified version of the
   * basic discrete event simulator code from Programming In Scala, pg 398,
@@ -2150,6 +2152,123 @@ class TraceAllWLGenerator(val workloadName: String,
     }
     assert(numJobs == workload.numJobs)
     workload
+  }
+}
+
+
+
+class TraceReadWLGenerator(val workloadName: String,
+                           traceFileName: String,
+                          maxCpusPerTask: Double,
+                          maxMemPerTask: Double)
+  extends WorkloadGenerator {
+  assert(workloadName.equals("Batch") || workloadName.equals("Service"))
+  // Build the distributions from the input trace textfile that we'll
+  // use to generate random job interarrival times.
+  // Traza:
+
+  def newWorkload(timeWindow: Double,
+                  maxCpus: Option[Double] = None,
+                  maxMem: Option[Double] = None,
+                  updatedAvgJobInterarrivalTime: Option[Double] = None)
+  : Workload = this.synchronized {
+    assert(timeWindow >= 0)
+    assert(maxCpus == None)
+    assert(maxMem == None)
+    val workload = new Workload(workloadName)
+
+    println(("Reading tracefile %s and building the workload").format(traceFileName))
+    val traceSrc = io.Source.fromFile(traceFileName)
+    val lines = traceSrc.getLines()
+    lines.foreach(line => {
+      val parsedLine = line.split(" ")
+      // Definir formato de traza: Columna 1: Submission time, Columna 2: Num tasks, Columna 3: duración, Columna 4: CpusPerTask, Columna 5: Mem Per task. Separados por espacios. Cada línea un job
+      val job = Job(UniqueIDGenerator.getUniqueID(),
+        parsedLine(0).toDouble,
+        parsedLine(1).toInt,
+        parsedLine(2).toDouble,
+        workloadName,
+        parsedLine(3).toDouble,
+        parsedLine(4).toDouble)
+      workload.addJob(job)
+    })
+    workload
+  }
+}
+
+
+class DailyExpExpExpWorkloadGenerator(val workloadName: String,
+                                 initAvgJobInterarrivalTime: Double,
+                                 avgTasksPerJob: Double,
+                                 avgJobDuration: Double,
+                                 avgCpusPerTask: Double,
+                                 avgMemPerTask: Double)
+  extends WorkloadGenerator{
+  val numTasksGenerator =
+    new ExponentialDistributionImpl(avgTasksPerJob.toFloat)
+  val durationGenerator = new ExponentialDistributionImpl(avgJobDuration)
+
+  def newJob(submissionTime: Double): Job = {
+    // Don't allow jobs with zero tasks.
+    var dur = durationGenerator.sample()
+    while (dur <= 0.0)
+      dur = durationGenerator.sample()
+    Job(UniqueIDGenerator.getUniqueID(),
+      submissionTime,
+      // Use ceil to avoid jobs with 0 tasks.
+      math.ceil(numTasksGenerator.sample().toFloat).toInt,
+      dur,
+      workloadName,
+      avgCpusPerTask,
+      avgMemPerTask)
+  }
+
+  /**
+    * Synchronized so that Experiments, which can share this WorkloadGenerator,
+    * can safely call newWorkload concurrently.
+    */
+  def newWorkload(timeWindow: Double,
+                  maxCpus: Option[Double] = None,
+                  maxMem: Option[Double] = None,
+                  updatedAvgJobInterarrivalTime: Option[Double] = None)
+  : Workload = this.synchronized {
+    assert(maxCpus == None)
+    assert(maxMem == None)
+    assert(timeWindow >= 0)
+    // Create the job-interarrival-time number generator using the
+    // parameter passed in, if any, else use the default parameter.
+    val avgJobInterarrivalTime =
+    updatedAvgJobInterarrivalTime.getOrElse(initAvgJobInterarrivalTime)
+    var interarrivalTimeGenerator =
+      new ExponentialDistributionImpl(avgJobInterarrivalTime)
+    val workload = new Workload(workloadName)
+    // create a new list of jobs for the experiment runTime window
+    // using the current WorkloadGenerator.
+    val interArrivalSample = interarrivalTimeGenerator.sample()
+    var nextJobSubmissionTime = interArrivalSample / (getCoeff(interArrivalSample))
+    while (nextJobSubmissionTime < timeWindow) {
+      val job = newJob(nextJobSubmissionTime)
+      assert(job.workloadName == workload.name)
+      workload.addJob(job)
+      val interArrivalSampleIter = interarrivalTimeGenerator.sample()
+      nextJobSubmissionTime += interArrivalSampleIter / (getCoeff(nextJobSubmissionTime+interArrivalSample))
+    }
+    workload
+  }
+
+  def getCoeff(submissionTime: Double): Double = {
+    var timeCofficients = (0.2 :: 0.6 :: 0.3 :: 0.6 :: 0.9 :: 0.7 :: 1.2 :: 1.0 :: 1.3 :: 1.4 :: 2.0 :: 1.1 :: 1.7 :: 1.4 :: 1.0 :: 1.2 :: 0.8 :: 0.6 :: 0.4 :: 0.3 :: 0.2 :: 0.2 :: 0.4 :: 0.2 :: Nil)
+    timeCofficients = timeCofficients.map( x => x*4 )
+    val secondsSubmission = submissionTime % 86400.0
+    val coeffIndex = (secondsSubmission/3600.0).floor.toInt
+    /*val random = new Random();
+    var correctedCoeff = random.nextGaussian()*(timeCofficients(coeffIndex)/1.3)+timeCofficients(coeffIndex);
+    while (correctedCoeff <= 0.0){
+      correctedCoeff = random.nextGaussian()*(timeCofficients(coeffIndex)/1.3)+timeCofficients(coeffIndex);
+    }*/
+    val correctedCoeff = timeCofficients(coeffIndex);
+
+    correctedCoeff
   }
 }
 
