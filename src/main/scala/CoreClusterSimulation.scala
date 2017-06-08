@@ -175,7 +175,7 @@ class ClusterSimulator(val cellState: CellState,
 
   def addCacheJob(tuple : Tuple2[Double, Job]): Unit = {
     if(jobCache.size > 0)
-      assert(tuple._1 > jobCache.last._1, "Intentando añadir un job a la cache cuyo tiempo de inicio es anterior al ultimo encontrado")
+      assert(tuple._1 >= jobCache.last._1, "Intentando añadir un job a la cache cuyo tiempo de inicio es anterior al ultimo encontrado")
     jobCache = jobCache :+ tuple
     if(jobCache.size > 100){
       jobCache = jobCache.drop(1)
