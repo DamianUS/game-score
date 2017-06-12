@@ -26,7 +26,7 @@ While the simulator will simulate job arrival, scheduler decision making and tas
 
 **Scheduler**: Given a **Job** and a **CellState**, find machines that the tasks of the job will fit into, and allocate the resources on that machine to those tasks, accounting those resoures to this scheduler, modifying the provided **CellState** (by calling apply() on the created **ClaimDelta**s). However, this class does not implement the specifics of each scheduling framework (Monolithic, Mesos, Omega) scheduling logic. This logic is present in child classes: **MonolithicScheduler**, **MesosScheduler**, and **OmegaScheduler**, which handle the arrival of new jobs from the simulator's agenda and the actual scheduling process.
  
- ADDED BY US (can be found in /src/main/scala/efficiency):
+Energy-efficiency related concepts: (can be found in **/src/main/scala/efficiency**):
  
 **Power Off Policy**: The strategy used in order to shut down a machine when a task is finished (if there are no more tasks running in this server). The **Power Off Policy** is composed of: A **Decision** that tells whether a machine should be turned off; and an **Action** that actually performs the shut-down process.  
 
@@ -49,7 +49,7 @@ While the simulator will simulate job arrival, scheduler decision making and tas
     * Which scheduling frameworks must be executed
     * Prefill (amount of charge that will be executed as a minimum during all the execution time) charge limit
     
-**ADDED BY US**
+**Energy-efficiency related configuration**:
     
     * Which sorting policies must be executed
     * Which picking policies must be executed
@@ -67,48 +67,62 @@ While the simulator will simulate job arrival, scheduler decision making and tas
 
 ## Scheduling Logic
 
-### Monolithic
+### Monolithic (**/src/main/scala/MonolithicSimulation.scala**)
 
 As an omniscient and only scheduler, the monolithic scheduling framework checks to see if there is currently a job in this scheduler's job queue. If there is, and this scheduler is not currently scheduling a job, then pop that job off of the queue and "begin scheduling it". Scheduling a job consists of setting this scheduler's state to scheduling = true, and adding a finishSchedulingJobAction to the simulators event queue by calling afterDelay(). The "scheduling process" (i.e. deciding which machine should host a given task) has been divided into the "sorting" and "picking" subprocesses which are executed by the **Sorter** and **Picker** passed as parameters to the **Simulator**.
 
-### Mesos
+### Mesos (**/src/main/scala/MesosSimulation.scala**)
 
 The mesos scheduling logic ( https://cs.stanford.edu/~matei/papers/2011/nsdi_mesos.pdf summarizing a pessimistic locking concurrent strategy) is coded in **MesosAllocator** and **MesosScheduler** classes. When a job arrives, the allocator is notified, so that it can make us offers until we notify it that we don't have any more jobs, at which time it can stop sending us offers.
 
-### Omega
+### Omega (**/src/main/scala/OmegaSimulation.scala**)
 
 The omega scheduling logic ( summarizing an optimistic locking concurrent strategy) is coded in **OmegaScheduler** class. When a job arrives, it creates an internal copy of the **CellState**, it schedules the job using this (probably out of date) internal copy of the **CellState** and it submits a transaction to the common (real) **CellState** for it. If not all tasks in the job are successfully committed, put it back in the pendingQueue to be scheduled again.
 
 
-## Power off policies families
+## Power off policies families (**/src/main/scala/efficiency/power_off_policies**)
 
-### Never Power Off
+### Never Power Off (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/NoPowerOffDecision.scala**)
 
 This power-off decision policy disables the power-off process, and therefore represents the current scenario.
 
-### Always Power Off
+### Always Power Off (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/AlwzPowerOffDecision.scala**)
 
 This power-off decision policy will shut down every machine after freeing all the resources under use, whenever possible. 
 
-### Random Power Off
+### Random Power Off (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/RandomPowerOffDecision.scala**)
 
 This policy switches off and randomly leaves the resources idle by following a Bernoulli distribution whose parameter is equal to 0.5. This policy is useful to ascertain the accuracy of the predictions made by the following probabilistic policies.
 
-### Load
+### Load (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/load/LoadMaxPowerOffDecision.scala**)
 
 This power-off decision policy takes into account the maximum resource pressure of the data-center load and compares it to a given threshold. If the current load is less than this given threshold, then the machine will be powered off.
 
-### Security Margin
+### Security Margin (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/security_margin/FreeCapacityMinMarginPowerOffDecision.scala**)
 
 This power-off decision policy assures that at least a given percentage of resources is turned on, free, and available in order to respond to peak loads.
 
-### Exponential
+### Exponential (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/ExponentialPowerOffDecision.scala**)
 
 Under the hypothesis that the arrival of new jobs that could harm the data center performance follows an Exponential distribution, this energy policy attempts to predict the arrival of new jobs that can harm the data-center performance due to the lack of sufficient resources for their execution.
 
-### Gamma
+### Gamma (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/GammaPowerOffDecision.scala**)
 
 Under the hypothesis that the arrival of new jobs follows a Gamma distribution, this energy policy attempts to predict the arrival of the amount of new jobs required to oversubscribe the available resources
+
+## Sorting (**/src/main/scala/efficiency/ordering_cellstate_resources_policies**)
+
+These agents are responsible for computing the suitability of every machine in the data center in order to place a task thereon, and for sorting these machines in terms of this suitability (to create an array of ordered machines as an attribute of the **CellState**). Once all the machines are sorted in terms of these strategies, the **Picker** can choose the more suitable machine to host the incoming tasks.
+ accept new jobs. To this end, the level of occupation of a machine is denoted by its CPU and RAM load in a range of [0,1], where 0 represents an idle machine, and 1 a fully occupied machine.
+
+## Picking (**/src/main/scala/efficiency/pick_cellstate_resources**)
+
+These agents are responsible for choosing a candidate from a previously created candidate pool in order to place a task thereon. The most relevant picker can be found in (**/src/main/scala/efficiency/pick_cellstate_resources/SpreadMarginReversePickerCandidatePower.scala**). 
+
+This approach is of major importance in avoiding resource conflicts and eliminating resource contention in distributed shared-state schedulers, such as Omega, which can arise due to the same machine being picked from various concurrent schedulers. 
+One way that this can be achieved is by adding a certain randomness to the picking-decision process. This policy selects the machines with the highest level of occupation from the available candidate pool that can host the task, but once the most occupied machine is found, a machine pivot that meets a specified safety margin is selected.
+
+This can be very useful in the prevention of runtime resource oversubscription.
 
 ## Downloading, building, and running
 
