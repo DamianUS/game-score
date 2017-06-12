@@ -82,38 +82,38 @@ The omega scheduling logic ( summarizing an optimistic locking concurrent strate
 
 ## Power off policies families (**/src/main/scala/efficiency/power_off_policies**)
 
-### Never Power Off (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/NoPowerOffDecision.scala**)
+### Never Power Off
 
-This power-off decision policy disables the power-off process, and therefore represents the current scenario.
+This power-off decision policy disables the power-off process, and therefore represents the current scenario. It can be found in (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/NoPowerOffDecision.scala**)
 
-### Always Power Off (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/AlwzPowerOffDecision.scala**)
+### Always Power Off 
 
-This power-off decision policy will shut down every machine after freeing all the resources under use, whenever possible. 
+This power-off decision policy will shut down every machine after freeing all the resources under use, whenever possible. It can be found in (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/AlwzPowerOffDecision.scala**) 
 
-### Random Power Off (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/RandomPowerOffDecision.scala**)
+### Random Power Off 
 
-This policy switches off and randomly leaves the resources idle by following a Bernoulli distribution whose parameter is equal to 0.5. This policy is useful to ascertain the accuracy of the predictions made by the following probabilistic policies.
+This policy switches off and randomly leaves the resources idle by following a Bernoulli distribution whose parameter is equal to 0.5. This policy is useful to ascertain the accuracy of the predictions made by the following probabilistic policies. It can be found in (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/RandomPowerOffDecision.scala**)
 
-### Load (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/load/LoadMaxPowerOffDecision.scala**)
+### Load 
 
-This power-off decision policy takes into account the maximum resource pressure of the data-center load and compares it to a given threshold. If the current load is less than this given threshold, then the machine will be powered off.
+This power-off decision policy takes into account the maximum resource pressure of the data-center load and compares it to a given threshold. If the current load is less than this given threshold, then the machine will be powered off. It can be found in (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/load/LoadMaxPowerOffDecision.scala**)
 
-### Security Margin (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/security_margin/FreeCapacityMinMarginPowerOffDecision.scala**)
+### Security Margin 
 
-This power-off decision policy assures that at least a given percentage of resources is turned on, free, and available in order to respond to peak loads.
+This power-off decision policy assures that at least a given percentage of resources is turned on, free, and available in order to respond to peak loads. It can be found in (**/src/main/scala/efficiency/power_off_policies/decision/deterministic/security_margin/FreeCapacityMinMarginPowerOffDecision.scala**)
 
-### Exponential (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/ExponentialPowerOffDecision.scala**)
+### Exponential
 
-Under the hypothesis that the arrival of new jobs that could harm the data center performance follows an Exponential distribution, this energy policy attempts to predict the arrival of new jobs that can harm the data-center performance due to the lack of sufficient resources for their execution.
+Under the hypothesis that the arrival of new jobs that could harm the data center performance follows an Exponential distribution, this energy policy attempts to predict the arrival of new jobs that can harm the data-center performance due to the lack of sufficient resources for their execution. It can be found in (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/ExponentialPowerOffDecision.scala**)
 
-### Gamma (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/GammaPowerOffDecision.scala**)
+### Gamma 
 
-Under the hypothesis that the arrival of new jobs follows a Gamma distribution, this energy policy attempts to predict the arrival of the amount of new jobs required to oversubscribe the available resources
+Under the hypothesis that the arrival of new jobs follows a Gamma distribution, this energy policy attempts to predict the arrival of the amount of new jobs required to oversubscribe the available resources. It can be found in (**/src/main/scala/efficiency/power_off_policies/decision/probabilistic/GammaPowerOffDecision.scala**)
 
 ## Sorting (**/src/main/scala/efficiency/ordering_cellstate_resources_policies**)
 
 These agents are responsible for computing the suitability of every machine in the data center in order to place a task thereon, and for sorting these machines in terms of this suitability (to create an array of ordered machines as an attribute of the **CellState**). Once all the machines are sorted in terms of these strategies, the **Picker** can choose the more suitable machine to host the incoming tasks.
- accept new jobs. To this end, the level of occupation of a machine is denoted by its CPU and RAM load in a range of [0,1], where 0 represents an idle machine, and 1 a fully occupied machine.
+ accept new jobs. To this end, the level of occupation of a machine is denoted by its CPU and RAM load in a range of [0,1], where 0 represents an idle machine, and 1 a fully occupied machine. It can be found in (**/src/main/scala/efficiency/ordering_cellstate_resources_policies/PowerStateLoadSorter.scala**)
 
 ## Picking (**/src/main/scala/efficiency/pick_cellstate_resources**)
 
