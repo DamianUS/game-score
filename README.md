@@ -20,11 +20,11 @@ While the simulator will simulate job arrival, scheduler decision making and tas
 
 **Simulator**: The actual simulator that can be run. IT has the current simulation time and the job that must be executed. This is the superclass of one of the most important classes of the simulator, i.e.: **ClusterSimulator**.
 
-**ClusterSimulator**: Child of **Simulator**, this class receives the **CellState**, the set of **Scheduler**s, **Workload**s, and (added by us), the **Sorter**, **Picker**, **Power Off Policy** and **Power On Policy**  used in that experiment. This class hold almost all the energy-efficiency related data of the simulation, i.e: average cpu and memory utilization, average number of machines on, kWh saved per shut-down, and so on. This class does measure the cluster state every X seconds in order to produce the results.  
+**ClusterSimulator**: Child of **Simulator**, this class receives the **CellState**, the set of **Scheduler**s, **Workload**s, and (added by us), the **Sorter**, **Picker**, **Power Off Policy** and **Power On Policy**  used in that experiment. This class hold almost all the energy-efficiency related data of the simulation, i.e: average cpu and memory utilization, average number of machines on, kWh saved per shut-down, and so on. This class does measure the cluster state every X seconds in order to produce the results. 
 
 **Workload**: Set of jobs of one type (Batch or Service). This class has the aggregated attributes as queue times, average inter arrival times, and so on.
 
-**Scheduler**:
+**Scheduler**: Given a **Job** and a **CellState**, find machines that the tasks of the job will fit into, and allocate the resources on that machine to those tasks, accounting those resoures to this scheduler, modifying the provided **CellState** (by calling apply() on the created **ClaimDelta**s). However, this class does not implement the specifics of each scheduling framework (Monolithic, Mesos, Omega) scheduling logic. This logic is present in child classes: **MonolithicScheduler**, **MesosScheduler**, and **OmegaScheduler**, which handle the arrival of new jobs from the simulator's agenda and the actual scheduling process.
  
  ADDED BY US (can be found in /src/main/scala/efficiency):
  
@@ -63,6 +63,52 @@ While the simulator will simulate job arrival, scheduler decision making and tas
 4)We will get a folder with the .protobuf files (you can see in /src/protocolbuffers/cluster_simulation_protos.proto the structure and in https://developers.google.com/protocol-buffers/ how it works if you are not familiar with this format) and the Simulation.scala file.
 
 5).csv files and graphics may be then generated from the .protobuf files (in /scr/main/python. The more interesting is generate-txt-from-protobuff.py). Our developed graphing scripts can be found in: https://github.com/DamianUS/graphs-scripts
+
+
+## Scheduling Logic
+
+### Monolithic
+
+As an omniscient and only scheduler, the monolithic scheduling framework checks to see if there is currently a job in this scheduler's job queue. If there is, and this scheduler is not currently scheduling a job, then pop that job off of the queue and "begin scheduling it". Scheduling a job consists of setting this scheduler's state to scheduling = true, and adding a finishSchedulingJobAction to the simulators event queue by calling afterDelay(). The "scheduling process" (i.e. deciding which machine should host a given task) has been divided into the "sorting" and "picking" subprocesses which are executed by the **Sorter** and **Picker** passed as parameters to the **Simulator**.
+
+### Mesos
+
+The mesos scheduling logic ( https://cs.stanford.edu/~matei/papers/2011/nsdi_mesos.pdf summarizing a pessimistic locking concurrent strategy) is coded in **MesosAllocator** and **MesosScheduler** classes. When a job arrives, the allocator is notified, so that it can make us offers until we notify it that we don't have any more jobs, at which time it can stop sending us offers.
+
+### Omega
+
+The omega scheduling logic ( summarizing an optimistic locking concurrent strategy) is coded in **OmegaScheduler** class. When a job arrives, it creates an internal copy of the **CellState**, it schedules the job using this (probably out of date) internal copy of the **CellState** and it submits a transaction to the common (real) **CellState** for it. If not all tasks in the job are successfully committed, put it back in the pendingQueue to be scheduled again.
+
+
+## Power off policies families
+
+### Never Power Off
+
+This power-off decision policy disables the power-off process, and therefore represents the current scenario.
+
+### Always Power Off
+
+This power-off decision policy will shut down every machine after freeing all the resources under use, whenever possible. 
+
+### Random Power Off
+
+This policy switches off and randomly leaves the resources idle by following a Bernoulli distribution whose parameter is equal to 0.5. This policy is useful to ascertain the accuracy of the predictions made by the following probabilistic policies.
+
+### Load
+
+This power-off decision policy takes into account the maximum resource pressure of the data-center load and compares it to a given threshold. If the current load is less than this given threshold, then the machine will be powered off.
+
+### Security Margin
+
+This power-off decision policy assures that at least a given percentage of resources is turned on, free, and available in order to respond to peak loads.
+
+### Exponential
+
+Under the hypothesis that the arrival of new jobs that could harm the data center performance follows an Exponential distribution, this energy policy attempts to predict the arrival of new jobs that can harm the data-center performance due to the lack of sufficient resources for their execution.
+
+### Gamma
+
+Under the hypothesis that the arrival of new jobs follows a Gamma distribution, this energy policy attempts to predict the arrival of the amount of new jobs required to oversubscribe the available resources
 
 ## Downloading, building, and running
 
