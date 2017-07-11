@@ -792,7 +792,8 @@ abstract class Scheduler(val name: String,
           cellState.machineSeqNums(currMachID),
           if (cellState.machinesHeterogeneous && job.workloadName == "Batch") job.taskDuration * cellState.machinesPerformance(currMachID) else job.taskDuration,
           job.cpusPerTask,
-          job.memPerTask)
+          job.memPerTask,
+          job = job)
         claimDelta.apply(cellState = cellState, locked = false)
         claimDeltas += claimDelta
         numRemainingTasks -= 1
@@ -899,7 +900,8 @@ class ClaimDelta(val scheduler: Scheduler,
                  val machineSeqNum: Int,
                  val duration: Double,
                  val cpus: Double,
-                 val mem: Double) {
+                 val mem: Double,
+                 val job: Job = null) {
   /**
     * Claim {@code cpus} and {@code mem} from {@code cellState}.
     * Increments the sequenceNum of the machine with ID referenced
@@ -909,6 +911,10 @@ class ClaimDelta(val scheduler: Scheduler,
     this.synchronized{
       cellState.machineSeqNums(machineID) += 1
       cellState.assignResources(scheduler, machineID, cpus, mem, locked)
+      if(!locked && job.timeStarted == 0.0) {
+        assert(job != null, "Job nulo cuando aplica un claimDelta no locked")
+        job.timeStarted = scheduler.simulator.currentTime
+      }
     }
     // Mark that the machine has changed, used for testing for conflicts
     // when using optimistic concurrency.
@@ -917,6 +923,10 @@ class ClaimDelta(val scheduler: Scheduler,
   def unApply(cellState: CellState, locked: Boolean = false): Unit = {
     this.synchronized{
       cellState.freeResources(scheduler, machineID, cpus, mem, locked)
+    }
+    if(!locked && (job.timeFinished == 0.0 || job.timeFinished < scheduler.simulator.currentTime)){
+      assert(job != null, "Job nulo cuando libera un claimDelta no locked")
+      job.timeFinished = scheduler.simulator.currentTime
     }
   }
 }
@@ -1399,6 +1409,11 @@ case class Job(id: Long,
   var wastedTimeScheduling: Double = 0.0
   var wastedTimeSchedulingPowering: Double = 0.0
   var turnOnRequests: Seq[Double] = Seq[Double]()
+
+  var timeStarted: Double = 0.0
+  var timeFinished: Double = 0.0
+  //TODO: remove this static total simulation time
+  def makespan = if (numSchedulingAttempts == 0 || unscheduledTasks > 0) 0.0 else if (timeFinished == 0.0) 86400.0 - timeStarted else timeFinished - timeStarted
 
   def cpusStillNeeded: Double = cpusPerTask * unscheduledTasks
   def memStillNeeded: Double = memPerTask * unscheduledTasks
