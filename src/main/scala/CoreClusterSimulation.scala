@@ -673,7 +673,7 @@ abstract class Scheduler(val name: String,
   val randomNumberGenerator = new util.Random(Seed())
   //var pastJobs = new mutable.LinkedHashMap[Long, Tuple3[Double, Job, Boolean]]()
   var pastJobs= new mutable.LinkedHashMap[Long, Tuple2[Double, Job]]()
-
+  val numMachinesBlackList = numMachinesToBlackList
   override
   def toString = {
     name
@@ -769,6 +769,7 @@ abstract class Scheduler(val name: String,
     assert(job.memPerTask <= cellState.memPerMachine,
       "Looking for machine with %f mem, but machines only have %f mem."
         .format(job.memPerTask, cellState.memPerMachine))
+/*
     val claimDeltas = collection.mutable.ListBuffer[ClaimDelta]()
 
     // Cache candidate pools in this scheduler for performance improvements.
@@ -799,7 +800,8 @@ abstract class Scheduler(val name: String,
         numRemainingTasks -= 1
       }
     }
-    return claimDeltas
+    */
+    return simulator.picker.schedule(cellState, job, this, simulator)
   }
 
   def cleanPastJobs(size: Int): Unit = {

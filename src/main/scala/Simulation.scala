@@ -378,7 +378,7 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = false
+    val runMonolithic = true
     val runMesos = true
     val runOmega = true
 
@@ -387,7 +387,9 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker] (RandomPicker)
     //val pickingPolicies = List[CellStateResourcesPicker] (BasicReversePickerCandidatePower)
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
-    val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
+    //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
+    //Krakow
+    val pickingPolicies = List[CellStateResourcesPicker](GASimplePickerCandidatePower)
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
@@ -468,16 +470,16 @@ object Simulation {
     val sweepGammaNormalLostFactor = true
     val sweepExponentialNormalLostFactor = true
     //Power Off
-    val runMaxLoadOff = true
+    val runMaxLoadOff = false
     val runMeanLoadOff = false
-    val runMinFreeCapacity = true
+    val runMinFreeCapacity = false
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
-    val runAlwzOff = true
-    val runRandom = true
-    val runGamma = true
-    val runExp = true
+    val runAlwzOff = false
+    val runRandom = false
+    val runGamma = false
+    val runExp = false
     val runExpNormal = false
     val runGammaNormal = false
 
