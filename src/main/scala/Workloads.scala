@@ -73,7 +73,8 @@ object Workloads {
     */
   val exampleCellStateDesc = new CellStateDesc(numMachines = 10000,
     cpusPerMachine = 4,
-    memPerMachine = 8)
+    memPerMachine = 8,
+    machinesHet = true)
 
 /*
   /**

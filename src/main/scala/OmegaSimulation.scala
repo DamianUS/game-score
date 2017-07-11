@@ -87,7 +87,8 @@ class OmegaSimulatorDesc(
       cellStateDesc.cpusPerMachine,
       cellStateDesc.memPerMachine,
       conflictMode,
-      transactionMode)
+      transactionMode,
+      machinesHet = cellStateDesc.machinesHet)
     println("Creating new OmegaSimulator with schedulers %s."
       .format(schedulers.values.map(_.toString).mkString(", ")))
     println("Setting OmegaSimulator(%s, %s)'s common cell state to %d"

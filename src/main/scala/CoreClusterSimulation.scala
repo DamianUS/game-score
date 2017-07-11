@@ -790,7 +790,7 @@ abstract class Scheduler(val name: String,
         val claimDelta = new ClaimDelta(this,
           currMachID,
           cellState.machineSeqNums(currMachID),
-          job.taskDuration,
+          if (cellState.machinesHeterogeneous && job.workloadName == "Batch") job.taskDuration * cellState.machinesPerformance(currMachID) else job.taskDuration,
           job.cpusPerTask,
           job.memPerTask)
         claimDelta.apply(cellState = cellState, locked = false)
@@ -923,7 +923,8 @@ class ClaimDelta(val scheduler: Scheduler,
 
 class CellStateDesc(val numMachines: Int,
                     val cpusPerMachine: Double,
-                    val memPerMachine: Double)
+                    val memPerMachine: Double,
+                    val machinesHet : Boolean = false)
 
 
 class CellState(val numMachines: Int,
@@ -933,7 +934,8 @@ class CellState(val numMachines: Int,
                 val transactionMode: String,
                 val powerOnTime : Double = 30.0,
                 val powerOffTime : Double = 10.0,
-                val mustPopulateLoadFactor : Boolean = true ) {
+                val mustPopulateLoadFactor : Boolean = true,
+                val machinesHet : Boolean = false) {
   assert(conflictMode.equals("resource-fit") ||
     conflictMode.equals("sequence-numbers"),
     "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
@@ -953,6 +955,8 @@ class CellState(val numMachines: Int,
   var machinesLoad = new Array[Int] (numMachines)
   var machinesLoadFactor = populateMachinesLoadFactorMap()
   var machinesLoadOrdered = true;
+  val machinesPerformance = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
+  val machinesHeterogeneous = machinesHet
 
   def populateMachinesLoadFactorMap(): HashMap[Int,Double] ={
     val map = HashMap[Int,Double]()
@@ -1205,7 +1209,8 @@ class CellState(val numMachines: Int,
       memPerMachine,
       conflictMode,
       transactionMode,
-      mustPopulateLoadFactor = false)
+      mustPopulateLoadFactor = false,
+      machinesHet = this.machinesHet)
     Array.copy(src = allocatedCpusPerMachine,
       srcPos = 0,
       dest = newCellState.allocatedCpusPerMachine,

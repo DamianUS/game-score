@@ -88,7 +88,8 @@ class MesosSimulatorDesc(
       cellStateDesc.cpusPerMachine,
       cellStateDesc.memPerMachine,
       conflictMode = "resource-fit",
-      transactionMode = "all-or-nothing")
+      transactionMode = "all-or-nothing",
+      machinesHet = cellStateDesc.machinesHet)
 
     val allocator =
       new MesosAllocator(allocatorConstantThinkTime)
