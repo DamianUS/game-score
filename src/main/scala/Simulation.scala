@@ -389,7 +389,8 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, BasicReversePickerCandidatePower, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.01))
     //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
     //Krakow
-    val pickingPolicies = List[CellStateResourcesPicker](GASimplePickerCandidatePower)
+    //val pickingPolicies = List[CellStateResourcesPicker](GASimplePickerCandidatePower)
+    val pickingPolicies = List[CellStateResourcesPicker](GreedyMakespanPickerCandidatePower)
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))

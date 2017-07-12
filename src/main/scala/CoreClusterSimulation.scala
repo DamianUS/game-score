@@ -967,8 +967,10 @@ class CellState(val numMachines: Int,
   var machinesLoad = new Array[Int] (numMachines)
   var machinesLoadFactor = populateMachinesLoadFactorMap()
   var machinesLoadOrdered = true;
-  val machinesPerformance = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
   val machinesHeterogeneous = machinesHet
+  val machinesPerformance = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
+  val machinesPerformanceOrdered = populateMachinesPerformance()
+
 
   def populateMachinesLoadFactorMap(): HashMap[Int,Double] ={
     val map = HashMap[Int,Double]()
@@ -979,6 +981,16 @@ class CellState(val numMachines: Int,
       machinesLoad = map.keySet.toArray
     }
     map
+  }
+
+  def populateMachinesPerformance(): Array[Int] ={
+    val map = HashMap[Int,Double]()
+    if(machinesHeterogeneous){
+      for (a <- 0 to numMachines-1){
+        map.put(a, machinesPerformance(a))
+      }
+    }
+    map.toSeq.sortBy(_._2).map(_._1).toArray
   }
 
   // Map from scheduler name to number of cpus assigned to that scheduler.
@@ -1415,7 +1427,7 @@ case class Job(id: Long,
   var timeStarted: Double = 0.0
   var timeFinished: Double = 0.0
   //TODO: remove this static total simulation time
-  def makespan = if (numSchedulingAttempts == 0 || unscheduledTasks > 0) 0.0 else if (timeFinished == 0.0) 86400.0 - timeStarted else timeFinished - timeStarted
+  def makespan = if (numSchedulingAttempts == 0 || unscheduledTasks > 0) 0.0 else if (timeFinished == 0.0) 86400.0*7 - timeStarted else timeFinished - timeStarted
 
   def cpusStillNeeded: Double = cpusPerTask * unscheduledTasks
   def memStillNeeded: Double = memPerTask * unscheduledTasks
