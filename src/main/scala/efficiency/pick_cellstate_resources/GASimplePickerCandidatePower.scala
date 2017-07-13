@@ -137,6 +137,6 @@ object GASimplePickerCandidatePower extends CellStateResourcesPicker{
     }
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePoolVar)
   }
-  override val name: String = "reverse-power-picker-candidate"
+  override val name: String = "genetic-simple-picker-candidate"
 
 }

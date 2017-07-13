@@ -379,8 +379,8 @@ object Simulation {
     val mesosWorkloadToSweep = "Service"
 
     val runMonolithic = true
-    val runMesos = true
-    val runOmega = true
+    val runMesos = false
+    val runOmega = false
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
@@ -390,7 +390,7 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07))
     //Krakow
     //val pickingPolicies = List[CellStateResourcesPicker](GASimplePickerCandidatePower)
-    val pickingPolicies = List[CellStateResourcesPicker](GreedyMakespanPickerCandidatePower)
+    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, GASimplePickerCandidatePower, GreedyMakespanPickerCandidatePower)
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
@@ -477,7 +477,7 @@ object Simulation {
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
-    val runAlwzOff = false
+    val runAlwzOff = true
     val runRandom = false
     val runGamma = false
     val runExp = false

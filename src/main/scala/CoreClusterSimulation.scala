@@ -1427,7 +1427,7 @@ case class Job(id: Long,
   var timeStarted: Double = 0.0
   var timeFinished: Double = 0.0
   //TODO: remove this static total simulation time
-  def makespan = if (numSchedulingAttempts == 0 || unscheduledTasks > 0) 0.0 else if (timeFinished == 0.0) 86400.0*7 - timeStarted else timeFinished - timeStarted
+  def makespan = if (timeFinished == 0.0) 86400.0*7 - timeStarted else timeFinished - timeStarted
 
   def cpusStillNeeded: Double = cpusPerTask * unscheduledTasks
   def memStillNeeded: Double = memPerTask * unscheduledTasks
@@ -1560,6 +1560,39 @@ class Workload(val name: String,
         "percentile value at position %d of %d: %f.")
         .format(((queueTimesArray.length) * percentile).toInt,
           queueTimesArray.length,
+          result))
+      result
+    } else {
+      -1.0
+    }
+  }
+
+  def avgJobMakespan: Double = {
+    // println("Computing avgJobQueueTimeTillFullyScheduled.")
+    val scheduledJobs = jobs.filter(_.numSchedulingAttempts > 0)
+    if (scheduledJobs.length > 0) {
+      val makespans = scheduledJobs.map(_.makespan).sum
+      makespans / scheduledJobs.length
+    } else {
+      -1.0
+    }
+  }
+
+
+  def jobMakespanPercentile(percentile: Double): Double = {
+    assert(percentile <= 1.0 && percentile >= 0)
+    val scheduled = jobs.filter(_.numSchedulingAttempts > 0)
+    if (scheduled.length > 0) {
+      val makespansArray = new Array[Double](scheduled.length)
+      scheduled.map(_.makespan)
+        .copyToArray(makespansArray)
+      util.Sorting.quickSort(makespansArray)
+      val result =
+        makespansArray(((makespansArray.length-1) * percentile).toInt)
+      println(("Looking up job queue time till first scheduled " +
+        "percentile value at position %d of %d: %f.")
+        .format(((makespansArray.length) * percentile).toInt,
+          makespansArray.length,
           result))
       result
     } else {

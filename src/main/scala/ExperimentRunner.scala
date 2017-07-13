@@ -114,6 +114,8 @@ class Experiment(
       experimentEnv.setIsPrefilled(
         workloadDesc.prefillWorkloadGenerators.length > 0)
       experimentEnv.setRunTime(simulatorDesc.runTime)
+      experimentEnv.setNumMachines(workloadDesc.cellStateDesc.numMachines)
+      experimentEnv.setHeterogeneousMachines(workloadDesc.cellStateDesc.machinesHet)
 
       // Generate preFill workloads. The simulator doesn't modify
       // these workloads like it does the workloads that are played during
@@ -374,7 +376,9 @@ class Experiment(
                             workload.numTaskSchedulingAttemptsPercentile(0.9))
                           workloadStats.setNumTaskSchedulingAttempts99Percentile(
                             workload.numTaskSchedulingAttemptsPercentile(0.99))
-
+                          //Makespan
+                          workloadStats.setAvgMakespan(workload.avgJobMakespan)
+                          workloadStats.setMakespan90Percentile(workload.jobMakespanPercentile(0.9))
                           experimentResult.addWorkloadStats(workloadStats)
                         })
                         // Record workload specific details about the parameter sweeps.

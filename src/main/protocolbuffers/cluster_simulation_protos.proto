@@ -35,6 +35,8 @@ message ExperimentResultSet {
     optional bool is_prefilled = 5 [default = false];
     optional double run_time = 3;
     repeated ExperimentResult experiment_result = 4;
+    optional int64 num_machines = 6;
+    optional bool heterogeneous_machines = 7 [default = false];
     // Next field number: 6
 
     // There is a 1-1 relationship between an ExperimentResult and a WorkloadDesc.
@@ -75,6 +77,8 @@ message ExperimentResultSet {
         optional double num_scheduling_attempts_99_percentile = 10;
         optional double num_task_scheduling_attempts_90_percentile = 11;
         optional double num_task_scheduling_attempts_99_percentile = 12;
+        optional double avg_makespan = 13;
+        optional double makespan_90_percentile = 14;
       }
 
       message SchedulerStats {
