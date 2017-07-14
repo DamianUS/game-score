@@ -1,6 +1,7 @@
-package efficiency.pick_cellstate_resources
+package efficiency.pick_cellstate_resources.genetic
 
 import ClusterSchedulingSimulation._
+import efficiency.pick_cellstate_resources.CellStateResourcesPicker
 
 import scala.collection.mutable.{IndexedSeq, ListBuffer}
 import scala.util.control.Breaks
