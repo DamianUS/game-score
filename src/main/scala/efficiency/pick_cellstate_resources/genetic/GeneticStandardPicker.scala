@@ -2,7 +2,7 @@ package efficiency.pick_cellstate_resources.genetic
 
 import ClusterSchedulingSimulation._
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
-import efficiency.pick_cellstate_resources.genetic.crossing_functions.CrossingFunctionSelector
+import efficiency.pick_cellstate_resources.genetic.crossing_selectors.CrossingSelector
 import efficiency.pick_cellstate_resources.genetic.fitness_functions.FitnessFunction
 
 import scala.collection.mutable.{IndexedSeq, ListBuffer}
@@ -11,7 +11,7 @@ import scala.util.control.Breaks
 /**
   * Created by dfernandez on 14/7/17.
   */
-class GeneticStandardPickerCandidatePower(populationSize : Int = 20, crossoverProbability : Double = 0.7, mutationProbability : Double = 0.001, crossingSelector : CrossingFunctionSelector, fitnessFunction : FitnessFunction, epochNumber : Int = 500) extends CellStateResourcesPicker{
+class GeneticStandardPicker(populationSize : Int = 20, crossoverProbability : Double = 0.7, mutationProbability : Double = 0.001, crossingSelector : CrossingSelector, fitnessFunction : FitnessFunction, epochNumber : Int = 500) extends CellStateResourcesPicker{
   val randomNumberGenerator = new util.Random(Seed())
 
   override def schedule(cellState: CellState, job: Job, scheduler: Scheduler, simulator: ClusterSimulator): ListBuffer[ClaimDelta] = {

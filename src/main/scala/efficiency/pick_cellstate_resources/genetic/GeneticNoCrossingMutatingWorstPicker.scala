@@ -11,7 +11,7 @@ import scala.util.control.Breaks
  */
 // This picker doesn't take into account yet shutted down machines nor capacity security margins nor performance
 // TODO: Make a Quicksort-like strategy or pass a candidate index to iterate (e.g. the last successful candidate)
-object GASimplePickerCandidatePower extends CellStateResourcesPicker{
+object GeneticNoCrossingMutatingWorstPicker extends CellStateResourcesPicker{
   val randomNumberGenerator = new util.Random(Seed())
 
   override def schedule(cellState: CellState, job: Job, scheduler: Scheduler, simulator: ClusterSimulator): ListBuffer[ClaimDelta] = {
@@ -138,6 +138,6 @@ object GASimplePickerCandidatePower extends CellStateResourcesPicker{
     }
     new Tuple4(machineID, numTries, remainingCandidatesVar, candidatePoolVar)
   }
-  override val name: String = "genetic-simple-picker-candidate"
+  override val name: String = "genetic-no-crossing-mutate-worst-picker"
 
 }

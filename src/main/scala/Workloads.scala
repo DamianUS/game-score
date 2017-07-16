@@ -71,7 +71,7 @@ object Workloads {
     * numbers are provided as an example. Enter numbers based on your
     * own clusters instead.
     */
-  val exampleCellStateDesc = new CellStateDesc(numMachines = 10000,
+  val exampleCellStateDesc = new CellStateDesc(numMachines = 1000,
     cpusPerMachine = 4,
     memPerMachine = 8,
     machinesHet = true)

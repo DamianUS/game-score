@@ -1,4 +1,4 @@
-package efficiency.pick_cellstate_resources.genetic.crossing_functions
+package efficiency.pick_cellstate_resources.genetic.crossing_selectors
 
 import ClusterSchedulingSimulation._
 import efficiency.pick_cellstate_resources.genetic.fitness_functions.FitnessFunction
@@ -8,7 +8,7 @@ import scala.collection.mutable.{IndexedSeq, ListBuffer}
 /**
  * Created by dfernandez on 11/1/16.
  */
-trait CrossingFunctionSelector {
+trait CrossingSelector {
   /**
     * Selects the required number of candidates from the population with
     * the probability of selecting any particular candidate being proportional

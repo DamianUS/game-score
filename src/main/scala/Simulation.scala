@@ -34,9 +34,10 @@ import ca.zmatrix.utils._
 import com.sun.xml.internal.ws.policy.jaxws.SafePolicyReader
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter, NoSorter, PowerStateLoadSorter}
 import efficiency.pick_cellstate_resources._
-import efficiency.pick_cellstate_resources.genetic.crossing_functions.{Agnieszka, RouletteWheel, TwoBest}
-import efficiency.pick_cellstate_resources.genetic.fitness_functions.Makespan
-import efficiency.pick_cellstate_resources.genetic.{GASimplePickerCandidatePower, GeneticStandardPickerCandidatePower}
+import efficiency.pick_cellstate_resources.genetic.crossing_functions.CrossGenes
+import efficiency.pick_cellstate_resources.genetic.crossing_selectors.{Agnieszka, RouletteWheel, TwoBest}
+import efficiency.pick_cellstate_resources.genetic.fitness_functions.{Makespan, MakespanMedian}
+import efficiency.pick_cellstate_resources.genetic.{GeneticMutateWorstGenePicker, GeneticNoCrossingMutatingWorstPicker, GeneticStandardPicker}
 import efficiency.power_off_policies.action.DefaultPowerOffAction
 import efficiency.power_off_policies.decision.deterministic.load.{LoadMaxPowerOffDecision, LoadMeanPowerOffDecision}
 import efficiency.power_off_policies.decision.deterministic.security_margin.{FreeCapacityMeanMarginPowerOffDecision, FreeCapacityMinMarginPowerOffDecision, WeightedFreeCapacityMarginPowerOffDecision}
@@ -395,7 +396,8 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](GASimplePickerCandidatePower)
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, GASimplePickerCandidatePower, GreedyMakespanPickerCandidatePower)
     //val pickingPolicies = List[CellStateResourcesPicker](new GeneticStandardPickerCandidatePower(populationSize=20, mutationProbability=0.01, crossingSelector=Agnieszka, fitnessFunction = Makespan, epochNumber = 500))
-    val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, GASimplePickerCandidatePower, GreedyMakespanPickerCandidatePower, new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=Agnieszka, fitnessFunction = Makespan, epochNumber = 300),new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=RouletteWheel, fitnessFunction = Makespan, epochNumber = 300),new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 300))
+    //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, GASimplePickerCandidatePower, GreedyMakespanPickerCandidatePower, new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=Agnieszka, fitnessFunction = Makespan, epochNumber = 300),new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=RouletteWheel, fitnessFunction = Makespan, epochNumber = 300),new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 300))
+    val pickingPolicies = List[CellStateResourcesPicker](new GeneticMutateWorstGenePicker(populationSize=20, mutationProbability=0.5, crossingSelector=TwoBest, fitnessFunction = Makespan, crossingFunction = CrossGenes, epochNumber = 200))
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
