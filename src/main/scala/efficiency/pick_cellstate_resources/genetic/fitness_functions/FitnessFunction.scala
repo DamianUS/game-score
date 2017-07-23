@@ -2,6 +2,7 @@ package efficiency.pick_cellstate_resources.genetic.fitness_functions
 
 import ClusterSchedulingSimulation.{CellState, Job}
 
+import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 
 /**
@@ -17,6 +18,8 @@ trait FitnessFunction {
     * @return The grade. THE LOWER, THE BETTER.
     */
   def evaluate(chromosome : ListBuffer[Int], job : Job, cellState : CellState): Double
+
+  def newEvaluate(chromosome : HashMap[Int, ListBuffer[Int]], job : Job, cellState : CellState): Double
 
 
   val name : String

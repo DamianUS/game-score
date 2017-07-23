@@ -1423,6 +1423,7 @@ case class Job(id: Long,
   var wastedTimeScheduling: Double = 0.0
   var wastedTimeSchedulingPowering: Double = 0.0
   var turnOnRequests: Seq[Double] = Seq[Double]()
+  val tasksPerformance = Array.fill[Double](numTasks)(Random.nextDouble() * (1.5) + 0.5)
 
   var timeStarted: Double = 0.0
   var timeFinished: Double = 0.0

@@ -2,6 +2,7 @@ package efficiency.pick_cellstate_resources.genetic.fitness_functions
 
 import ClusterSchedulingSimulation.{CellState, Job}
 
+import scala.collection.mutable.HashMap
 import scala.collection.mutable.ListBuffer
 
 
@@ -16,6 +17,21 @@ object MakespanAverage extends FitnessFunction{
       for(mID <- 0 until cellState.numMachines){
         if(chromosome(mID) == 1){
           makespans += job.taskDuration * cellState.machinesPerformance(mID)
+        }
+      }
+    }
+    else{
+      makespans += job.taskDuration
+    }
+    makespans.sum / makespans.length
+  }
+
+  override def newEvaluate(chromosome: HashMap[Int, ListBuffer[Int]], job: Job, cellState: CellState): Double ={
+    val makespans = collection.mutable.ListBuffer.empty[Double]
+    if (job.workloadName == "Batch"){
+      for ((machineID,tasksMachine) <- chromosome){
+        for(taskID <- tasksMachine){
+          makespans += cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
         }
       }
     }

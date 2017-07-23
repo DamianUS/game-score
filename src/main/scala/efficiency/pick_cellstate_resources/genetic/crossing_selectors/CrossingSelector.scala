@@ -3,7 +3,8 @@ package efficiency.pick_cellstate_resources.genetic.crossing_selectors
 import ClusterSchedulingSimulation._
 import efficiency.pick_cellstate_resources.genetic.fitness_functions.FitnessFunction
 
-import scala.collection.mutable.{IndexedSeq, ListBuffer}
+import scala.collection.mutable
+import scala.collection.mutable.{HashMap, ListBuffer}
 
 /**
  * Created by dfernandez on 11/1/16.
@@ -22,7 +23,7 @@ trait CrossingSelector {
     */
   def select(population : ListBuffer[ListBuffer[Int]], naturalFitnessScores : Boolean = false, selectionSize : Int, fitnessFunction : FitnessFunction, job: Job, cellState: CellState): ListBuffer[ListBuffer[Int]]
 
-
+  def newSelect(population : ListBuffer[HashMap[Int, ListBuffer[Int]]], naturalFitnessScores : Boolean = false, selectionSize : Int, fitnessFunction : FitnessFunction, job: Job, cellState: CellState): ListBuffer[HashMap[Int, ListBuffer[Int]]]
 
   val name : String
 }

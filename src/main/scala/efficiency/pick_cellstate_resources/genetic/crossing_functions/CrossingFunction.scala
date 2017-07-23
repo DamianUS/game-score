@@ -3,7 +3,7 @@ package efficiency.pick_cellstate_resources.genetic.crossing_functions
 import ClusterSchedulingSimulation._
 import efficiency.pick_cellstate_resources.genetic.fitness_functions.FitnessFunction
 
-import scala.collection.mutable.{IndexedSeq, ListBuffer}
+import scala.collection.mutable.{ListBuffer, HashMap}
 
 /**
  * Created by dfernandez on 11/1/16.
@@ -20,7 +20,7 @@ trait CrossingFunction {
     */
   def cross(chromosome1 : ListBuffer[Int], chromosome2 : ListBuffer[Int]): (ListBuffer[Int],ListBuffer[Int])
 
-
+  def newCross(chromosome1 : HashMap[Int, ListBuffer[Int]], chromosome2 : HashMap[Int, ListBuffer[Int]]): (HashMap[Int, ListBuffer[Int]],HashMap[Int, ListBuffer[Int]])
 
   val name : String
 }
