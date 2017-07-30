@@ -45,6 +45,7 @@ import scala.util.Random
   * http://www.amazon.com/Programming-Scala-Comprehensive-Step-step/dp/0981531601
   */
 abstract class Simulator(logging: Boolean = false){
+  var totalRuntime = 0.0
   type Action = () => Unit
 
   case class WorkItem(time: Double, action: Action)
@@ -339,7 +340,10 @@ class ClusterSimulator(val cellState: CellState,
   var sumMachinesOccupied = 0
   var sumCpuIdle = 0.0
   var sumMemIdle = 0.0
-
+  //Heterogeneous machines power profile
+  val totalMeasurements = (86400.0*7/monitoringPeriod).toInt+1
+  val totalPower= Array.ofDim[Double](cellState.numMachines,totalMeasurements) //Matrix of numMachines
+  val currentPower= Array.ofDim[Double](cellState.numMachines,totalMeasurements) //Matrix of numMachines
 
 
   var runtime = 0.0
@@ -350,18 +354,34 @@ class ClusterSimulator(val cellState: CellState,
   val powerShutting = 110
 
   def totalEnergyConsumed : Double = {
+    /*
+    //Old way, all machines homogeneous in terms of energy consumption
     val energyOn = (sumCpuUtilization.toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuOn * runtime
     val energyIdle = ( ((sumMachinesOn * cellState.cpusPerMachine) - (sumCpuUtilization)).toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuIdle * runtime
     val energyOff = (sumMachinesOff.toDouble / numMonitoringMeasurements.toDouble) * powerTurnedOff * runtime
     val energyTurnOn = (sumMachinesTurningOn.toDouble / numMonitoringMeasurements.toDouble) * powerBooting * runtime
     val energyTurnOff = (sumMachinesTurningOff.toDouble / numMonitoringMeasurements.toDouble) * powerShutting * runtime
     energyOn + energyIdle + energyOff + energyTurnOff + energyTurnOn
+    */
+    val avgPowerPerMachine = new Array[Double](cellState.numMachines)
+    for (machineID <- 0 until cellState.numMachines){
+      avgPowerPerMachine(machineID) = totalPower(machineID).sum / totalPower(machineID).length
+    }
+    avgPowerPerMachine.sum/avgPowerPerMachine.length * runtime
   }
 
   def totalCurrentEnergyConsumed : Double = {
+    /*
+    //Old way, all machines homogeneous in terms of energy consumption
     val energyOn = (sumCpuUtilization.toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuOn * runtime
     val energyIdle = ( ((cellState.numMachines * cellState.cpusPerMachine * numMonitoringMeasurements) - (sumCpuUtilization)).toDouble / numMonitoringMeasurements.toDouble) * powerPerCpuIdle * runtime
     energyOn + energyIdle
+    */
+    val avgPowerPerMachine = new Array[Double](cellState.numMachines)
+    for (machineID <- 0 until cellState.numMachines){
+      avgPowerPerMachine(machineID) = currentPower(machineID).sum / currentPower(machineID).length
+    }
+    avgPowerPerMachine.map(power => power * runtime)
   }
 
   def shuttingDownsPerMachineAvg : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cellState.powerOffs.filter(_ != null).map(_.length).sum.toDouble / cellState.powerOffs.filter(_ != null).length.toDouble else 0.0
@@ -505,7 +525,6 @@ class ClusterSimulator(val cellState: CellState,
   }
 
   def measureUtilization: Unit = {
-    numMonitoringMeasurements += 1
     val totalOccupiedCpus = cellState.totalOccupiedCpus
     val totalOccupiedMem = cellState.totalOccupiedMem
     val numMachinesOccupied = cellState.numMachinesOccupied
@@ -538,6 +557,28 @@ class ClusterSimulator(val cellState: CellState,
     sumMachinesTurningOff += numMachinesTurningOff
     sumMachinesTurningOn += numMachinesTurningOn
     sumMachinesOccupied += numMachinesOccupied
+    for(machineID <- 0 until cellState.numMachines){
+      var totalMachinePower = powerBooting * cellState.machinesEnergy(machineID) //We assume the machine is turning on (less frequent case)
+      var currentMachinePower = powerPerCpuIdle * cellState.cpusPerMachine * cellState.machinesEnergy(machineID)
+      if(cellState.machinePowerState(machineID) == 0){
+        //Off
+        totalMachinePower = powerTurnedOff * cellState.machinesEnergy(machineID)
+        currentMachinePower = powerPerCpuIdle * cellState.cpusPerMachine * cellState.machinesEnergy(machineID)
+      }
+      else if(cellState.machinePowerState(machineID) == 1){
+        //On
+        totalMachinePower = (cellState.allocatedCpusPerMachine(machineID) * powerPerCpuOn + cellState.availableCpusPerMachine(machineID) * powerPerCpuIdle) * cellState.machinesEnergy(machineID)
+        currentMachinePower = totalMachinePower
+      }
+      else if(cellState.machinePowerState(machineID) == 2){
+        //Turning off
+        totalMachinePower = powerShutting * cellState.machinesEnergy(machineID)
+        currentMachinePower = powerPerCpuIdle * cellState.cpusPerMachine * cellState.machinesEnergy(machineID)
+      }
+      totalPower(machineID)(numMonitoringMeasurements.toInt) = totalMachinePower
+      currentPower(machineID)(numMonitoringMeasurements.toInt) = currentMachinePower
+    }
+    numMonitoringMeasurements += 1
     //totalMachinePowerStates = totalMachinePowerStates :+ cellState.machinePowerState
     log("Avg cpu utilization (adding measurement %d of %f): %f."
       .format(numMonitoringMeasurements,
@@ -574,6 +615,7 @@ class ClusterSimulator(val cellState: CellState,
   def run(runTime:Option[Double] = None,
           wallClockTimeout:Option[Double] = None): Boolean = {
     assert(currentTime == 0.0, "currentTime must be 0 at simulator run time.")
+    totalRuntime = runTime.getOrElse(0.0)
     schedulers.values.foreach(scheduler => {
       assert(scheduler.jobQueueSize == 0,
         "Schedulers are not allowed to have jobs in their " +
@@ -970,7 +1012,9 @@ class CellState(val numMachines: Int,
   val machinesHeterogeneous = machinesHet
   val machinesPerformance = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
   val machinesPerformanceOrdered = populateMachinesPerformance()
-
+  val machinesSecurity = Array.fill[Int](numMachines)(Random.nextInt(6))
+  val machinesSecurityMap = populateMachinesSecurity()
+  val machinesEnergy = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
 
   def populateMachinesLoadFactorMap(): HashMap[Int,Double] ={
     val map = HashMap[Int,Double]()
@@ -991,6 +1035,15 @@ class CellState(val numMachines: Int,
       }
     }
     map.toSeq.sortBy(_._2).map(_._1).toArray
+  }
+
+  def populateMachinesSecurity(): HashMap[Int, ListBuffer[Int]] ={
+    val map = HashMap.empty[Int,ListBuffer[Int]]
+    for (mID <- 0 until numMachines){
+      val machines = map.getOrElseUpdate(machinesSecurity(mID),ListBuffer.empty[Int])
+      machines += mID
+    }
+    map
   }
 
   // Map from scheduler name to number of cpus assigned to that scheduler.
@@ -1424,6 +1477,8 @@ case class Job(id: Long,
   var wastedTimeSchedulingPowering: Double = 0.0
   var turnOnRequests: Seq[Double] = Seq[Double]()
   val tasksPerformance = Array.fill[Double](numTasks)(Random.nextDouble() * (1.5) + 0.5)
+  val security = Random.nextInt(6)
+  var makespanLogArray = new ListBuffer[ListBuffer[Double]]()
 
   var timeStarted: Double = 0.0
   var timeFinished: Double = 0.0

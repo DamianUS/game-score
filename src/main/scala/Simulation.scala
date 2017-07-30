@@ -67,7 +67,7 @@ object Simulation {
       }
     }
     val pp = new ParseParms(helpString)
-    pp.parm("--thread-pool-size", "1").rex("^\\d*") // optional_arg
+    pp.parm("--thread-pool-size", "4").rex("^\\d*") // optional_arg
     pp.parm("--random-seed").rex("^\\d*") // optional_arg
 
     var inputArgs = Map[String, String]()
@@ -398,11 +398,12 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](new GeneticStandardPickerCandidatePower(populationSize=20, mutationProbability=0.01, crossingSelector=Agnieszka, fitnessFunction = Makespan, epochNumber = 500))
     //val pickingPolicies = List[CellStateResourcesPicker](RandomPicker, GASimplePickerCandidatePower, GreedyMakespanPickerCandidatePower, new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=Agnieszka, fitnessFunction = Makespan, epochNumber = 300),new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=RouletteWheel, fitnessFunction = Makespan, epochNumber = 300),new GeneticStandardPickerCandidatePower(populationSize=10, mutationProbability=0.01, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 300))
     //val pickingPolicies = List[CellStateResourcesPicker](new GeneticMutateWorstGenePicker(populationSize=20, mutationProbability=0.5, crossingSelector=TwoBest, fitnessFunction = Makespan, crossingFunction = CrossGenes, epochNumber = 200))
-    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaPicker)
+    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](GeneticNoCrossingMutatingWorstPicker)
-    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaWithRandom) //This one is the best so far
+    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaWithRandom) //This one is the best so far
     //val pickingPolicies = List[CellStateResourcesPicker](new NewGeneticStandardPicker(populationSize=10, mutationProbability=0.5, crossoverProbability = 0.7, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 2000, crossingFunction = CrossGenes, mutatingFunction = WorstRandom))
-
+    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
+    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom,AgnieszkaEnergySecurityWithRandom)
 
     //val pickingPolicies = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
@@ -415,11 +416,11 @@ object Simulation {
     //val defaultPickingPolicy = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.02))
     val defaultPickingPolicy = pickingPolicies
 
-    val loadRange = (0.5 :: 0.7 :: Nil)
+    val loadRange = (0.4 /*:: 0.7*/ :: Nil)
     //val loadRange = (0.1 to 0.99 by 0.2).toList
     val defaultLoadRange = 0.5
 
-    val freeCapacityRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
+    val freeCapacityRange = (0.35 /*:: 0.4 :: 0.45*/ ::  Nil)
     val freeCapacityOnRange = (0.05 :: 0.1 :: Nil)
 
     //val freeCapacityRange = (0.1 to 0.99 by 0.2).toList
@@ -441,23 +442,24 @@ object Simulation {
     val distributionOnThresholdRange = (0.01 :: 0.1 :: 0.9 :: 0.99 ::Nil)
     val defaultOnDistributionThreshold = 0.5
 */
-    val distributionWindowRange = (100 :: 500 :: 1000 :: Nil)
+    val distributionWindowRange = (100 :: Nil)
     val defaultWindowSize = 100
 
     //val exponentialOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 :: Nil)
-    val exponentialOffDistributionThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
+    val exponentialOffDistributionThresholdRange = (0.1 /*:: 0.9*/ ::Nil)
     val exponentialOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
     val defaultExponentialOffDistributionThreshold = 0.05
     val defaultExponentialOnDistributionThreshold = 0.5
 
     //val gammaOffDistributionThresholdRange = (0.1 :: 0.3 :: 0.5 :: 0.7 :: 0.9 ::Nil)
-    val gammaOffDistributionThresholdRange = (0.1 :: 0.5 :: 0.9 ::Nil)
+    val gammaOffDistributionThresholdRange = (0.1 /*:: 0.9*/ ::Nil)
     val gammaOnDistributionThresholdRange = (0.2 :: 0.5 :: 0.8 ::Nil)
     val defaultGammaOffDistributionThreshold = 0.05
     val defaultGammaOnDistributionThreshold = 0.5
 
     //val dataCenterLostFactorRange = (0.15 :: 0.2 :: 0.25 :: 0.3 :: Nil)
-    val dataCenterLostFactorRange = (0.15 :: 0.16 :: 0.17 :: 0.18 :: 0.19 :: 0.20 :: Nil)
+    //val dataCenterLostFactorRange = (0.15 :: 0.16 :: 0.17 :: 0.18 :: 0.19 :: 0.20 :: Nil)
+    val dataCenterLostFactorRange = (0.4 /*:: 0.6*/ :: Nil)
     val dataCenterLostFactorDefault = 0.2
 
     val sweepMaxLoadOffRange = true
@@ -483,16 +485,16 @@ object Simulation {
     val sweepGammaNormalLostFactor = true
     val sweepExponentialNormalLostFactor = true
     //Power Off
-    val runMaxLoadOff = false
+    val runMaxLoadOff = true
     val runMeanLoadOff = false
-    val runMinFreeCapacity = false
+    val runMinFreeCapacity = true
     val runMeanFreeCapacity = false
     val runMinFreeCapacityPonderated = false
     val runNeverOff = true
     val runAlwzOff = true
-    val runRandom = false
-    val runGamma = false
-    val runExp = false
+    val runRandom = true
+    val runGamma = true
+    val runExp = true
     val runExpNormal = false
     val runGammaNormal = false
 
@@ -906,7 +908,7 @@ object Simulation {
     // val lambdaRange = fullLambdaRange
     val interArrivalScaleRange = 0.009 :: 0.01 :: 0.02 :: 0.1 :: 0.2 :: 1.0 :: Nil
     // val interArrivalScaleRange = lambdaRange.map(1/_)
-    val prefillCpuLim = Map("PrefillBatch" -> 0.4, "PrefillService" -> 0.4, "PrefillBatchService" -> 0.4)
+    val prefillCpuLim = Map("PrefillBatch" -> 0.3, "PrefillService" -> 0.3, "PrefillBatchService" -> 0.3)
     val doLogging = false
     val timeout = 60.0 * 60.0 *10000.0 // In seconds.
 

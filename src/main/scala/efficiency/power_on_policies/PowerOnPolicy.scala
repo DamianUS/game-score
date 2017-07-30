@@ -34,7 +34,8 @@ trait PowerOnPolicy {
           if (numberOfMachinesToPowerOn == 0) {
             loop.break
           }
-          if (cellState.isMachineOff(cellState.machinesLoad(i))) {
+          //Metido esto a pelo, cambiarlo luego
+          if (cellState.isMachineOff(cellState.machinesLoad(i)) && job.security <= cellState.machinesSecurity(cellState.machinesLoad(i))) {
             cellState.powerOnMachine(cellState.machinesLoad(i))
             numberOfMachinesToPowerOn -= 1
           }

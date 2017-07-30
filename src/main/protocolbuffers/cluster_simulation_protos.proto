@@ -79,6 +79,17 @@ message ExperimentResultSet {
         optional double num_task_scheduling_attempts_99_percentile = 12;
         optional double avg_makespan = 13;
         optional double makespan_90_percentile = 14;
+        optional double avg_makespan_epoch_0 = 15;
+        optional double avg_makespan_epoch_100 = 16;
+        optional double avg_makespan_epoch_500 = 17;
+        optional double avg_makespan_epoch_1000 = 18;
+        optional double avg_makespan_epoch_2000 = 19;
+        optional int64 num_jobs_security_0 = 20;
+        optional int64 num_jobs_security_1 = 21;
+        optional int64 num_jobs_security_2 = 22;
+        optional int64 num_jobs_security_3 = 23;
+        optional int64 num_jobs_security_4 = 24;
+        optional int64 num_jobs_security_5 = 25;
       }
 
       message SchedulerStats {

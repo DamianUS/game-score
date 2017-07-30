@@ -350,6 +350,7 @@ class Experiment(
                         experimentResult.setEfficiencyStats(efficiencyStats)
                         // Save repeated stats about workloads.
                         workloads.foreach(workload => {
+
                           val workloadStats = ExperimentResultSet.
                             ExperimentEnv.
                             ExperimentResult.
@@ -379,6 +380,50 @@ class Experiment(
                           //Makespan
                           workloadStats.setAvgMakespan(workload.avgJobMakespan)
                           workloadStats.setMakespan90Percentile(workload.jobMakespanPercentile(0.9))
+                          //Nuevo
+                          val numJobs0= workload.getJobs.filter(_.security == 0).length
+                          val numJobs1= workload.getJobs.filter(_.security == 1).length
+                          val numJobs2= workload.getJobs.filter(_.security == 2).length
+                          val numJobs3= workload.getJobs.filter(_.security == 3).length
+                          val numJobs4= workload.getJobs.filter(_.security == 4).length
+                          val numJobs5= workload.getJobs.filter(_.security == 5).length
+
+                          workloadStats.setNumJobsSecurity0(numJobs0)
+                          workloadStats.setNumJobsSecurity1(numJobs1)
+                          workloadStats.setNumJobsSecurity2(numJobs2)
+                          workloadStats.setNumJobsSecurity3(numJobs3)
+                          workloadStats.setNumJobsSecurity4(numJobs4)
+                          workloadStats.setNumJobsSecurity5(numJobs5)
+                          println("trabajos con makespanlog > 0 : "+ workload.getJobs.filter(job => job.makespanLogArray.size > 0))
+                          if(workload.name == "Batch"){
+                            val jobsNotNull=workload.getJobs.filter(job => job.makespanLogArray.size > 0)
+
+                            val makespanLogs = new ListBuffer[ListBuffer[Double]]()
+                            jobsNotNull.map(job => job.makespanLogArray).foreach(makespanLogs ++= _)
+
+
+                            val makespansEpoch0 = makespanLogs.filter(_.length > 0)
+                            val makespansEpoch0Avg = makespansEpoch0.map(x => x(0)).sum / makespansEpoch0.length
+
+                            val makespansEpoch100 = makespanLogs.filter(_.length > 99)
+                            val makespansEpoch100Avg = makespansEpoch100.map(x => x(99)).sum / makespansEpoch100.length
+
+                            val makespansEpoch500 = makespanLogs.filter(_.length > 499)
+                            val makespansEpoch500Avg = makespansEpoch500.map(x => x(499)).sum / makespansEpoch500.length
+
+                            val makespansEpoch1000 = makespanLogs.filter(_.length > 999)
+                            val makespansEpoch1000Avg = makespansEpoch1000.map(x => x(999)).sum / makespansEpoch1000.length
+
+                            val makespansEpoch2000 = makespanLogs.filter(_.length > 1999)
+                            val makespansEpoch2000Avg = makespansEpoch2000.map(x => x(1999)).sum / makespansEpoch2000.length
+
+
+                            if(makespansEpoch0.length > 0) workloadStats.setAvgMakespanEpoch0(makespansEpoch0Avg) else workloadStats.setAvgMakespanEpoch0(0.0)
+                            if(makespansEpoch100.length > 0) workloadStats.setAvgMakespanEpoch100(makespansEpoch100Avg) else workloadStats.setAvgMakespanEpoch100(0.0)
+                            if(makespansEpoch500.length > 0) workloadStats.setAvgMakespanEpoch500(makespansEpoch500Avg) else workloadStats.setAvgMakespanEpoch500(0.0)
+                            if(makespansEpoch1000.length > 0) workloadStats.setAvgMakespanEpoch1000(makespansEpoch1000Avg) else workloadStats.setAvgMakespanEpoch1000(0.0)
+                            if(makespansEpoch2000.length > 0) workloadStats.setAvgMakespanEpoch2000(makespansEpoch2000Avg) else workloadStats.setAvgMakespanEpoch2000(0.0)
+                          }
                           experimentResult.addWorkloadStats(workloadStats)
                         })
                         // Record workload specific details about the parameter sweeps.

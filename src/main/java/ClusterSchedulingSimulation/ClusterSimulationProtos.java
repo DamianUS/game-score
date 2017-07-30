@@ -1024,6 +1024,116 @@ public final class ClusterSimulationProtos {
            * <code>optional double makespan_90_percentile = 14;</code>
            */
           double getMakespan90Percentile();
+
+          // optional double avg_makespan_epoch_0 = 15;
+          /**
+           * <code>optional double avg_makespan_epoch_0 = 15;</code>
+           */
+          boolean hasAvgMakespanEpoch0();
+          /**
+           * <code>optional double avg_makespan_epoch_0 = 15;</code>
+           */
+          double getAvgMakespanEpoch0();
+
+          // optional double avg_makespan_epoch_100 = 16;
+          /**
+           * <code>optional double avg_makespan_epoch_100 = 16;</code>
+           */
+          boolean hasAvgMakespanEpoch100();
+          /**
+           * <code>optional double avg_makespan_epoch_100 = 16;</code>
+           */
+          double getAvgMakespanEpoch100();
+
+          // optional double avg_makespan_epoch_500 = 17;
+          /**
+           * <code>optional double avg_makespan_epoch_500 = 17;</code>
+           */
+          boolean hasAvgMakespanEpoch500();
+          /**
+           * <code>optional double avg_makespan_epoch_500 = 17;</code>
+           */
+          double getAvgMakespanEpoch500();
+
+          // optional double avg_makespan_epoch_1000 = 18;
+          /**
+           * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+           */
+          boolean hasAvgMakespanEpoch1000();
+          /**
+           * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+           */
+          double getAvgMakespanEpoch1000();
+
+          // optional double avg_makespan_epoch_2000 = 19;
+          /**
+           * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+           */
+          boolean hasAvgMakespanEpoch2000();
+          /**
+           * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+           */
+          double getAvgMakespanEpoch2000();
+
+          // optional int64 num_jobs_security_0 = 20;
+          /**
+           * <code>optional int64 num_jobs_security_0 = 20;</code>
+           */
+          boolean hasNumJobsSecurity0();
+          /**
+           * <code>optional int64 num_jobs_security_0 = 20;</code>
+           */
+          long getNumJobsSecurity0();
+
+          // optional int64 num_jobs_security_1 = 21;
+          /**
+           * <code>optional int64 num_jobs_security_1 = 21;</code>
+           */
+          boolean hasNumJobsSecurity1();
+          /**
+           * <code>optional int64 num_jobs_security_1 = 21;</code>
+           */
+          long getNumJobsSecurity1();
+
+          // optional int64 num_jobs_security_2 = 22;
+          /**
+           * <code>optional int64 num_jobs_security_2 = 22;</code>
+           */
+          boolean hasNumJobsSecurity2();
+          /**
+           * <code>optional int64 num_jobs_security_2 = 22;</code>
+           */
+          long getNumJobsSecurity2();
+
+          // optional int64 num_jobs_security_3 = 23;
+          /**
+           * <code>optional int64 num_jobs_security_3 = 23;</code>
+           */
+          boolean hasNumJobsSecurity3();
+          /**
+           * <code>optional int64 num_jobs_security_3 = 23;</code>
+           */
+          long getNumJobsSecurity3();
+
+          // optional int64 num_jobs_security_4 = 24;
+          /**
+           * <code>optional int64 num_jobs_security_4 = 24;</code>
+           */
+          boolean hasNumJobsSecurity4();
+          /**
+           * <code>optional int64 num_jobs_security_4 = 24;</code>
+           */
+          long getNumJobsSecurity4();
+
+          // optional int64 num_jobs_security_5 = 25;
+          /**
+           * <code>optional int64 num_jobs_security_5 = 25;</code>
+           */
+          boolean hasNumJobsSecurity5();
+          /**
+           * <code>optional int64 num_jobs_security_5 = 25;</code>
+           */
+          long getNumJobsSecurity5();
         }
         /**
          * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats}
@@ -1148,6 +1258,61 @@ public final class ClusterSimulationProtos {
                   case 113: {
                     bitField0_ |= 0x00002000;
                     makespan90Percentile_ = input.readDouble();
+                    break;
+                  }
+                  case 121: {
+                    bitField0_ |= 0x00004000;
+                    avgMakespanEpoch0_ = input.readDouble();
+                    break;
+                  }
+                  case 129: {
+                    bitField0_ |= 0x00008000;
+                    avgMakespanEpoch100_ = input.readDouble();
+                    break;
+                  }
+                  case 137: {
+                    bitField0_ |= 0x00010000;
+                    avgMakespanEpoch500_ = input.readDouble();
+                    break;
+                  }
+                  case 145: {
+                    bitField0_ |= 0x00020000;
+                    avgMakespanEpoch1000_ = input.readDouble();
+                    break;
+                  }
+                  case 153: {
+                    bitField0_ |= 0x00040000;
+                    avgMakespanEpoch2000_ = input.readDouble();
+                    break;
+                  }
+                  case 160: {
+                    bitField0_ |= 0x00080000;
+                    numJobsSecurity0_ = input.readInt64();
+                    break;
+                  }
+                  case 168: {
+                    bitField0_ |= 0x00100000;
+                    numJobsSecurity1_ = input.readInt64();
+                    break;
+                  }
+                  case 176: {
+                    bitField0_ |= 0x00200000;
+                    numJobsSecurity2_ = input.readInt64();
+                    break;
+                  }
+                  case 184: {
+                    bitField0_ |= 0x00400000;
+                    numJobsSecurity3_ = input.readInt64();
+                    break;
+                  }
+                  case 192: {
+                    bitField0_ |= 0x00800000;
+                    numJobsSecurity4_ = input.readInt64();
+                    break;
+                  }
+                  case 200: {
+                    bitField0_ |= 0x01000000;
+                    numJobsSecurity5_ = input.readInt64();
                     break;
                   }
                 }
@@ -1441,6 +1606,182 @@ public final class ClusterSimulationProtos {
             return makespan90Percentile_;
           }
 
+          // optional double avg_makespan_epoch_0 = 15;
+          public static final int AVG_MAKESPAN_EPOCH_0_FIELD_NUMBER = 15;
+          private double avgMakespanEpoch0_;
+          /**
+           * <code>optional double avg_makespan_epoch_0 = 15;</code>
+           */
+          public boolean hasAvgMakespanEpoch0() {
+            return ((bitField0_ & 0x00004000) == 0x00004000);
+          }
+          /**
+           * <code>optional double avg_makespan_epoch_0 = 15;</code>
+           */
+          public double getAvgMakespanEpoch0() {
+            return avgMakespanEpoch0_;
+          }
+
+          // optional double avg_makespan_epoch_100 = 16;
+          public static final int AVG_MAKESPAN_EPOCH_100_FIELD_NUMBER = 16;
+          private double avgMakespanEpoch100_;
+          /**
+           * <code>optional double avg_makespan_epoch_100 = 16;</code>
+           */
+          public boolean hasAvgMakespanEpoch100() {
+            return ((bitField0_ & 0x00008000) == 0x00008000);
+          }
+          /**
+           * <code>optional double avg_makespan_epoch_100 = 16;</code>
+           */
+          public double getAvgMakespanEpoch100() {
+            return avgMakespanEpoch100_;
+          }
+
+          // optional double avg_makespan_epoch_500 = 17;
+          public static final int AVG_MAKESPAN_EPOCH_500_FIELD_NUMBER = 17;
+          private double avgMakespanEpoch500_;
+          /**
+           * <code>optional double avg_makespan_epoch_500 = 17;</code>
+           */
+          public boolean hasAvgMakespanEpoch500() {
+            return ((bitField0_ & 0x00010000) == 0x00010000);
+          }
+          /**
+           * <code>optional double avg_makespan_epoch_500 = 17;</code>
+           */
+          public double getAvgMakespanEpoch500() {
+            return avgMakespanEpoch500_;
+          }
+
+          // optional double avg_makespan_epoch_1000 = 18;
+          public static final int AVG_MAKESPAN_EPOCH_1000_FIELD_NUMBER = 18;
+          private double avgMakespanEpoch1000_;
+          /**
+           * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+           */
+          public boolean hasAvgMakespanEpoch1000() {
+            return ((bitField0_ & 0x00020000) == 0x00020000);
+          }
+          /**
+           * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+           */
+          public double getAvgMakespanEpoch1000() {
+            return avgMakespanEpoch1000_;
+          }
+
+          // optional double avg_makespan_epoch_2000 = 19;
+          public static final int AVG_MAKESPAN_EPOCH_2000_FIELD_NUMBER = 19;
+          private double avgMakespanEpoch2000_;
+          /**
+           * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+           */
+          public boolean hasAvgMakespanEpoch2000() {
+            return ((bitField0_ & 0x00040000) == 0x00040000);
+          }
+          /**
+           * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+           */
+          public double getAvgMakespanEpoch2000() {
+            return avgMakespanEpoch2000_;
+          }
+
+          // optional int64 num_jobs_security_0 = 20;
+          public static final int NUM_JOBS_SECURITY_0_FIELD_NUMBER = 20;
+          private long numJobsSecurity0_;
+          /**
+           * <code>optional int64 num_jobs_security_0 = 20;</code>
+           */
+          public boolean hasNumJobsSecurity0() {
+            return ((bitField0_ & 0x00080000) == 0x00080000);
+          }
+          /**
+           * <code>optional int64 num_jobs_security_0 = 20;</code>
+           */
+          public long getNumJobsSecurity0() {
+            return numJobsSecurity0_;
+          }
+
+          // optional int64 num_jobs_security_1 = 21;
+          public static final int NUM_JOBS_SECURITY_1_FIELD_NUMBER = 21;
+          private long numJobsSecurity1_;
+          /**
+           * <code>optional int64 num_jobs_security_1 = 21;</code>
+           */
+          public boolean hasNumJobsSecurity1() {
+            return ((bitField0_ & 0x00100000) == 0x00100000);
+          }
+          /**
+           * <code>optional int64 num_jobs_security_1 = 21;</code>
+           */
+          public long getNumJobsSecurity1() {
+            return numJobsSecurity1_;
+          }
+
+          // optional int64 num_jobs_security_2 = 22;
+          public static final int NUM_JOBS_SECURITY_2_FIELD_NUMBER = 22;
+          private long numJobsSecurity2_;
+          /**
+           * <code>optional int64 num_jobs_security_2 = 22;</code>
+           */
+          public boolean hasNumJobsSecurity2() {
+            return ((bitField0_ & 0x00200000) == 0x00200000);
+          }
+          /**
+           * <code>optional int64 num_jobs_security_2 = 22;</code>
+           */
+          public long getNumJobsSecurity2() {
+            return numJobsSecurity2_;
+          }
+
+          // optional int64 num_jobs_security_3 = 23;
+          public static final int NUM_JOBS_SECURITY_3_FIELD_NUMBER = 23;
+          private long numJobsSecurity3_;
+          /**
+           * <code>optional int64 num_jobs_security_3 = 23;</code>
+           */
+          public boolean hasNumJobsSecurity3() {
+            return ((bitField0_ & 0x00400000) == 0x00400000);
+          }
+          /**
+           * <code>optional int64 num_jobs_security_3 = 23;</code>
+           */
+          public long getNumJobsSecurity3() {
+            return numJobsSecurity3_;
+          }
+
+          // optional int64 num_jobs_security_4 = 24;
+          public static final int NUM_JOBS_SECURITY_4_FIELD_NUMBER = 24;
+          private long numJobsSecurity4_;
+          /**
+           * <code>optional int64 num_jobs_security_4 = 24;</code>
+           */
+          public boolean hasNumJobsSecurity4() {
+            return ((bitField0_ & 0x00800000) == 0x00800000);
+          }
+          /**
+           * <code>optional int64 num_jobs_security_4 = 24;</code>
+           */
+          public long getNumJobsSecurity4() {
+            return numJobsSecurity4_;
+          }
+
+          // optional int64 num_jobs_security_5 = 25;
+          public static final int NUM_JOBS_SECURITY_5_FIELD_NUMBER = 25;
+          private long numJobsSecurity5_;
+          /**
+           * <code>optional int64 num_jobs_security_5 = 25;</code>
+           */
+          public boolean hasNumJobsSecurity5() {
+            return ((bitField0_ & 0x01000000) == 0x01000000);
+          }
+          /**
+           * <code>optional int64 num_jobs_security_5 = 25;</code>
+           */
+          public long getNumJobsSecurity5() {
+            return numJobsSecurity5_;
+          }
+
           private void initFields() {
             workloadName_ = "";
             numJobs_ = 0L;
@@ -1456,6 +1797,17 @@ public final class ClusterSimulationProtos {
             numTaskSchedulingAttempts99Percentile_ = 0D;
             avgMakespan_ = 0D;
             makespan90Percentile_ = 0D;
+            avgMakespanEpoch0_ = 0D;
+            avgMakespanEpoch100_ = 0D;
+            avgMakespanEpoch500_ = 0D;
+            avgMakespanEpoch1000_ = 0D;
+            avgMakespanEpoch2000_ = 0D;
+            numJobsSecurity0_ = 0L;
+            numJobsSecurity1_ = 0L;
+            numJobsSecurity2_ = 0L;
+            numJobsSecurity3_ = 0L;
+            numJobsSecurity4_ = 0L;
+            numJobsSecurity5_ = 0L;
           }
           private byte memoizedIsInitialized = -1;
           public final boolean isInitialized() {
@@ -1510,6 +1862,39 @@ public final class ClusterSimulationProtos {
             }
             if (((bitField0_ & 0x00002000) == 0x00002000)) {
               output.writeDouble(14, makespan90Percentile_);
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+              output.writeDouble(15, avgMakespanEpoch0_);
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
+              output.writeDouble(16, avgMakespanEpoch100_);
+            }
+            if (((bitField0_ & 0x00010000) == 0x00010000)) {
+              output.writeDouble(17, avgMakespanEpoch500_);
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+              output.writeDouble(18, avgMakespanEpoch1000_);
+            }
+            if (((bitField0_ & 0x00040000) == 0x00040000)) {
+              output.writeDouble(19, avgMakespanEpoch2000_);
+            }
+            if (((bitField0_ & 0x00080000) == 0x00080000)) {
+              output.writeInt64(20, numJobsSecurity0_);
+            }
+            if (((bitField0_ & 0x00100000) == 0x00100000)) {
+              output.writeInt64(21, numJobsSecurity1_);
+            }
+            if (((bitField0_ & 0x00200000) == 0x00200000)) {
+              output.writeInt64(22, numJobsSecurity2_);
+            }
+            if (((bitField0_ & 0x00400000) == 0x00400000)) {
+              output.writeInt64(23, numJobsSecurity3_);
+            }
+            if (((bitField0_ & 0x00800000) == 0x00800000)) {
+              output.writeInt64(24, numJobsSecurity4_);
+            }
+            if (((bitField0_ & 0x01000000) == 0x01000000)) {
+              output.writeInt64(25, numJobsSecurity5_);
             }
             getUnknownFields().writeTo(output);
           }
@@ -1575,6 +1960,50 @@ public final class ClusterSimulationProtos {
             if (((bitField0_ & 0x00002000) == 0x00002000)) {
               size += com.google.protobuf.CodedOutputStream
                 .computeDoubleSize(14, makespan90Percentile_);
+            }
+            if (((bitField0_ & 0x00004000) == 0x00004000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(15, avgMakespanEpoch0_);
+            }
+            if (((bitField0_ & 0x00008000) == 0x00008000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(16, avgMakespanEpoch100_);
+            }
+            if (((bitField0_ & 0x00010000) == 0x00010000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(17, avgMakespanEpoch500_);
+            }
+            if (((bitField0_ & 0x00020000) == 0x00020000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(18, avgMakespanEpoch1000_);
+            }
+            if (((bitField0_ & 0x00040000) == 0x00040000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeDoubleSize(19, avgMakespanEpoch2000_);
+            }
+            if (((bitField0_ & 0x00080000) == 0x00080000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeInt64Size(20, numJobsSecurity0_);
+            }
+            if (((bitField0_ & 0x00100000) == 0x00100000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeInt64Size(21, numJobsSecurity1_);
+            }
+            if (((bitField0_ & 0x00200000) == 0x00200000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeInt64Size(22, numJobsSecurity2_);
+            }
+            if (((bitField0_ & 0x00400000) == 0x00400000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeInt64Size(23, numJobsSecurity3_);
+            }
+            if (((bitField0_ & 0x00800000) == 0x00800000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeInt64Size(24, numJobsSecurity4_);
+            }
+            if (((bitField0_ & 0x01000000) == 0x01000000)) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeInt64Size(25, numJobsSecurity5_);
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -1724,6 +2153,28 @@ public final class ClusterSimulationProtos {
               bitField0_ = (bitField0_ & ~0x00001000);
               makespan90Percentile_ = 0D;
               bitField0_ = (bitField0_ & ~0x00002000);
+              avgMakespanEpoch0_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00004000);
+              avgMakespanEpoch100_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00008000);
+              avgMakespanEpoch500_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00010000);
+              avgMakespanEpoch1000_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00020000);
+              avgMakespanEpoch2000_ = 0D;
+              bitField0_ = (bitField0_ & ~0x00040000);
+              numJobsSecurity0_ = 0L;
+              bitField0_ = (bitField0_ & ~0x00080000);
+              numJobsSecurity1_ = 0L;
+              bitField0_ = (bitField0_ & ~0x00100000);
+              numJobsSecurity2_ = 0L;
+              bitField0_ = (bitField0_ & ~0x00200000);
+              numJobsSecurity3_ = 0L;
+              bitField0_ = (bitField0_ & ~0x00400000);
+              numJobsSecurity4_ = 0L;
+              bitField0_ = (bitField0_ & ~0x00800000);
+              numJobsSecurity5_ = 0L;
+              bitField0_ = (bitField0_ & ~0x01000000);
               return this;
             }
 
@@ -1808,6 +2259,50 @@ public final class ClusterSimulationProtos {
                 to_bitField0_ |= 0x00002000;
               }
               result.makespan90Percentile_ = makespan90Percentile_;
+              if (((from_bitField0_ & 0x00004000) == 0x00004000)) {
+                to_bitField0_ |= 0x00004000;
+              }
+              result.avgMakespanEpoch0_ = avgMakespanEpoch0_;
+              if (((from_bitField0_ & 0x00008000) == 0x00008000)) {
+                to_bitField0_ |= 0x00008000;
+              }
+              result.avgMakespanEpoch100_ = avgMakespanEpoch100_;
+              if (((from_bitField0_ & 0x00010000) == 0x00010000)) {
+                to_bitField0_ |= 0x00010000;
+              }
+              result.avgMakespanEpoch500_ = avgMakespanEpoch500_;
+              if (((from_bitField0_ & 0x00020000) == 0x00020000)) {
+                to_bitField0_ |= 0x00020000;
+              }
+              result.avgMakespanEpoch1000_ = avgMakespanEpoch1000_;
+              if (((from_bitField0_ & 0x00040000) == 0x00040000)) {
+                to_bitField0_ |= 0x00040000;
+              }
+              result.avgMakespanEpoch2000_ = avgMakespanEpoch2000_;
+              if (((from_bitField0_ & 0x00080000) == 0x00080000)) {
+                to_bitField0_ |= 0x00080000;
+              }
+              result.numJobsSecurity0_ = numJobsSecurity0_;
+              if (((from_bitField0_ & 0x00100000) == 0x00100000)) {
+                to_bitField0_ |= 0x00100000;
+              }
+              result.numJobsSecurity1_ = numJobsSecurity1_;
+              if (((from_bitField0_ & 0x00200000) == 0x00200000)) {
+                to_bitField0_ |= 0x00200000;
+              }
+              result.numJobsSecurity2_ = numJobsSecurity2_;
+              if (((from_bitField0_ & 0x00400000) == 0x00400000)) {
+                to_bitField0_ |= 0x00400000;
+              }
+              result.numJobsSecurity3_ = numJobsSecurity3_;
+              if (((from_bitField0_ & 0x00800000) == 0x00800000)) {
+                to_bitField0_ |= 0x00800000;
+              }
+              result.numJobsSecurity4_ = numJobsSecurity4_;
+              if (((from_bitField0_ & 0x01000000) == 0x01000000)) {
+                to_bitField0_ |= 0x01000000;
+              }
+              result.numJobsSecurity5_ = numJobsSecurity5_;
               result.bitField0_ = to_bitField0_;
               onBuilt();
               return result;
@@ -1867,6 +2362,39 @@ public final class ClusterSimulationProtos {
               }
               if (other.hasMakespan90Percentile()) {
                 setMakespan90Percentile(other.getMakespan90Percentile());
+              }
+              if (other.hasAvgMakespanEpoch0()) {
+                setAvgMakespanEpoch0(other.getAvgMakespanEpoch0());
+              }
+              if (other.hasAvgMakespanEpoch100()) {
+                setAvgMakespanEpoch100(other.getAvgMakespanEpoch100());
+              }
+              if (other.hasAvgMakespanEpoch500()) {
+                setAvgMakespanEpoch500(other.getAvgMakespanEpoch500());
+              }
+              if (other.hasAvgMakespanEpoch1000()) {
+                setAvgMakespanEpoch1000(other.getAvgMakespanEpoch1000());
+              }
+              if (other.hasAvgMakespanEpoch2000()) {
+                setAvgMakespanEpoch2000(other.getAvgMakespanEpoch2000());
+              }
+              if (other.hasNumJobsSecurity0()) {
+                setNumJobsSecurity0(other.getNumJobsSecurity0());
+              }
+              if (other.hasNumJobsSecurity1()) {
+                setNumJobsSecurity1(other.getNumJobsSecurity1());
+              }
+              if (other.hasNumJobsSecurity2()) {
+                setNumJobsSecurity2(other.getNumJobsSecurity2());
+              }
+              if (other.hasNumJobsSecurity3()) {
+                setNumJobsSecurity3(other.getNumJobsSecurity3());
+              }
+              if (other.hasNumJobsSecurity4()) {
+                setNumJobsSecurity4(other.getNumJobsSecurity4());
+              }
+              if (other.hasNumJobsSecurity5()) {
+                setNumJobsSecurity5(other.getNumJobsSecurity5());
               }
               this.mergeUnknownFields(other.getUnknownFields());
               return this;
@@ -2394,6 +2922,369 @@ public final class ClusterSimulationProtos {
             public Builder clearMakespan90Percentile() {
               bitField0_ = (bitField0_ & ~0x00002000);
               makespan90Percentile_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            // optional double avg_makespan_epoch_0 = 15;
+            private double avgMakespanEpoch0_ ;
+            /**
+             * <code>optional double avg_makespan_epoch_0 = 15;</code>
+             */
+            public boolean hasAvgMakespanEpoch0() {
+              return ((bitField0_ & 0x00004000) == 0x00004000);
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_0 = 15;</code>
+             */
+            public double getAvgMakespanEpoch0() {
+              return avgMakespanEpoch0_;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_0 = 15;</code>
+             */
+            public Builder setAvgMakespanEpoch0(double value) {
+              bitField0_ |= 0x00004000;
+              avgMakespanEpoch0_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_0 = 15;</code>
+             */
+            public Builder clearAvgMakespanEpoch0() {
+              bitField0_ = (bitField0_ & ~0x00004000);
+              avgMakespanEpoch0_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            // optional double avg_makespan_epoch_100 = 16;
+            private double avgMakespanEpoch100_ ;
+            /**
+             * <code>optional double avg_makespan_epoch_100 = 16;</code>
+             */
+            public boolean hasAvgMakespanEpoch100() {
+              return ((bitField0_ & 0x00008000) == 0x00008000);
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_100 = 16;</code>
+             */
+            public double getAvgMakespanEpoch100() {
+              return avgMakespanEpoch100_;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_100 = 16;</code>
+             */
+            public Builder setAvgMakespanEpoch100(double value) {
+              bitField0_ |= 0x00008000;
+              avgMakespanEpoch100_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_100 = 16;</code>
+             */
+            public Builder clearAvgMakespanEpoch100() {
+              bitField0_ = (bitField0_ & ~0x00008000);
+              avgMakespanEpoch100_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            // optional double avg_makespan_epoch_500 = 17;
+            private double avgMakespanEpoch500_ ;
+            /**
+             * <code>optional double avg_makespan_epoch_500 = 17;</code>
+             */
+            public boolean hasAvgMakespanEpoch500() {
+              return ((bitField0_ & 0x00010000) == 0x00010000);
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_500 = 17;</code>
+             */
+            public double getAvgMakespanEpoch500() {
+              return avgMakespanEpoch500_;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_500 = 17;</code>
+             */
+            public Builder setAvgMakespanEpoch500(double value) {
+              bitField0_ |= 0x00010000;
+              avgMakespanEpoch500_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_500 = 17;</code>
+             */
+            public Builder clearAvgMakespanEpoch500() {
+              bitField0_ = (bitField0_ & ~0x00010000);
+              avgMakespanEpoch500_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            // optional double avg_makespan_epoch_1000 = 18;
+            private double avgMakespanEpoch1000_ ;
+            /**
+             * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+             */
+            public boolean hasAvgMakespanEpoch1000() {
+              return ((bitField0_ & 0x00020000) == 0x00020000);
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+             */
+            public double getAvgMakespanEpoch1000() {
+              return avgMakespanEpoch1000_;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+             */
+            public Builder setAvgMakespanEpoch1000(double value) {
+              bitField0_ |= 0x00020000;
+              avgMakespanEpoch1000_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_1000 = 18;</code>
+             */
+            public Builder clearAvgMakespanEpoch1000() {
+              bitField0_ = (bitField0_ & ~0x00020000);
+              avgMakespanEpoch1000_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            // optional double avg_makespan_epoch_2000 = 19;
+            private double avgMakespanEpoch2000_ ;
+            /**
+             * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+             */
+            public boolean hasAvgMakespanEpoch2000() {
+              return ((bitField0_ & 0x00040000) == 0x00040000);
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+             */
+            public double getAvgMakespanEpoch2000() {
+              return avgMakespanEpoch2000_;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+             */
+            public Builder setAvgMakespanEpoch2000(double value) {
+              bitField0_ |= 0x00040000;
+              avgMakespanEpoch2000_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional double avg_makespan_epoch_2000 = 19;</code>
+             */
+            public Builder clearAvgMakespanEpoch2000() {
+              bitField0_ = (bitField0_ & ~0x00040000);
+              avgMakespanEpoch2000_ = 0D;
+              onChanged();
+              return this;
+            }
+
+            // optional int64 num_jobs_security_0 = 20;
+            private long numJobsSecurity0_ ;
+            /**
+             * <code>optional int64 num_jobs_security_0 = 20;</code>
+             */
+            public boolean hasNumJobsSecurity0() {
+              return ((bitField0_ & 0x00080000) == 0x00080000);
+            }
+            /**
+             * <code>optional int64 num_jobs_security_0 = 20;</code>
+             */
+            public long getNumJobsSecurity0() {
+              return numJobsSecurity0_;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_0 = 20;</code>
+             */
+            public Builder setNumJobsSecurity0(long value) {
+              bitField0_ |= 0x00080000;
+              numJobsSecurity0_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_0 = 20;</code>
+             */
+            public Builder clearNumJobsSecurity0() {
+              bitField0_ = (bitField0_ & ~0x00080000);
+              numJobsSecurity0_ = 0L;
+              onChanged();
+              return this;
+            }
+
+            // optional int64 num_jobs_security_1 = 21;
+            private long numJobsSecurity1_ ;
+            /**
+             * <code>optional int64 num_jobs_security_1 = 21;</code>
+             */
+            public boolean hasNumJobsSecurity1() {
+              return ((bitField0_ & 0x00100000) == 0x00100000);
+            }
+            /**
+             * <code>optional int64 num_jobs_security_1 = 21;</code>
+             */
+            public long getNumJobsSecurity1() {
+              return numJobsSecurity1_;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_1 = 21;</code>
+             */
+            public Builder setNumJobsSecurity1(long value) {
+              bitField0_ |= 0x00100000;
+              numJobsSecurity1_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_1 = 21;</code>
+             */
+            public Builder clearNumJobsSecurity1() {
+              bitField0_ = (bitField0_ & ~0x00100000);
+              numJobsSecurity1_ = 0L;
+              onChanged();
+              return this;
+            }
+
+            // optional int64 num_jobs_security_2 = 22;
+            private long numJobsSecurity2_ ;
+            /**
+             * <code>optional int64 num_jobs_security_2 = 22;</code>
+             */
+            public boolean hasNumJobsSecurity2() {
+              return ((bitField0_ & 0x00200000) == 0x00200000);
+            }
+            /**
+             * <code>optional int64 num_jobs_security_2 = 22;</code>
+             */
+            public long getNumJobsSecurity2() {
+              return numJobsSecurity2_;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_2 = 22;</code>
+             */
+            public Builder setNumJobsSecurity2(long value) {
+              bitField0_ |= 0x00200000;
+              numJobsSecurity2_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_2 = 22;</code>
+             */
+            public Builder clearNumJobsSecurity2() {
+              bitField0_ = (bitField0_ & ~0x00200000);
+              numJobsSecurity2_ = 0L;
+              onChanged();
+              return this;
+            }
+
+            // optional int64 num_jobs_security_3 = 23;
+            private long numJobsSecurity3_ ;
+            /**
+             * <code>optional int64 num_jobs_security_3 = 23;</code>
+             */
+            public boolean hasNumJobsSecurity3() {
+              return ((bitField0_ & 0x00400000) == 0x00400000);
+            }
+            /**
+             * <code>optional int64 num_jobs_security_3 = 23;</code>
+             */
+            public long getNumJobsSecurity3() {
+              return numJobsSecurity3_;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_3 = 23;</code>
+             */
+            public Builder setNumJobsSecurity3(long value) {
+              bitField0_ |= 0x00400000;
+              numJobsSecurity3_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_3 = 23;</code>
+             */
+            public Builder clearNumJobsSecurity3() {
+              bitField0_ = (bitField0_ & ~0x00400000);
+              numJobsSecurity3_ = 0L;
+              onChanged();
+              return this;
+            }
+
+            // optional int64 num_jobs_security_4 = 24;
+            private long numJobsSecurity4_ ;
+            /**
+             * <code>optional int64 num_jobs_security_4 = 24;</code>
+             */
+            public boolean hasNumJobsSecurity4() {
+              return ((bitField0_ & 0x00800000) == 0x00800000);
+            }
+            /**
+             * <code>optional int64 num_jobs_security_4 = 24;</code>
+             */
+            public long getNumJobsSecurity4() {
+              return numJobsSecurity4_;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_4 = 24;</code>
+             */
+            public Builder setNumJobsSecurity4(long value) {
+              bitField0_ |= 0x00800000;
+              numJobsSecurity4_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_4 = 24;</code>
+             */
+            public Builder clearNumJobsSecurity4() {
+              bitField0_ = (bitField0_ & ~0x00800000);
+              numJobsSecurity4_ = 0L;
+              onChanged();
+              return this;
+            }
+
+            // optional int64 num_jobs_security_5 = 25;
+            private long numJobsSecurity5_ ;
+            /**
+             * <code>optional int64 num_jobs_security_5 = 25;</code>
+             */
+            public boolean hasNumJobsSecurity5() {
+              return ((bitField0_ & 0x01000000) == 0x01000000);
+            }
+            /**
+             * <code>optional int64 num_jobs_security_5 = 25;</code>
+             */
+            public long getNumJobsSecurity5() {
+              return numJobsSecurity5_;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_5 = 25;</code>
+             */
+            public Builder setNumJobsSecurity5(long value) {
+              bitField0_ |= 0x01000000;
+              numJobsSecurity5_ = value;
+              onChanged();
+              return this;
+            }
+            /**
+             * <code>optional int64 num_jobs_security_5 = 25;</code>
+             */
+            public Builder clearNumJobsSecurity5() {
+              bitField0_ = (bitField0_ & ~0x01000000);
+              numJobsSecurity5_ = 0L;
               onChanged();
               return this;
             }
@@ -16188,17 +17079,17 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\353#\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\271&\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\373\"\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\311%\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
       "tSet.ExperimentEnv.ExperimentResult\022\024\n\014n",
       "um_machines\030\006 \001(\003\022%\n\026heterogeneous_machi" +
-      "nes\030\007 \001(\010:\005false\032\341 \n\020ExperimentResult\022&\n" +
+      "nes\030\007 \001(\010:\005false\032\257#\n\020ExperimentResult\022&\n" +
       "\036cell_state_avg_cpu_utilization\030\004 \001(\001\022&\n" +
       "\036cell_state_avg_mem_utilization\030\005 \001(\001\022!\n" +
       "\031cell_state_avg_cpu_locked\030\r \001(\001\022!\n\031cell" +
@@ -16220,7 +17111,7 @@ public final class ClusterSimulationProtos {
       "imentEnv.ExperimentResult.EfficiencyStat" +
       "s\022q\n\014measurements\030\020 \003(\0132[.ClusterSchedul" +
       "ingSimulation.ExperimentResultSet.Experi" +
-      "mentEnv.ExperimentResult.Measurement\032\321\004\n" +
+      "mentEnv.ExperimentResult.Measurement\032\237\007\n" +
       "\rWorkloadStats\022\025\n\rworkload_name\030\001 \001(\t\022\020\n" +
       "\010num_jobs\030\002 \001(\003\022\032\n\022num_jobs_scheduled\030\003 " +
       "\001(\003\022%\n\035job_think_times_90_percentile\030\004 \001" +
@@ -16235,75 +17126,83 @@ public final class ClusterSimulationProtos {
       "m_task_scheduling_attempts_90_percentile" +
       "\030\013 \001(\001\0222\n*num_task_scheduling_attempts_9" +
       "9_percentile\030\014 \001(\001\022\024\n\014avg_makespan\030\r \001(\001" +
-      "\022\036\n\026makespan_90_percentile\030\016 \001(\001\032\341\007\n\016Sch" +
-      "edulerStats\022\026\n\016scheduler_name\030\001 \001(\t\022\030\n\020u",
-      "seful_busy_time\030\003 \001(\001\022\030\n\020wasted_busy_tim" +
-      "e\030\004 \001(\001\022\201\001\n\rper_day_stats\030\020 \003(\0132j.Cluste" +
-      "rSchedulingSimulation.ExperimentResultSe" +
-      "t.ExperimentEnv.ExperimentResult.Schedul" +
-      "erStats.PerDayStats\022\222\001\n\026per_workload_bus" +
-      "y_time\030\005 \003(\0132r.ClusterSchedulingSimulati" +
-      "on.ExperimentResultSet.ExperimentEnv.Exp" +
-      "erimentResult.SchedulerStats.PerWorkload" +
-      "BusyTime\022#\n\033num_successful_transactions\030" +
-      "\006 \001(\003\022\037\n\027num_failed_transactions\030\007 \001(\003\0222",
-      "\n*num_no_resources_found_scheduling_atte" +
-      "mpts\030\r \001(\003\022 \n\030num_retried_transactions\030\013" +
-      " \001(\003\022%\n\035num_jobs_timed_out_scheduling\030\021 " +
-      "\001(\003\022(\n num_successful_task_transactions\030" +
-      "\t \001(\003\022$\n\034num_failed_task_transactions\030\n " +
-      "\001(\003\022\025\n\ris_multi_path\030\010 \001(\010\022\036\n\026num_jobs_l" +
-      "eft_in_queue\030\014 \001(\003\022#\n\033failed_find_victim" +
-      "_attempts\030\016 \001(\003\032\230\001\n\013PerDayStats\022\017\n\007day_n" +
-      "um\030\001 \001(\003\022\030\n\020useful_busy_time\030\002 \001(\001\022\030\n\020wa" +
-      "sted_busy_time\030\003 \001(\001\022#\n\033num_successful_t",
-      "ransactions\030\004 \001(\003\022\037\n\027num_failed_transact" +
-      "ions\030\005 \001(\003\032`\n\023PerWorkloadBusyTime\022\025\n\rwor" +
-      "kload_name\030\001 \001(\t\022\030\n\020useful_busy_time\030\002 \001" +
-      "(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\032@\n\021Schedule" +
-      "rWorkload\022\025\n\rschedulerName\030\001 \001(\t\022\024\n\014work" +
-      "loadName\030\002 \001(\t\032\271\n\n\017EfficiencyStats\022\035\n\025to" +
-      "tal_energy_consumed\030\001 \001(\001\022\032\n\022total_energ" +
-      "y_saved\030\002 \001(\001\022\036\n\026total_power_off_number\030" +
-      "\003 \001(\001\022\036\n\026kwh_saved_per_shutting\030\004 \001(\001\022!\n" +
-      "\031avg_shuttings_per_machine\030\005 \001(\001\022!\n\031max_",
-      "shuttings_per_machine\030\006 \001(\001\022!\n\031min_shutt" +
-      "ings_per_machine\030\007 \001(\001\022+\n#shuttings_per_" +
-      "machine_90_percentile\030\010 \001(\001\022+\n#shuttings" +
-      "_per_machine_99_percentile\030\t \001(\001\022\'\n\037avg_" +
-      "time_shutted_down_per_cycle\030\n \001(\001\022\'\n\037max" +
-      "_time_shutted_down_per_cycle\030\013 \001(\001\022\'\n\037mi" +
-      "n_time_shutted_down_per_cycle\030\014 \001(\001\0221\n)t" +
-      "ime_shutted_down_per_cycle_90_percentile" +
-      "\030\r \001(\001\0221\n)time_shutted_down_per_cycle_99" +
-      "_percentile\030\016 \001(\001\022)\n!avg_time_shutted_do",
-      "wn_per_machine\030\017 \001(\001\022)\n!max_time_shutted" +
-      "_down_per_machine\030\020 \001(\001\022)\n!min_time_shut" +
-      "ted_down_per_machine\030\021 \001(\001\0223\n+time_shutt" +
-      "ed_down_per_machine_90_percentile\030\022 \001(\001\022" +
-      "3\n+time_shutted_down_per_machine_99_perc" +
-      "entile\030\023 \001(\001\022\036\n\026avg_number_machines_on\030\024" +
-      " \001(\001\022\037\n\027avg_number_machines_off\030\025 \001(\001\022&\n" +
-      "\036avg_number_machines_turning_on\030\026 \001(\001\022\'\n" +
-      "\037avg_number_machines_turning_off\030\027 \001(\001\022\210" +
-      "\001\n\020power_off_policy\030\030 \001(\0132n.ClusterSched",
-      "ulingSimulation.ExperimentResultSet.Expe" +
-      "rimentEnv.ExperimentResult.EfficiencySta" +
-      "ts.PowerOffPolicy\022\206\001\n\017power_on_policy\030\031 " +
-      "\001(\0132m.ClusterSchedulingSimulation.Experi" +
-      "mentResultSet.ExperimentEnv.ExperimentRe" +
-      "sult.EfficiencyStats.PowerOnPolicy\022\037\n\027cu" +
-      "rrent_energy_consumed\030\032 \001(\001\022\026\n\016picking_p" +
-      "olicy\030\033 \001(\t\032\036\n\016PowerOffPolicy\022\014\n\004name\030\001 " +
-      "\001(\t\032\035\n\rPowerOnPolicy\022\014\n\004name\030\001 \001(\t\032\247\002\n\013M" +
-      "easurement\022\026\n\016cpuUtilization\030\001 \001(\001\022\026\n\016cp",
-      "uTotallyIdle\030\002 \001(\001\022\030\n\020cpuPartiallyIdle\030\003" +
-      " \001(\001\022\026\n\016memUtilization\030\004 \001(\001\022\026\n\016memTotal" +
-      "lyIdle\030\005 \001(\001\022\030\n\020memPartiallyIdle\030\006 \001(\001\022\023" +
-      "\n\013machinesOff\030\007 \001(\001\022\022\n\nmachinesOn\030\010 \001(\001\022" +
-      "\032\n\022machinesTurningOff\030\t \001(\001\022\031\n\021machinesT" +
-      "urningOn\030\n \001(\001\022\021\n\tmpuLocked\030\013 \001(\001\022\021\n\tmem" +
-      "Locked\030\014 \001(\001"
+      "\022\036\n\026makespan_90_percentile\030\016 \001(\001\022\034\n\024avg_" +
+      "makespan_epoch_0\030\017 \001(\001\022\036\n\026avg_makespan_e",
+      "poch_100\030\020 \001(\001\022\036\n\026avg_makespan_epoch_500" +
+      "\030\021 \001(\001\022\037\n\027avg_makespan_epoch_1000\030\022 \001(\001\022" +
+      "\037\n\027avg_makespan_epoch_2000\030\023 \001(\001\022\033\n\023num_" +
+      "jobs_security_0\030\024 \001(\003\022\033\n\023num_jobs_securi" +
+      "ty_1\030\025 \001(\003\022\033\n\023num_jobs_security_2\030\026 \001(\003\022" +
+      "\033\n\023num_jobs_security_3\030\027 \001(\003\022\033\n\023num_jobs" +
+      "_security_4\030\030 \001(\003\022\033\n\023num_jobs_security_5" +
+      "\030\031 \001(\003\032\341\007\n\016SchedulerStats\022\026\n\016scheduler_n" +
+      "ame\030\001 \001(\t\022\030\n\020useful_busy_time\030\003 \001(\001\022\030\n\020w" +
+      "asted_busy_time\030\004 \001(\001\022\201\001\n\rper_day_stats\030",
+      "\020 \003(\0132j.ClusterSchedulingSimulation.Expe" +
+      "rimentResultSet.ExperimentEnv.Experiment" +
+      "Result.SchedulerStats.PerDayStats\022\222\001\n\026pe" +
+      "r_workload_busy_time\030\005 \003(\0132r.ClusterSche" +
+      "dulingSimulation.ExperimentResultSet.Exp" +
+      "erimentEnv.ExperimentResult.SchedulerSta" +
+      "ts.PerWorkloadBusyTime\022#\n\033num_successful" +
+      "_transactions\030\006 \001(\003\022\037\n\027num_failed_transa" +
+      "ctions\030\007 \001(\003\0222\n*num_no_resources_found_s" +
+      "cheduling_attempts\030\r \001(\003\022 \n\030num_retried_",
+      "transactions\030\013 \001(\003\022%\n\035num_jobs_timed_out" +
+      "_scheduling\030\021 \001(\003\022(\n num_successful_task" +
+      "_transactions\030\t \001(\003\022$\n\034num_failed_task_t" +
+      "ransactions\030\n \001(\003\022\025\n\ris_multi_path\030\010 \001(\010" +
+      "\022\036\n\026num_jobs_left_in_queue\030\014 \001(\003\022#\n\033fail" +
+      "ed_find_victim_attempts\030\016 \001(\003\032\230\001\n\013PerDay" +
+      "Stats\022\017\n\007day_num\030\001 \001(\003\022\030\n\020useful_busy_ti" +
+      "me\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\022#\n\033nu" +
+      "m_successful_transactions\030\004 \001(\003\022\037\n\027num_f" +
+      "ailed_transactions\030\005 \001(\003\032`\n\023PerWorkloadB",
+      "usyTime\022\025\n\rworkload_name\030\001 \001(\t\022\030\n\020useful" +
+      "_busy_time\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001" +
+      "(\001\032@\n\021SchedulerWorkload\022\025\n\rschedulerName" +
+      "\030\001 \001(\t\022\024\n\014workloadName\030\002 \001(\t\032\271\n\n\017Efficie" +
+      "ncyStats\022\035\n\025total_energy_consumed\030\001 \001(\001\022" +
+      "\032\n\022total_energy_saved\030\002 \001(\001\022\036\n\026total_pow" +
+      "er_off_number\030\003 \001(\001\022\036\n\026kwh_saved_per_shu" +
+      "tting\030\004 \001(\001\022!\n\031avg_shuttings_per_machine" +
+      "\030\005 \001(\001\022!\n\031max_shuttings_per_machine\030\006 \001(" +
+      "\001\022!\n\031min_shuttings_per_machine\030\007 \001(\001\022+\n#",
+      "shuttings_per_machine_90_percentile\030\010 \001(" +
+      "\001\022+\n#shuttings_per_machine_99_percentile" +
+      "\030\t \001(\001\022\'\n\037avg_time_shutted_down_per_cycl" +
+      "e\030\n \001(\001\022\'\n\037max_time_shutted_down_per_cyc" +
+      "le\030\013 \001(\001\022\'\n\037min_time_shutted_down_per_cy" +
+      "cle\030\014 \001(\001\0221\n)time_shutted_down_per_cycle" +
+      "_90_percentile\030\r \001(\001\0221\n)time_shutted_dow" +
+      "n_per_cycle_99_percentile\030\016 \001(\001\022)\n!avg_t" +
+      "ime_shutted_down_per_machine\030\017 \001(\001\022)\n!ma" +
+      "x_time_shutted_down_per_machine\030\020 \001(\001\022)\n",
+      "!min_time_shutted_down_per_machine\030\021 \001(\001" +
+      "\0223\n+time_shutted_down_per_machine_90_per" +
+      "centile\030\022 \001(\001\0223\n+time_shutted_down_per_m" +
+      "achine_99_percentile\030\023 \001(\001\022\036\n\026avg_number" +
+      "_machines_on\030\024 \001(\001\022\037\n\027avg_number_machine" +
+      "s_off\030\025 \001(\001\022&\n\036avg_number_machines_turni" +
+      "ng_on\030\026 \001(\001\022\'\n\037avg_number_machines_turni" +
+      "ng_off\030\027 \001(\001\022\210\001\n\020power_off_policy\030\030 \001(\0132" +
+      "n.ClusterSchedulingSimulation.Experiment" +
+      "ResultSet.ExperimentEnv.ExperimentResult",
+      ".EfficiencyStats.PowerOffPolicy\022\206\001\n\017powe" +
+      "r_on_policy\030\031 \001(\0132m.ClusterSchedulingSim" +
+      "ulation.ExperimentResultSet.ExperimentEn" +
+      "v.ExperimentResult.EfficiencyStats.Power" +
+      "OnPolicy\022\037\n\027current_energy_consumed\030\032 \001(" +
+      "\001\022\026\n\016picking_policy\030\033 \001(\t\032\036\n\016PowerOffPol" +
+      "icy\022\014\n\004name\030\001 \001(\t\032\035\n\rPowerOnPolicy\022\014\n\004na" +
+      "me\030\001 \001(\t\032\247\002\n\013Measurement\022\026\n\016cpuUtilizati" +
+      "on\030\001 \001(\001\022\026\n\016cpuTotallyIdle\030\002 \001(\001\022\030\n\020cpuP" +
+      "artiallyIdle\030\003 \001(\001\022\026\n\016memUtilization\030\004 \001",
+      "(\001\022\026\n\016memTotallyIdle\030\005 \001(\001\022\030\n\020memPartial" +
+      "lyIdle\030\006 \001(\001\022\023\n\013machinesOff\030\007 \001(\001\022\022\n\nmac" +
+      "hinesOn\030\010 \001(\001\022\032\n\022machinesTurningOff\030\t \001(" +
+      "\001\022\031\n\021machinesTurningOn\030\n \001(\001\022\021\n\tmpuLocke" +
+      "d\030\013 \001(\001\022\021\n\tmemLocked\030\014 \001(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -16333,7 +17232,7 @@ public final class ClusterSimulationProtos {
           internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_descriptor,
-              new java.lang.String[] { "WorkloadName", "NumJobs", "NumJobsScheduled", "JobThinkTimes90Percentile", "AvgJobQueueTimesTillFirstScheduled", "AvgJobQueueTimesTillFullyScheduled", "JobQueueTimeTillFirstScheduled90Percentile", "JobQueueTimeTillFullyScheduled90Percentile", "NumSchedulingAttempts90Percentile", "NumSchedulingAttempts99Percentile", "NumTaskSchedulingAttempts90Percentile", "NumTaskSchedulingAttempts99Percentile", "AvgMakespan", "Makespan90Percentile", });
+              new java.lang.String[] { "WorkloadName", "NumJobs", "NumJobsScheduled", "JobThinkTimes90Percentile", "AvgJobQueueTimesTillFirstScheduled", "AvgJobQueueTimesTillFullyScheduled", "JobQueueTimeTillFirstScheduled90Percentile", "JobQueueTimeTillFullyScheduled90Percentile", "NumSchedulingAttempts90Percentile", "NumSchedulingAttempts99Percentile", "NumTaskSchedulingAttempts90Percentile", "NumTaskSchedulingAttempts99Percentile", "AvgMakespan", "Makespan90Percentile", "AvgMakespanEpoch0", "AvgMakespanEpoch100", "AvgMakespanEpoch500", "AvgMakespanEpoch1000", "AvgMakespanEpoch2000", "NumJobsSecurity0", "NumJobsSecurity1", "NumJobsSecurity2", "NumJobsSecurity3", "NumJobsSecurity4", "NumJobsSecurity5", });
           internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_SchedulerStats_descriptor =
             internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_descriptor.getNestedTypes().get(1);
           internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_SchedulerStats_fieldAccessorTable = new

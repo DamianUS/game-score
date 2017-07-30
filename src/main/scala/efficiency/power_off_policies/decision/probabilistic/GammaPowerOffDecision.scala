@@ -25,6 +25,21 @@ class GammaPowerOffDecision(threshold : Double, windowSize: Int, lostFactor : Do
       should = prob <= threshold
     }
     should
+
+    /*
+    val allPastTuples = getPastTuples(cellState, windowSize)
+    var should = false
+    val jobAttributes = getJobAttributes(allPastTuples)
+    val securityLevels = 6
+    if(jobAttributes._1 > 0.0 && jobAttributes._3 > 0.0 && jobAttributes._5 > 0.0){
+      val alphaCpu = ((cellState.availableCpus * ((securityLevels-cellState.machinesSecurity(machineID))/securityLevels)) - (cellState.numberOfMachinesOn * ((securityLevels-cellState.machinesSecurity(machineID))/securityLevels) * cellState.cpusPerMachine * lostFactor)) / jobAttributes._5
+      val alphaMem = ((cellState.availableMem * ((securityLevels-cellState.machinesSecurity(machineID))/securityLevels)) - (cellState.numberOfMachinesOn * ((securityLevels-cellState.machinesSecurity(machineID))/securityLevels) * cellState.memPerMachine * lostFactor)) / jobAttributes._3
+      //FIXME: en la implementación anterior teníamos un floor de (alphacpu+alphamem) /2 y le sumábamos 1
+      val prob = getGammaDistributionCummulativeProbability( Math.min(alphaCpu,alphaMem), jobAttributes._1, ts)
+      should = prob <= threshold
+    }
+    should
+     */
   }
 
 

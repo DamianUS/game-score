@@ -76,45 +76,69 @@ object Workloads {
     memPerMachine = 8,
     machinesHet = true)
 
-/*
-  /**
-    * Reddit
-    */
+  /*
+    /**
+      * Reddit
+      */
 
 
-  /*val exampleWorkloadGeneratorBatch =
-    new TraceReadWLGenerator(workloadName = "Batch".intern(),
-      traceFileName = "/Users/damianfernandez/Downloads/GeneratedLoadReddit-10minutes-2009-02.csv",
-      maxCpusPerTask = 3.9,
-      maxMemPerTask = 7.9)*/
-  val exampleWorkloadGeneratorService =
-    new TraceReadWLGenerator(workloadName = "Service".intern(),
-      traceFileName = "/Users/damianfernandez/Downloads/GeneratedLoadReddit-10minutes-2009-02.csv",
-      maxCpusPerTask = 3.9,
-      maxMemPerTask = 7.9)
-  val TraceReadWLGenerator = WorkloadDesc(cell = "example",
-    assignmentPolicy = "CMB_PBB",
-    workloadGenerators =
-        exampleWorkloadGeneratorService :: Nil,
-    cellStateDesc = exampleCellStateDesc)
-*/
+    /*val exampleWorkloadGeneratorBatch =
+      new TraceReadWLGenerator(workloadName = "Batch".intern(),
+        traceFileName = "/Users/damianfernandez/Downloads/GeneratedLoadReddit-10minutes-2009-02.csv",
+        maxCpusPerTask = 3.9,
+        maxMemPerTask = 7.9)*/
+    val exampleWorkloadGeneratorService =
+      new TraceReadWLGenerator(workloadName = "Service".intern(),
+        traceFileName = "/Users/damianfernandez/Downloads/GeneratedLoadReddit-10minutes-2009-02.csv",
+        maxCpusPerTask = 3.9,
+        maxMemPerTask = 7.9)
+    val TraceReadWLGenerator = WorkloadDesc(cell = "example",
+      assignmentPolicy = "CMB_PBB",
+      workloadGenerators =
+          exampleWorkloadGeneratorService :: Nil,
+      cellStateDesc = exampleCellStateDesc)
+  */
 
   /**
     * Patron dia noche generado
     */
 
+  /*
+    val exampleWorkloadGeneratorBatch =
+      new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+        initAvgJobInterarrivalTime = 14,
+        avgTasksPerJob = 180.0,
+        avgJobDuration = (90.0),
+        avgCpusPerTask = 0.3,
+        avgMemPerTask = 0.5)
+    val exampleWorkloadGeneratorService =
+      new DailyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+        initAvgJobInterarrivalTime = 140,
+        avgTasksPerJob = 30.0,
+        avgJobDuration = (2000.0),
+        avgCpusPerTask = 0.5,
+        avgMemPerTask = 1.2)
+    val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+      assignmentPolicy = "CMB_PBB",
+      workloadGenerators =
+        exampleWorkloadGeneratorBatch ::
+          exampleWorkloadGeneratorService :: Nil,
+      cellStateDesc = exampleCellStateDesc)
+
+    */
+  //1000 maquinas
 
   val exampleWorkloadGeneratorBatch =
-    new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 14,
-      avgTasksPerJob = 180.0,
-      avgJobDuration = (90.0),
-      avgCpusPerTask = 0.3,
-      avgMemPerTask = 0.5)
+  new DailyExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+    initAvgJobInterarrivalTime = 90,
+    avgTasksPerJob = 50.0,
+    avgJobDuration = (90.0),
+    avgCpusPerTask = 0.3,
+    avgMemPerTask = 0.5)
   val exampleWorkloadGeneratorService =
     new DailyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-      initAvgJobInterarrivalTime = 140,
-      avgTasksPerJob = 30.0,
+      initAvgJobInterarrivalTime = 900,
+      avgTasksPerJob = 9.0,
       avgJobDuration = (2000.0),
       avgCpusPerTask = 0.5,
       avgMemPerTask = 1.2)
@@ -126,36 +150,36 @@ object Workloads {
     cellStateDesc = exampleCellStateDesc)
 
 
-/*
-  /**
-    * Este e sel bueno
-    */
+  /*
+    /**
+      * Este e sel bueno
+      */
 
-  /**
-    * Set up WorkloadDescs, containing generators of workloads and
-    * pre-fill workloads based on measurements of cells/workloads.
-    */
-  val exampleWorkloadGeneratorBatch =
-    new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
-      initAvgJobInterarrivalTime = 14,
-      avgTasksPerJob = 180.0,
-      avgJobDuration = (90.0),
-      avgCpusPerTask = 0.3,
-      avgMemPerTask = 0.5)
-  val exampleWorkloadGeneratorService =
-    new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
-      initAvgJobInterarrivalTime = 140,
-      avgTasksPerJob = 30.0,
-      avgJobDuration = (2000.0),
-      avgCpusPerTask = 0.5,
-      avgMemPerTask = 1.2)
-  val exampleWorkloadDesc = WorkloadDesc(cell = "example",
-    assignmentPolicy = "CMB_PBB",
-    workloadGenerators =
-      exampleWorkloadGeneratorBatch ::
-        exampleWorkloadGeneratorService :: Nil,
-    cellStateDesc = exampleCellStateDesc)
-*/
+    /**
+      * Set up WorkloadDescs, containing generators of workloads and
+      * pre-fill workloads based on measurements of cells/workloads.
+      */
+    val exampleWorkloadGeneratorBatch =
+      new ExpExpExpWorkloadGenerator(workloadName = "Batch".intern(),
+        initAvgJobInterarrivalTime = 14,
+        avgTasksPerJob = 180.0,
+        avgJobDuration = (90.0),
+        avgCpusPerTask = 0.3,
+        avgMemPerTask = 0.5)
+    val exampleWorkloadGeneratorService =
+      new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
+        initAvgJobInterarrivalTime = 140,
+        avgTasksPerJob = 30.0,
+        avgJobDuration = (2000.0),
+        avgCpusPerTask = 0.5,
+        avgMemPerTask = 1.2)
+    val exampleWorkloadDesc = WorkloadDesc(cell = "example",
+      assignmentPolicy = "CMB_PBB",
+      workloadGenerators =
+        exampleWorkloadGeneratorBatch ::
+          exampleWorkloadGeneratorService :: Nil,
+      cellStateDesc = exampleCellStateDesc)
+  */
 
   // example pre-fill workload generators.
   val examplePrefillTraceFileName = "traces/initial-traces/example-init-cluster-state.log"
@@ -197,14 +221,14 @@ object Workloads {
   // A workload based on traces of interarrival times, tasks-per-job,
   // and job duration. Task shapes now based on pre-fill traces.
   val exampleWorkloadGeneratorTraceAllBatch =
-    new TraceAllWLGenerator(
-      "Batch".intern(),
-      exampleInterarrivalTraceFileName,
-      exampleNumTasksTraceFileName,
-      exampleJobDurationTraceFileName,
-      examplePrefillTraceFileName,
-      maxCpusPerTask = 3.9, // Machines in example cluster have 4 CPUs.
-      maxMemPerTask = 7.9) // Machines in example cluster have 16GB mem.
+  new TraceAllWLGenerator(
+    "Batch".intern(),
+    exampleInterarrivalTraceFileName,
+    exampleNumTasksTraceFileName,
+    exampleJobDurationTraceFileName,
+    examplePrefillTraceFileName,
+    maxCpusPerTask = 3.9, // Machines in example cluster have 4 CPUs.
+    maxMemPerTask = 7.9) // Machines in example cluster have 16GB mem.
 
   val exampleWorkloadGeneratorTraceAllService =
     new TraceAllWLGenerator(
@@ -237,17 +261,17 @@ object Workloads {
       cellStateDesc = exampleCellStateDesc,
       prefillWorkloadGenerators =
         List(exampleBatchServicePrefillTraceWLGenerator))
-/*Solo service
+  /*Solo service
 
-  val exampleGeneratedWorkloadPrefillDesc =
-    WorkloadDesc(cell = "example",
-      assignmentPolicy = "CMB_PBB",
-      workloadGenerators =
-          exampleWorkloadGeneratorService ::
-          Nil,
-      cellStateDesc = exampleCellStateDesc,
-      prefillWorkloadGenerators =
-        List(exampleBatchServicePrefillTraceWLGenerator))*/
+    val exampleGeneratedWorkloadPrefillDesc =
+      WorkloadDesc(cell = "example",
+        assignmentPolicy = "CMB_PBB",
+        workloadGenerators =
+            exampleWorkloadGeneratorService ::
+            Nil,
+        cellStateDesc = exampleCellStateDesc,
+        prefillWorkloadGenerators =
+          List(exampleBatchServicePrefillTraceWLGenerator))*/
 
   /* Solo batch
   val exampleGeneratedWorkloadPrefillDesc =

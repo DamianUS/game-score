@@ -193,12 +193,13 @@ class MonolithicScheduler(name: String,
             job.unscheduledTasks == job.numTasks) ||
             job.numSchedulingAttempts > 1000) {
             println(("Abandoning job %d (%f cpu %f mem) with %d/%d " +
-              "remaining tasks, after %d scheduling " +
+              "remaining tasks and %d security level, after %d scheduling " +
               "attempts.").format(job.id,
               job.cpusPerTask,
               job.memPerTask,
               job.unscheduledTasks,
               job.numTasks,
+              job.security,
               job.numSchedulingAttempts))
             numJobsTimedOutScheduling += 1
             jobEventType = "abandoned"

@@ -24,7 +24,7 @@ object AgnieszkaPicker extends CellStateResourcesPicker{
       var numRemainingTasks = job.unscheduledTasks
       var remainingCandidates = math.max(0, cellState.numberOfMachinesOn - scheduler.numMachinesBlackList).toInt
       var numTries =0
-      val makespanLog = scala.collection.mutable.ListBuffer.empty[Double]
+      val makespanLog = ListBuffer.empty[Double]
       //First approach: Initialization: Iterate over the tasks and choose any machine randomly and then we only apply the crossing thing between ALL machines in cluster.
 
       //Initialization
