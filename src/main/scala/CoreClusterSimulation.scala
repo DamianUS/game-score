@@ -367,7 +367,7 @@ class ClusterSimulator(val cellState: CellState,
     for (machineID <- 0 until cellState.numMachines){
       avgPowerPerMachine(machineID) = totalPower(machineID).sum / totalPower(machineID).length
     }
-    avgPowerPerMachine.sum/avgPowerPerMachine.length * runtime
+    avgPowerPerMachine.sum * runtime / 3600000
   }
 
   def totalCurrentEnergyConsumed : Double = {
@@ -381,7 +381,7 @@ class ClusterSimulator(val cellState: CellState,
     for (machineID <- 0 until cellState.numMachines){
       avgPowerPerMachine(machineID) = currentPower(machineID).sum / currentPower(machineID).length
     }
-    avgPowerPerMachine.map(power => power * runtime)
+    avgPowerPerMachine.sum * runtime / 3600000
   }
 
   def shuttingDownsPerMachineAvg : Double = if(cellState.powerOffs.filter(_ != null).length > 0) cellState.powerOffs.filter(_ != null).map(_.length).sum.toDouble / cellState.powerOffs.filter(_ != null).length.toDouble else 0.0
