@@ -29,6 +29,7 @@ package ClusterSchedulingSimulation
 import java.io.File
 
 import scala.collection.mutable.HashMap
+import scala.util.Random
 
 /**
   * Set up workloads based on measurements from a real cluster.
@@ -71,10 +72,19 @@ object Workloads {
     * numbers are provided as an example. Enter numbers based on your
     * own clusters instead.
     */
-  val exampleCellStateDesc = new CellStateDesc(numMachines = 1000,
+  val numMach = 1000
+  val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
+  val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(6))
+  val machinesEnergy = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
+
+
+  val exampleCellStateDesc = new CellStateDesc(numMachines = numMach,
     cpusPerMachine = 4,
     memPerMachine = 8,
-    machinesHet = true)
+    machinesHet = true,
+    machEn = machinesEnergy,
+    machPerf = machinesPerformance,
+    machSec = machinesSecurity)
 
   /*
     /**

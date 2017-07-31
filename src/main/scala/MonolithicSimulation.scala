@@ -90,7 +90,10 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
       cellStateDesc.memPerMachine,
       conflictMode = "resource-fit",
       transactionMode = "all-or-nothing",
-      machinesHet = cellStateDesc.machinesHet)
+      machinesHet = cellStateDesc.machinesHet,
+      machEn = cellStateDesc.machEn,
+      machPerf = cellStateDesc.machPerf,
+      machSec = cellStateDesc.machSec)
 
     new ClusterSimulator(cellState,
       schedulers.toMap,

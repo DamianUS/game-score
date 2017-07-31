@@ -978,7 +978,12 @@ class ClaimDelta(val scheduler: Scheduler,
 class CellStateDesc(val numMachines: Int,
                     val cpusPerMachine: Double,
                     val memPerMachine: Double,
-                    val machinesHet : Boolean = false)
+                    val machinesHet : Boolean = false,
+                    val machPerf : Array[Double],
+                    val machSec : Array[Int],
+                    val machEn : Array[Double]){
+
+}
 
 
 class CellState(val numMachines: Int,
@@ -989,7 +994,10 @@ class CellState(val numMachines: Int,
                 val powerOnTime : Double = 30.0,
                 val powerOffTime : Double = 10.0,
                 val mustPopulateLoadFactor : Boolean = true,
-                val machinesHet : Boolean = false) {
+                val machinesHet : Boolean = false,
+                val machPerf : Array[Double] = null,
+                val machSec : Array[Int] = null,
+                val machEn : Array[Double] = null) {
   assert(conflictMode.equals("resource-fit") ||
     conflictMode.equals("sequence-numbers"),
     "conflictMode must be one of: {'resource-fit', 'sequence-numbers'}, " +
@@ -1010,11 +1018,14 @@ class CellState(val numMachines: Int,
   var machinesLoadFactor = populateMachinesLoadFactorMap()
   var machinesLoadOrdered = true;
   val machinesHeterogeneous = machinesHet
-  val machinesPerformance = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
+  //val machinesPerformance = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
+  val machinesPerformance = machPerf
   val machinesPerformanceOrdered = populateMachinesPerformance()
-  val machinesSecurity = Array.fill[Int](numMachines)(Random.nextInt(6))
+  //val machinesSecurity = Array.fill[Int](numMachines)(Random.nextInt(6))
+  val machinesSecurity = machSec
   val machinesSecurityMap = populateMachinesSecurity()
-  val machinesEnergy = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
+  //val machinesEnergy = Array.fill[Double](numMachines)(Random.nextDouble() * (1.5) + 0.5)
+  val machinesEnergy = machEn
 
   def populateMachinesLoadFactorMap(): HashMap[Int,Double] ={
     val map = HashMap[Int,Double]()
@@ -1287,7 +1298,10 @@ class CellState(val numMachines: Int,
       conflictMode,
       transactionMode,
       mustPopulateLoadFactor = false,
-      machinesHet = this.machinesHet)
+      machinesHet = this.machinesHet,
+      machEn = machinesEnergy,
+      machSec = machinesSecurity,
+      machPerf = machinesPerformance)
     Array.copy(src = allocatedCpusPerMachine,
       srcPos = 0,
       dest = newCellState.allocatedCpusPerMachine,
