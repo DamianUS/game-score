@@ -341,7 +341,7 @@ class ClusterSimulator(val cellState: CellState,
   var sumCpuIdle = 0.0
   var sumMemIdle = 0.0
   //Heterogeneous machines power profile
-  val totalMeasurements = (86400.0*7/monitoringPeriod).toInt+1
+  val totalMeasurements = (86400.0*7/monitoringPeriod).toInt+2
   val totalPower= Array.ofDim[Double](cellState.numMachines,totalMeasurements) //Matrix of numMachines
   val currentPower= Array.ofDim[Double](cellState.numMachines,totalMeasurements) //Matrix of numMachines
 
@@ -502,7 +502,7 @@ class ClusterSimulator(val cellState: CellState,
     var totalSecondsWasted = 0.0
     schedulers.map(_._2).foreach(totalSecondsWasted += _.totalWastedTimeSchedulingPowering)
     if(totalSecondsWasted > 0 && totalEnergySaved > 0){
-      totalSecondsWasted / (totalEnergySaved / 3600000)
+      totalSecondsWasted / (totalEnergySaved)
     }
     else{
       0.0
@@ -517,7 +517,7 @@ class ClusterSimulator(val cellState: CellState,
 
   def kwhSavedPerShutting : Double = {
     if(totalPowerOffNumber > 0 && totalEnergySaved > 0.0){
-      (totalEnergySaved / 3600000) / totalPowerOffNumber
+      totalEnergySaved / totalPowerOffNumber
     }
     else{
       0.0

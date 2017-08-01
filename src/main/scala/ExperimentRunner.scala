@@ -402,6 +402,20 @@ class Experiment(
                             jobsNotNull.map(job => job.makespanLogArray).foreach(makespanLogs ++= _)
 
 
+                            for(i <- 0 until 500){
+                              val epoch = ExperimentResultSet.
+                                ExperimentEnv.
+                                ExperimentResult.
+                                WorkloadStats
+                                .Epoch.
+                                newBuilder()
+                              epoch.setNumberEpoch(i)
+                              val fitness = makespanLogs.filter(_.length > i)
+                              val fitnessAvg = fitness.map(x => x(i)).sum / fitness.length
+                              epoch.setFintessAvg(fitnessAvg)
+                              workloadStats.addEpochs(epoch)
+                            }
+
                             val makespansEpoch0 = makespanLogs.filter(_.length > 0)
                             val makespansEpoch0Avg = makespansEpoch0.map(x => x(0)).sum / makespansEpoch0.length
 

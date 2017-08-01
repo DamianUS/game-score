@@ -1134,6 +1134,31 @@ public final class ClusterSimulationProtos {
            * <code>optional int64 num_jobs_security_5 = 25;</code>
            */
           long getNumJobsSecurity5();
+
+          // repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch> 
+              getEpochsList();
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch getEpochs(int index);
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          int getEpochsCount();
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          java.util.List<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder> 
+              getEpochsOrBuilderList();
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder getEpochsOrBuilder(
+              int index);
         }
         /**
          * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats}
@@ -1315,6 +1340,14 @@ public final class ClusterSimulationProtos {
                     numJobsSecurity5_ = input.readInt64();
                     break;
                   }
+                  case 210: {
+                    if (!((mutable_bitField0_ & 0x02000000) == 0x02000000)) {
+                      epochs_ = new java.util.ArrayList<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch>();
+                      mutable_bitField0_ |= 0x02000000;
+                    }
+                    epochs_.add(input.readMessage(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.PARSER, extensionRegistry));
+                    break;
+                  }
                 }
               }
             } catch (com.google.protobuf.InvalidProtocolBufferException e) {
@@ -1323,6 +1356,9 @@ public final class ClusterSimulationProtos {
               throw new com.google.protobuf.InvalidProtocolBufferException(
                   e.getMessage()).setUnfinishedMessage(this);
             } finally {
+              if (((mutable_bitField0_ & 0x02000000) == 0x02000000)) {
+                epochs_ = java.util.Collections.unmodifiableList(epochs_);
+              }
               this.unknownFields = unknownFields.build();
               makeExtensionsImmutable();
             }
@@ -1352,6 +1388,483 @@ public final class ClusterSimulationProtos {
           @java.lang.Override
           public com.google.protobuf.Parser<WorkloadStats> getParserForType() {
             return PARSER;
+          }
+
+          public interface EpochOrBuilder
+              extends com.google.protobuf.MessageOrBuilder {
+
+            // optional int64 number_epoch = 1;
+            /**
+             * <code>optional int64 number_epoch = 1;</code>
+             */
+            boolean hasNumberEpoch();
+            /**
+             * <code>optional int64 number_epoch = 1;</code>
+             */
+            long getNumberEpoch();
+
+            // optional double fintess_avg = 2;
+            /**
+             * <code>optional double fintess_avg = 2;</code>
+             */
+            boolean hasFintessAvg();
+            /**
+             * <code>optional double fintess_avg = 2;</code>
+             */
+            double getFintessAvg();
+          }
+          /**
+           * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch}
+           */
+          public static final class Epoch extends
+              com.google.protobuf.GeneratedMessage
+              implements EpochOrBuilder {
+            // Use Epoch.newBuilder() to construct.
+            private Epoch(com.google.protobuf.GeneratedMessage.Builder<?> builder) {
+              super(builder);
+              this.unknownFields = builder.getUnknownFields();
+            }
+            private Epoch(boolean noInit) { this.unknownFields = com.google.protobuf.UnknownFieldSet.getDefaultInstance(); }
+
+            private static final Epoch defaultInstance;
+            public static Epoch getDefaultInstance() {
+              return defaultInstance;
+            }
+
+            public Epoch getDefaultInstanceForType() {
+              return defaultInstance;
+            }
+
+            private final com.google.protobuf.UnknownFieldSet unknownFields;
+            @java.lang.Override
+            public final com.google.protobuf.UnknownFieldSet
+                getUnknownFields() {
+              return this.unknownFields;
+            }
+            private Epoch(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+              initFields();
+              int mutable_bitField0_ = 0;
+              com.google.protobuf.UnknownFieldSet.Builder unknownFields =
+                  com.google.protobuf.UnknownFieldSet.newBuilder();
+              try {
+                boolean done = false;
+                while (!done) {
+                  int tag = input.readTag();
+                  switch (tag) {
+                    case 0:
+                      done = true;
+                      break;
+                    default: {
+                      if (!parseUnknownField(input, unknownFields,
+                                             extensionRegistry, tag)) {
+                        done = true;
+                      }
+                      break;
+                    }
+                    case 8: {
+                      bitField0_ |= 0x00000001;
+                      numberEpoch_ = input.readInt64();
+                      break;
+                    }
+                    case 17: {
+                      bitField0_ |= 0x00000002;
+                      fintessAvg_ = input.readDouble();
+                      break;
+                    }
+                  }
+                }
+              } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                throw e.setUnfinishedMessage(this);
+              } catch (java.io.IOException e) {
+                throw new com.google.protobuf.InvalidProtocolBufferException(
+                    e.getMessage()).setUnfinishedMessage(this);
+              } finally {
+                this.unknownFields = unknownFields.build();
+                makeExtensionsImmutable();
+              }
+            }
+            public static final com.google.protobuf.Descriptors.Descriptor
+                getDescriptor() {
+              return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_descriptor;
+            }
+
+            protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                internalGetFieldAccessorTable() {
+              return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_fieldAccessorTable
+                  .ensureFieldAccessorsInitialized(
+                      ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.class, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder.class);
+            }
+
+            public static com.google.protobuf.Parser<Epoch> PARSER =
+                new com.google.protobuf.AbstractParser<Epoch>() {
+              public Epoch parsePartialFrom(
+                  com.google.protobuf.CodedInputStream input,
+                  com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                  throws com.google.protobuf.InvalidProtocolBufferException {
+                return new Epoch(input, extensionRegistry);
+              }
+            };
+
+            @java.lang.Override
+            public com.google.protobuf.Parser<Epoch> getParserForType() {
+              return PARSER;
+            }
+
+            private int bitField0_;
+            // optional int64 number_epoch = 1;
+            public static final int NUMBER_EPOCH_FIELD_NUMBER = 1;
+            private long numberEpoch_;
+            /**
+             * <code>optional int64 number_epoch = 1;</code>
+             */
+            public boolean hasNumberEpoch() {
+              return ((bitField0_ & 0x00000001) == 0x00000001);
+            }
+            /**
+             * <code>optional int64 number_epoch = 1;</code>
+             */
+            public long getNumberEpoch() {
+              return numberEpoch_;
+            }
+
+            // optional double fintess_avg = 2;
+            public static final int FINTESS_AVG_FIELD_NUMBER = 2;
+            private double fintessAvg_;
+            /**
+             * <code>optional double fintess_avg = 2;</code>
+             */
+            public boolean hasFintessAvg() {
+              return ((bitField0_ & 0x00000002) == 0x00000002);
+            }
+            /**
+             * <code>optional double fintess_avg = 2;</code>
+             */
+            public double getFintessAvg() {
+              return fintessAvg_;
+            }
+
+            private void initFields() {
+              numberEpoch_ = 0L;
+              fintessAvg_ = 0D;
+            }
+            private byte memoizedIsInitialized = -1;
+            public final boolean isInitialized() {
+              byte isInitialized = memoizedIsInitialized;
+              if (isInitialized != -1) return isInitialized == 1;
+
+              memoizedIsInitialized = 1;
+              return true;
+            }
+
+            public void writeTo(com.google.protobuf.CodedOutputStream output)
+                                throws java.io.IOException {
+              getSerializedSize();
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                output.writeInt64(1, numberEpoch_);
+              }
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                output.writeDouble(2, fintessAvg_);
+              }
+              getUnknownFields().writeTo(output);
+            }
+
+            private int memoizedSerializedSize = -1;
+            public int getSerializedSize() {
+              int size = memoizedSerializedSize;
+              if (size != -1) return size;
+
+              size = 0;
+              if (((bitField0_ & 0x00000001) == 0x00000001)) {
+                size += com.google.protobuf.CodedOutputStream
+                  .computeInt64Size(1, numberEpoch_);
+              }
+              if (((bitField0_ & 0x00000002) == 0x00000002)) {
+                size += com.google.protobuf.CodedOutputStream
+                  .computeDoubleSize(2, fintessAvg_);
+              }
+              size += getUnknownFields().getSerializedSize();
+              memoizedSerializedSize = size;
+              return size;
+            }
+
+            private static final long serialVersionUID = 0L;
+            @java.lang.Override
+            protected java.lang.Object writeReplace()
+                throws java.io.ObjectStreamException {
+              return super.writeReplace();
+            }
+
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(
+                com.google.protobuf.ByteString data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+              return PARSER.parseFrom(data);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(
+                com.google.protobuf.ByteString data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+              return PARSER.parseFrom(data, extensionRegistry);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(byte[] data)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+              return PARSER.parseFrom(data);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(
+                byte[] data,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws com.google.protobuf.InvalidProtocolBufferException {
+              return PARSER.parseFrom(data, extensionRegistry);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(java.io.InputStream input)
+                throws java.io.IOException {
+              return PARSER.parseFrom(input);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+              return PARSER.parseFrom(input, extensionRegistry);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseDelimitedFrom(java.io.InputStream input)
+                throws java.io.IOException {
+              return PARSER.parseDelimitedFrom(input);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseDelimitedFrom(
+                java.io.InputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+              return PARSER.parseDelimitedFrom(input, extensionRegistry);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(
+                com.google.protobuf.CodedInputStream input)
+                throws java.io.IOException {
+              return PARSER.parseFrom(input);
+            }
+            public static ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parseFrom(
+                com.google.protobuf.CodedInputStream input,
+                com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                throws java.io.IOException {
+              return PARSER.parseFrom(input, extensionRegistry);
+            }
+
+            public static Builder newBuilder() { return Builder.create(); }
+            public Builder newBuilderForType() { return newBuilder(); }
+            public static Builder newBuilder(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch prototype) {
+              return newBuilder().mergeFrom(prototype);
+            }
+            public Builder toBuilder() { return newBuilder(this); }
+
+            @java.lang.Override
+            protected Builder newBuilderForType(
+                com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+              Builder builder = new Builder(parent);
+              return builder;
+            }
+            /**
+             * Protobuf type {@code ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch}
+             */
+            public static final class Builder extends
+                com.google.protobuf.GeneratedMessage.Builder<Builder>
+               implements ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder {
+              public static final com.google.protobuf.Descriptors.Descriptor
+                  getDescriptor() {
+                return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_descriptor;
+              }
+
+              protected com.google.protobuf.GeneratedMessage.FieldAccessorTable
+                  internalGetFieldAccessorTable() {
+                return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_fieldAccessorTable
+                    .ensureFieldAccessorsInitialized(
+                        ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.class, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder.class);
+              }
+
+              // Construct using ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.newBuilder()
+              private Builder() {
+                maybeForceBuilderInitialization();
+              }
+
+              private Builder(
+                  com.google.protobuf.GeneratedMessage.BuilderParent parent) {
+                super(parent);
+                maybeForceBuilderInitialization();
+              }
+              private void maybeForceBuilderInitialization() {
+                if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                }
+              }
+              private static Builder create() {
+                return new Builder();
+              }
+
+              public Builder clear() {
+                super.clear();
+                numberEpoch_ = 0L;
+                bitField0_ = (bitField0_ & ~0x00000001);
+                fintessAvg_ = 0D;
+                bitField0_ = (bitField0_ & ~0x00000002);
+                return this;
+              }
+
+              public Builder clone() {
+                return create().mergeFrom(buildPartial());
+              }
+
+              public com.google.protobuf.Descriptors.Descriptor
+                  getDescriptorForType() {
+                return ClusterSchedulingSimulation.ClusterSimulationProtos.internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_descriptor;
+              }
+
+              public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch getDefaultInstanceForType() {
+                return ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.getDefaultInstance();
+              }
+
+              public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch build() {
+                ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch result = buildPartial();
+                if (!result.isInitialized()) {
+                  throw newUninitializedMessageException(result);
+                }
+                return result;
+              }
+
+              public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch buildPartial() {
+                ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch result = new ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch(this);
+                int from_bitField0_ = bitField0_;
+                int to_bitField0_ = 0;
+                if (((from_bitField0_ & 0x00000001) == 0x00000001)) {
+                  to_bitField0_ |= 0x00000001;
+                }
+                result.numberEpoch_ = numberEpoch_;
+                if (((from_bitField0_ & 0x00000002) == 0x00000002)) {
+                  to_bitField0_ |= 0x00000002;
+                }
+                result.fintessAvg_ = fintessAvg_;
+                result.bitField0_ = to_bitField0_;
+                onBuilt();
+                return result;
+              }
+
+              public Builder mergeFrom(com.google.protobuf.Message other) {
+                if (other instanceof ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch) {
+                  return mergeFrom((ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch)other);
+                } else {
+                  super.mergeFrom(other);
+                  return this;
+                }
+              }
+
+              public Builder mergeFrom(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch other) {
+                if (other == ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.getDefaultInstance()) return this;
+                if (other.hasNumberEpoch()) {
+                  setNumberEpoch(other.getNumberEpoch());
+                }
+                if (other.hasFintessAvg()) {
+                  setFintessAvg(other.getFintessAvg());
+                }
+                this.mergeUnknownFields(other.getUnknownFields());
+                return this;
+              }
+
+              public final boolean isInitialized() {
+                return true;
+              }
+
+              public Builder mergeFrom(
+                  com.google.protobuf.CodedInputStream input,
+                  com.google.protobuf.ExtensionRegistryLite extensionRegistry)
+                  throws java.io.IOException {
+                ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch parsedMessage = null;
+                try {
+                  parsedMessage = PARSER.parsePartialFrom(input, extensionRegistry);
+                } catch (com.google.protobuf.InvalidProtocolBufferException e) {
+                  parsedMessage = (ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch) e.getUnfinishedMessage();
+                  throw e;
+                } finally {
+                  if (parsedMessage != null) {
+                    mergeFrom(parsedMessage);
+                  }
+                }
+                return this;
+              }
+              private int bitField0_;
+
+              // optional int64 number_epoch = 1;
+              private long numberEpoch_ ;
+              /**
+               * <code>optional int64 number_epoch = 1;</code>
+               */
+              public boolean hasNumberEpoch() {
+                return ((bitField0_ & 0x00000001) == 0x00000001);
+              }
+              /**
+               * <code>optional int64 number_epoch = 1;</code>
+               */
+              public long getNumberEpoch() {
+                return numberEpoch_;
+              }
+              /**
+               * <code>optional int64 number_epoch = 1;</code>
+               */
+              public Builder setNumberEpoch(long value) {
+                bitField0_ |= 0x00000001;
+                numberEpoch_ = value;
+                onChanged();
+                return this;
+              }
+              /**
+               * <code>optional int64 number_epoch = 1;</code>
+               */
+              public Builder clearNumberEpoch() {
+                bitField0_ = (bitField0_ & ~0x00000001);
+                numberEpoch_ = 0L;
+                onChanged();
+                return this;
+              }
+
+              // optional double fintess_avg = 2;
+              private double fintessAvg_ ;
+              /**
+               * <code>optional double fintess_avg = 2;</code>
+               */
+              public boolean hasFintessAvg() {
+                return ((bitField0_ & 0x00000002) == 0x00000002);
+              }
+              /**
+               * <code>optional double fintess_avg = 2;</code>
+               */
+              public double getFintessAvg() {
+                return fintessAvg_;
+              }
+              /**
+               * <code>optional double fintess_avg = 2;</code>
+               */
+              public Builder setFintessAvg(double value) {
+                bitField0_ |= 0x00000002;
+                fintessAvg_ = value;
+                onChanged();
+                return this;
+              }
+              /**
+               * <code>optional double fintess_avg = 2;</code>
+               */
+              public Builder clearFintessAvg() {
+                bitField0_ = (bitField0_ & ~0x00000002);
+                fintessAvg_ = 0D;
+                onChanged();
+                return this;
+              }
+
+              // @@protoc_insertion_point(builder_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch)
+            }
+
+            static {
+              defaultInstance = new Epoch(true);
+              defaultInstance.initFields();
+            }
+
+            // @@protoc_insertion_point(class_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch)
           }
 
           private int bitField0_;
@@ -1782,6 +2295,42 @@ public final class ClusterSimulationProtos {
             return numJobsSecurity5_;
           }
 
+          // repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;
+          public static final int EPOCHS_FIELD_NUMBER = 26;
+          private java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch> epochs_;
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          public java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch> getEpochsList() {
+            return epochs_;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          public java.util.List<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder> 
+              getEpochsOrBuilderList() {
+            return epochs_;
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          public int getEpochsCount() {
+            return epochs_.size();
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch getEpochs(int index) {
+            return epochs_.get(index);
+          }
+          /**
+           * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+           */
+          public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder getEpochsOrBuilder(
+              int index) {
+            return epochs_.get(index);
+          }
+
           private void initFields() {
             workloadName_ = "";
             numJobs_ = 0L;
@@ -1808,6 +2357,7 @@ public final class ClusterSimulationProtos {
             numJobsSecurity3_ = 0L;
             numJobsSecurity4_ = 0L;
             numJobsSecurity5_ = 0L;
+            epochs_ = java.util.Collections.emptyList();
           }
           private byte memoizedIsInitialized = -1;
           public final boolean isInitialized() {
@@ -1895,6 +2445,9 @@ public final class ClusterSimulationProtos {
             }
             if (((bitField0_ & 0x01000000) == 0x01000000)) {
               output.writeInt64(25, numJobsSecurity5_);
+            }
+            for (int i = 0; i < epochs_.size(); i++) {
+              output.writeMessage(26, epochs_.get(i));
             }
             getUnknownFields().writeTo(output);
           }
@@ -2004,6 +2557,10 @@ public final class ClusterSimulationProtos {
             if (((bitField0_ & 0x01000000) == 0x01000000)) {
               size += com.google.protobuf.CodedOutputStream
                 .computeInt64Size(25, numJobsSecurity5_);
+            }
+            for (int i = 0; i < epochs_.size(); i++) {
+              size += com.google.protobuf.CodedOutputStream
+                .computeMessageSize(26, epochs_.get(i));
             }
             size += getUnknownFields().getSerializedSize();
             memoizedSerializedSize = size;
@@ -2117,6 +2674,7 @@ public final class ClusterSimulationProtos {
             }
             private void maybeForceBuilderInitialization() {
               if (com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders) {
+                getEpochsFieldBuilder();
               }
             }
             private static Builder create() {
@@ -2175,6 +2733,12 @@ public final class ClusterSimulationProtos {
               bitField0_ = (bitField0_ & ~0x00800000);
               numJobsSecurity5_ = 0L;
               bitField0_ = (bitField0_ & ~0x01000000);
+              if (epochsBuilder_ == null) {
+                epochs_ = java.util.Collections.emptyList();
+                bitField0_ = (bitField0_ & ~0x02000000);
+              } else {
+                epochsBuilder_.clear();
+              }
               return this;
             }
 
@@ -2303,6 +2867,15 @@ public final class ClusterSimulationProtos {
                 to_bitField0_ |= 0x01000000;
               }
               result.numJobsSecurity5_ = numJobsSecurity5_;
+              if (epochsBuilder_ == null) {
+                if (((bitField0_ & 0x02000000) == 0x02000000)) {
+                  epochs_ = java.util.Collections.unmodifiableList(epochs_);
+                  bitField0_ = (bitField0_ & ~0x02000000);
+                }
+                result.epochs_ = epochs_;
+              } else {
+                result.epochs_ = epochsBuilder_.build();
+              }
               result.bitField0_ = to_bitField0_;
               onBuilt();
               return result;
@@ -2395,6 +2968,32 @@ public final class ClusterSimulationProtos {
               }
               if (other.hasNumJobsSecurity5()) {
                 setNumJobsSecurity5(other.getNumJobsSecurity5());
+              }
+              if (epochsBuilder_ == null) {
+                if (!other.epochs_.isEmpty()) {
+                  if (epochs_.isEmpty()) {
+                    epochs_ = other.epochs_;
+                    bitField0_ = (bitField0_ & ~0x02000000);
+                  } else {
+                    ensureEpochsIsMutable();
+                    epochs_.addAll(other.epochs_);
+                  }
+                  onChanged();
+                }
+              } else {
+                if (!other.epochs_.isEmpty()) {
+                  if (epochsBuilder_.isEmpty()) {
+                    epochsBuilder_.dispose();
+                    epochsBuilder_ = null;
+                    epochs_ = other.epochs_;
+                    bitField0_ = (bitField0_ & ~0x02000000);
+                    epochsBuilder_ = 
+                      com.google.protobuf.GeneratedMessage.alwaysUseFieldBuilders ?
+                         getEpochsFieldBuilder() : null;
+                  } else {
+                    epochsBuilder_.addAllMessages(other.epochs_);
+                  }
+                }
               }
               this.mergeUnknownFields(other.getUnknownFields());
               return this;
@@ -3287,6 +3886,246 @@ public final class ClusterSimulationProtos {
               numJobsSecurity5_ = 0L;
               onChanged();
               return this;
+            }
+
+            // repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;
+            private java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch> epochs_ =
+              java.util.Collections.emptyList();
+            private void ensureEpochsIsMutable() {
+              if (!((bitField0_ & 0x02000000) == 0x02000000)) {
+                epochs_ = new java.util.ArrayList<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch>(epochs_);
+                bitField0_ |= 0x02000000;
+               }
+            }
+
+            private com.google.protobuf.RepeatedFieldBuilder<
+                ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder> epochsBuilder_;
+
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch> getEpochsList() {
+              if (epochsBuilder_ == null) {
+                return java.util.Collections.unmodifiableList(epochs_);
+              } else {
+                return epochsBuilder_.getMessageList();
+              }
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public int getEpochsCount() {
+              if (epochsBuilder_ == null) {
+                return epochs_.size();
+              } else {
+                return epochsBuilder_.getCount();
+              }
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch getEpochs(int index) {
+              if (epochsBuilder_ == null) {
+                return epochs_.get(index);
+              } else {
+                return epochsBuilder_.getMessage(index);
+              }
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder setEpochs(
+                int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch value) {
+              if (epochsBuilder_ == null) {
+                if (value == null) {
+                  throw new NullPointerException();
+                }
+                ensureEpochsIsMutable();
+                epochs_.set(index, value);
+                onChanged();
+              } else {
+                epochsBuilder_.setMessage(index, value);
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder setEpochs(
+                int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder builderForValue) {
+              if (epochsBuilder_ == null) {
+                ensureEpochsIsMutable();
+                epochs_.set(index, builderForValue.build());
+                onChanged();
+              } else {
+                epochsBuilder_.setMessage(index, builderForValue.build());
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder addEpochs(ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch value) {
+              if (epochsBuilder_ == null) {
+                if (value == null) {
+                  throw new NullPointerException();
+                }
+                ensureEpochsIsMutable();
+                epochs_.add(value);
+                onChanged();
+              } else {
+                epochsBuilder_.addMessage(value);
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder addEpochs(
+                int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch value) {
+              if (epochsBuilder_ == null) {
+                if (value == null) {
+                  throw new NullPointerException();
+                }
+                ensureEpochsIsMutable();
+                epochs_.add(index, value);
+                onChanged();
+              } else {
+                epochsBuilder_.addMessage(index, value);
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder addEpochs(
+                ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder builderForValue) {
+              if (epochsBuilder_ == null) {
+                ensureEpochsIsMutable();
+                epochs_.add(builderForValue.build());
+                onChanged();
+              } else {
+                epochsBuilder_.addMessage(builderForValue.build());
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder addEpochs(
+                int index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder builderForValue) {
+              if (epochsBuilder_ == null) {
+                ensureEpochsIsMutable();
+                epochs_.add(index, builderForValue.build());
+                onChanged();
+              } else {
+                epochsBuilder_.addMessage(index, builderForValue.build());
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder addAllEpochs(
+                java.lang.Iterable<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch> values) {
+              if (epochsBuilder_ == null) {
+                ensureEpochsIsMutable();
+                super.addAll(values, epochs_);
+                onChanged();
+              } else {
+                epochsBuilder_.addAllMessages(values);
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder clearEpochs() {
+              if (epochsBuilder_ == null) {
+                epochs_ = java.util.Collections.emptyList();
+                bitField0_ = (bitField0_ & ~0x02000000);
+                onChanged();
+              } else {
+                epochsBuilder_.clear();
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public Builder removeEpochs(int index) {
+              if (epochsBuilder_ == null) {
+                ensureEpochsIsMutable();
+                epochs_.remove(index);
+                onChanged();
+              } else {
+                epochsBuilder_.remove(index);
+              }
+              return this;
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder getEpochsBuilder(
+                int index) {
+              return getEpochsFieldBuilder().getBuilder(index);
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder getEpochsOrBuilder(
+                int index) {
+              if (epochsBuilder_ == null) {
+                return epochs_.get(index);  } else {
+                return epochsBuilder_.getMessageOrBuilder(index);
+              }
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public java.util.List<? extends ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder> 
+                 getEpochsOrBuilderList() {
+              if (epochsBuilder_ != null) {
+                return epochsBuilder_.getMessageOrBuilderList();
+              } else {
+                return java.util.Collections.unmodifiableList(epochs_);
+              }
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder addEpochsBuilder() {
+              return getEpochsFieldBuilder().addBuilder(
+                  ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.getDefaultInstance());
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder addEpochsBuilder(
+                int index) {
+              return getEpochsFieldBuilder().addBuilder(
+                  index, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.getDefaultInstance());
+            }
+            /**
+             * <code>repeated .ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch epochs = 26;</code>
+             */
+            public java.util.List<ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder> 
+                 getEpochsBuilderList() {
+              return getEpochsFieldBuilder().getBuilderList();
+            }
+            private com.google.protobuf.RepeatedFieldBuilder<
+                ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder> 
+                getEpochsFieldBuilder() {
+              if (epochsBuilder_ == null) {
+                epochsBuilder_ = new com.google.protobuf.RepeatedFieldBuilder<
+                    ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.Epoch.Builder, ClusterSchedulingSimulation.ClusterSimulationProtos.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats.EpochOrBuilder>(
+                        epochs_,
+                        ((bitField0_ & 0x02000000) == 0x02000000),
+                        getParentForChildren(),
+                        isClean());
+                epochs_ = null;
+              }
+              return epochsBuilder_;
             }
 
             // @@protoc_insertion_point(builder_scope:ClusterSchedulingSimulation.ExperimentResultSet.ExperimentEnv.ExperimentResult.WorkloadStats)
@@ -17030,6 +17869,11 @@ public final class ClusterSimulationProtos {
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
       internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_fieldAccessorTable;
   private static com.google.protobuf.Descriptors.Descriptor
+    internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_descriptor;
+  private static
+    com.google.protobuf.GeneratedMessage.FieldAccessorTable
+      internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_fieldAccessorTable;
+  private static com.google.protobuf.Descriptors.Descriptor
     internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_SchedulerStats_descriptor;
   private static
     com.google.protobuf.GeneratedMessage.FieldAccessorTable
@@ -17079,17 +17923,17 @@ public final class ClusterSimulationProtos {
   static {
     java.lang.String[] descriptorData = {
       "\n\037cluster_simulation_protos.proto\022\033Clust" +
-      "erSchedulingSimulation\"\271&\n\023ExperimentRes" +
+      "erSchedulingSimulation\"\342\'\n\023ExperimentRes" +
       "ultSet\022V\n\016experiment_env\030\001 \003(\0132>.Cluster" +
       "SchedulingSimulation.ExperimentResultSet" +
-      ".ExperimentEnv\032\311%\n\rExperimentEnv\022\021\n\tcell" +
+      ".ExperimentEnv\032\362&\n\rExperimentEnv\022\021\n\tcell" +
       "_name\030\001 \001(\t\022\033\n\023workload_split_type\030\002 \001(\t" +
       "\022\033\n\014is_prefilled\030\005 \001(\010:\005false\022\020\n\010run_tim" +
       "e\030\003 \001(\001\022j\n\021experiment_result\030\004 \003(\0132O.Clu" +
       "sterSchedulingSimulation.ExperimentResul" +
       "tSet.ExperimentEnv.ExperimentResult\022\024\n\014n",
       "um_machines\030\006 \001(\003\022%\n\026heterogeneous_machi" +
-      "nes\030\007 \001(\010:\005false\032\257#\n\020ExperimentResult\022&\n" +
+      "nes\030\007 \001(\010:\005false\032\330$\n\020ExperimentResult\022&\n" +
       "\036cell_state_avg_cpu_utilization\030\004 \001(\001\022&\n" +
       "\036cell_state_avg_mem_utilization\030\005 \001(\001\022!\n" +
       "\031cell_state_avg_cpu_locked\030\r \001(\001\022!\n\031cell" +
@@ -17111,7 +17955,7 @@ public final class ClusterSimulationProtos {
       "imentEnv.ExperimentResult.EfficiencyStat" +
       "s\022q\n\014measurements\030\020 \003(\0132[.ClusterSchedul" +
       "ingSimulation.ExperimentResultSet.Experi" +
-      "mentEnv.ExperimentResult.Measurement\032\237\007\n" +
+      "mentEnv.ExperimentResult.Measurement\032\310\010\n" +
       "\rWorkloadStats\022\025\n\rworkload_name\030\001 \001(\t\022\020\n" +
       "\010num_jobs\030\002 \001(\003\022\032\n\022num_jobs_scheduled\030\003 " +
       "\001(\003\022%\n\035job_think_times_90_percentile\030\004 \001" +
@@ -17135,74 +17979,78 @@ public final class ClusterSimulationProtos {
       "ty_1\030\025 \001(\003\022\033\n\023num_jobs_security_2\030\026 \001(\003\022" +
       "\033\n\023num_jobs_security_3\030\027 \001(\003\022\033\n\023num_jobs" +
       "_security_4\030\030 \001(\003\022\033\n\023num_jobs_security_5" +
-      "\030\031 \001(\003\032\341\007\n\016SchedulerStats\022\026\n\016scheduler_n" +
-      "ame\030\001 \001(\t\022\030\n\020useful_busy_time\030\003 \001(\001\022\030\n\020w" +
-      "asted_busy_time\030\004 \001(\001\022\201\001\n\rper_day_stats\030",
-      "\020 \003(\0132j.ClusterSchedulingSimulation.Expe" +
-      "rimentResultSet.ExperimentEnv.Experiment" +
-      "Result.SchedulerStats.PerDayStats\022\222\001\n\026pe" +
-      "r_workload_busy_time\030\005 \003(\0132r.ClusterSche" +
+      "\030\031 \001(\003\022s\n\006epochs\030\032 \003(\0132c.ClusterScheduli" +
+      "ngSimulation.ExperimentResultSet.Experim" +
+      "entEnv.ExperimentResult.WorkloadStats.Ep",
+      "och\0322\n\005Epoch\022\024\n\014number_epoch\030\001 \001(\003\022\023\n\013fi" +
+      "ntess_avg\030\002 \001(\001\032\341\007\n\016SchedulerStats\022\026\n\016sc" +
+      "heduler_name\030\001 \001(\t\022\030\n\020useful_busy_time\030\003" +
+      " \001(\001\022\030\n\020wasted_busy_time\030\004 \001(\001\022\201\001\n\rper_d" +
+      "ay_stats\030\020 \003(\0132j.ClusterSchedulingSimula" +
+      "tion.ExperimentResultSet.ExperimentEnv.E" +
+      "xperimentResult.SchedulerStats.PerDaySta" +
+      "ts\022\222\001\n\026per_workload_busy_time\030\005 \003(\0132r.Cl" +
+      "usterSchedulingSimulation.ExperimentResu" +
+      "ltSet.ExperimentEnv.ExperimentResult.Sch",
+      "edulerStats.PerWorkloadBusyTime\022#\n\033num_s" +
+      "uccessful_transactions\030\006 \001(\003\022\037\n\027num_fail" +
+      "ed_transactions\030\007 \001(\003\0222\n*num_no_resource" +
+      "s_found_scheduling_attempts\030\r \001(\003\022 \n\030num" +
+      "_retried_transactions\030\013 \001(\003\022%\n\035num_jobs_" +
+      "timed_out_scheduling\030\021 \001(\003\022(\n num_succes" +
+      "sful_task_transactions\030\t \001(\003\022$\n\034num_fail" +
+      "ed_task_transactions\030\n \001(\003\022\025\n\ris_multi_p" +
+      "ath\030\010 \001(\010\022\036\n\026num_jobs_left_in_queue\030\014 \001(" +
+      "\003\022#\n\033failed_find_victim_attempts\030\016 \001(\003\032\230",
+      "\001\n\013PerDayStats\022\017\n\007day_num\030\001 \001(\003\022\030\n\020usefu" +
+      "l_busy_time\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 " +
+      "\001(\001\022#\n\033num_successful_transactions\030\004 \001(\003" +
+      "\022\037\n\027num_failed_transactions\030\005 \001(\003\032`\n\023Per" +
+      "WorkloadBusyTime\022\025\n\rworkload_name\030\001 \001(\t\022" +
+      "\030\n\020useful_busy_time\030\002 \001(\001\022\030\n\020wasted_busy" +
+      "_time\030\003 \001(\001\032@\n\021SchedulerWorkload\022\025\n\rsche" +
+      "dulerName\030\001 \001(\t\022\024\n\014workloadName\030\002 \001(\t\032\271\n" +
+      "\n\017EfficiencyStats\022\035\n\025total_energy_consum" +
+      "ed\030\001 \001(\001\022\032\n\022total_energy_saved\030\002 \001(\001\022\036\n\026",
+      "total_power_off_number\030\003 \001(\001\022\036\n\026kwh_save" +
+      "d_per_shutting\030\004 \001(\001\022!\n\031avg_shuttings_pe" +
+      "r_machine\030\005 \001(\001\022!\n\031max_shuttings_per_mac" +
+      "hine\030\006 \001(\001\022!\n\031min_shuttings_per_machine\030" +
+      "\007 \001(\001\022+\n#shuttings_per_machine_90_percen" +
+      "tile\030\010 \001(\001\022+\n#shuttings_per_machine_99_p" +
+      "ercentile\030\t \001(\001\022\'\n\037avg_time_shutted_down" +
+      "_per_cycle\030\n \001(\001\022\'\n\037max_time_shutted_dow" +
+      "n_per_cycle\030\013 \001(\001\022\'\n\037min_time_shutted_do" +
+      "wn_per_cycle\030\014 \001(\001\0221\n)time_shutted_down_",
+      "per_cycle_90_percentile\030\r \001(\001\0221\n)time_sh" +
+      "utted_down_per_cycle_99_percentile\030\016 \001(\001" +
+      "\022)\n!avg_time_shutted_down_per_machine\030\017 " +
+      "\001(\001\022)\n!max_time_shutted_down_per_machine" +
+      "\030\020 \001(\001\022)\n!min_time_shutted_down_per_mach" +
+      "ine\030\021 \001(\001\0223\n+time_shutted_down_per_machi" +
+      "ne_90_percentile\030\022 \001(\001\0223\n+time_shutted_d" +
+      "own_per_machine_99_percentile\030\023 \001(\001\022\036\n\026a" +
+      "vg_number_machines_on\030\024 \001(\001\022\037\n\027avg_numbe" +
+      "r_machines_off\030\025 \001(\001\022&\n\036avg_number_machi",
+      "nes_turning_on\030\026 \001(\001\022\'\n\037avg_number_machi" +
+      "nes_turning_off\030\027 \001(\001\022\210\001\n\020power_off_poli" +
+      "cy\030\030 \001(\0132n.ClusterSchedulingSimulation.E" +
+      "xperimentResultSet.ExperimentEnv.Experim" +
+      "entResult.EfficiencyStats.PowerOffPolicy" +
+      "\022\206\001\n\017power_on_policy\030\031 \001(\0132m.ClusterSche" +
       "dulingSimulation.ExperimentResultSet.Exp" +
-      "erimentEnv.ExperimentResult.SchedulerSta" +
-      "ts.PerWorkloadBusyTime\022#\n\033num_successful" +
-      "_transactions\030\006 \001(\003\022\037\n\027num_failed_transa" +
-      "ctions\030\007 \001(\003\0222\n*num_no_resources_found_s" +
-      "cheduling_attempts\030\r \001(\003\022 \n\030num_retried_",
-      "transactions\030\013 \001(\003\022%\n\035num_jobs_timed_out" +
-      "_scheduling\030\021 \001(\003\022(\n num_successful_task" +
-      "_transactions\030\t \001(\003\022$\n\034num_failed_task_t" +
-      "ransactions\030\n \001(\003\022\025\n\ris_multi_path\030\010 \001(\010" +
-      "\022\036\n\026num_jobs_left_in_queue\030\014 \001(\003\022#\n\033fail" +
-      "ed_find_victim_attempts\030\016 \001(\003\032\230\001\n\013PerDay" +
-      "Stats\022\017\n\007day_num\030\001 \001(\003\022\030\n\020useful_busy_ti" +
-      "me\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001(\001\022#\n\033nu" +
-      "m_successful_transactions\030\004 \001(\003\022\037\n\027num_f" +
-      "ailed_transactions\030\005 \001(\003\032`\n\023PerWorkloadB",
-      "usyTime\022\025\n\rworkload_name\030\001 \001(\t\022\030\n\020useful" +
-      "_busy_time\030\002 \001(\001\022\030\n\020wasted_busy_time\030\003 \001" +
-      "(\001\032@\n\021SchedulerWorkload\022\025\n\rschedulerName" +
-      "\030\001 \001(\t\022\024\n\014workloadName\030\002 \001(\t\032\271\n\n\017Efficie" +
-      "ncyStats\022\035\n\025total_energy_consumed\030\001 \001(\001\022" +
-      "\032\n\022total_energy_saved\030\002 \001(\001\022\036\n\026total_pow" +
-      "er_off_number\030\003 \001(\001\022\036\n\026kwh_saved_per_shu" +
-      "tting\030\004 \001(\001\022!\n\031avg_shuttings_per_machine" +
-      "\030\005 \001(\001\022!\n\031max_shuttings_per_machine\030\006 \001(" +
-      "\001\022!\n\031min_shuttings_per_machine\030\007 \001(\001\022+\n#",
-      "shuttings_per_machine_90_percentile\030\010 \001(" +
-      "\001\022+\n#shuttings_per_machine_99_percentile" +
-      "\030\t \001(\001\022\'\n\037avg_time_shutted_down_per_cycl" +
-      "e\030\n \001(\001\022\'\n\037max_time_shutted_down_per_cyc" +
-      "le\030\013 \001(\001\022\'\n\037min_time_shutted_down_per_cy" +
-      "cle\030\014 \001(\001\0221\n)time_shutted_down_per_cycle" +
-      "_90_percentile\030\r \001(\001\0221\n)time_shutted_dow" +
-      "n_per_cycle_99_percentile\030\016 \001(\001\022)\n!avg_t" +
-      "ime_shutted_down_per_machine\030\017 \001(\001\022)\n!ma" +
-      "x_time_shutted_down_per_machine\030\020 \001(\001\022)\n",
-      "!min_time_shutted_down_per_machine\030\021 \001(\001" +
-      "\0223\n+time_shutted_down_per_machine_90_per" +
-      "centile\030\022 \001(\001\0223\n+time_shutted_down_per_m" +
-      "achine_99_percentile\030\023 \001(\001\022\036\n\026avg_number" +
-      "_machines_on\030\024 \001(\001\022\037\n\027avg_number_machine" +
-      "s_off\030\025 \001(\001\022&\n\036avg_number_machines_turni" +
-      "ng_on\030\026 \001(\001\022\'\n\037avg_number_machines_turni" +
-      "ng_off\030\027 \001(\001\022\210\001\n\020power_off_policy\030\030 \001(\0132" +
-      "n.ClusterSchedulingSimulation.Experiment" +
-      "ResultSet.ExperimentEnv.ExperimentResult",
-      ".EfficiencyStats.PowerOffPolicy\022\206\001\n\017powe" +
-      "r_on_policy\030\031 \001(\0132m.ClusterSchedulingSim" +
-      "ulation.ExperimentResultSet.ExperimentEn" +
-      "v.ExperimentResult.EfficiencyStats.Power" +
-      "OnPolicy\022\037\n\027current_energy_consumed\030\032 \001(" +
-      "\001\022\026\n\016picking_policy\030\033 \001(\t\032\036\n\016PowerOffPol" +
-      "icy\022\014\n\004name\030\001 \001(\t\032\035\n\rPowerOnPolicy\022\014\n\004na" +
-      "me\030\001 \001(\t\032\247\002\n\013Measurement\022\026\n\016cpuUtilizati" +
-      "on\030\001 \001(\001\022\026\n\016cpuTotallyIdle\030\002 \001(\001\022\030\n\020cpuP" +
-      "artiallyIdle\030\003 \001(\001\022\026\n\016memUtilization\030\004 \001",
-      "(\001\022\026\n\016memTotallyIdle\030\005 \001(\001\022\030\n\020memPartial" +
-      "lyIdle\030\006 \001(\001\022\023\n\013machinesOff\030\007 \001(\001\022\022\n\nmac" +
-      "hinesOn\030\010 \001(\001\022\032\n\022machinesTurningOff\030\t \001(" +
-      "\001\022\031\n\021machinesTurningOn\030\n \001(\001\022\021\n\tmpuLocke" +
-      "d\030\013 \001(\001\022\021\n\tmemLocked\030\014 \001(\001"
+      "erimentEnv.ExperimentResult.EfficiencySt" +
+      "ats.PowerOnPolicy\022\037\n\027current_energy_cons" +
+      "umed\030\032 \001(\001\022\026\n\016picking_policy\030\033 \001(\t\032\036\n\016Po",
+      "werOffPolicy\022\014\n\004name\030\001 \001(\t\032\035\n\rPowerOnPol" +
+      "icy\022\014\n\004name\030\001 \001(\t\032\247\002\n\013Measurement\022\026\n\016cpu" +
+      "Utilization\030\001 \001(\001\022\026\n\016cpuTotallyIdle\030\002 \001(" +
+      "\001\022\030\n\020cpuPartiallyIdle\030\003 \001(\001\022\026\n\016memUtiliz" +
+      "ation\030\004 \001(\001\022\026\n\016memTotallyIdle\030\005 \001(\001\022\030\n\020m" +
+      "emPartiallyIdle\030\006 \001(\001\022\023\n\013machinesOff\030\007 \001" +
+      "(\001\022\022\n\nmachinesOn\030\010 \001(\001\022\032\n\022machinesTurnin" +
+      "gOff\030\t \001(\001\022\031\n\021machinesTurningOn\030\n \001(\001\022\021\n" +
+      "\tmpuLocked\030\013 \001(\001\022\021\n\tmemLocked\030\014 \001(\001"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
       new com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner() {
@@ -17232,7 +18080,13 @@ public final class ClusterSimulationProtos {
           internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_fieldAccessorTable = new
             com.google.protobuf.GeneratedMessage.FieldAccessorTable(
               internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_descriptor,
-              new java.lang.String[] { "WorkloadName", "NumJobs", "NumJobsScheduled", "JobThinkTimes90Percentile", "AvgJobQueueTimesTillFirstScheduled", "AvgJobQueueTimesTillFullyScheduled", "JobQueueTimeTillFirstScheduled90Percentile", "JobQueueTimeTillFullyScheduled90Percentile", "NumSchedulingAttempts90Percentile", "NumSchedulingAttempts99Percentile", "NumTaskSchedulingAttempts90Percentile", "NumTaskSchedulingAttempts99Percentile", "AvgMakespan", "Makespan90Percentile", "AvgMakespanEpoch0", "AvgMakespanEpoch100", "AvgMakespanEpoch500", "AvgMakespanEpoch1000", "AvgMakespanEpoch2000", "NumJobsSecurity0", "NumJobsSecurity1", "NumJobsSecurity2", "NumJobsSecurity3", "NumJobsSecurity4", "NumJobsSecurity5", });
+              new java.lang.String[] { "WorkloadName", "NumJobs", "NumJobsScheduled", "JobThinkTimes90Percentile", "AvgJobQueueTimesTillFirstScheduled", "AvgJobQueueTimesTillFullyScheduled", "JobQueueTimeTillFirstScheduled90Percentile", "JobQueueTimeTillFullyScheduled90Percentile", "NumSchedulingAttempts90Percentile", "NumSchedulingAttempts99Percentile", "NumTaskSchedulingAttempts90Percentile", "NumTaskSchedulingAttempts99Percentile", "AvgMakespan", "Makespan90Percentile", "AvgMakespanEpoch0", "AvgMakespanEpoch100", "AvgMakespanEpoch500", "AvgMakespanEpoch1000", "AvgMakespanEpoch2000", "NumJobsSecurity0", "NumJobsSecurity1", "NumJobsSecurity2", "NumJobsSecurity3", "NumJobsSecurity4", "NumJobsSecurity5", "Epochs", });
+          internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_descriptor =
+            internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_descriptor.getNestedTypes().get(0);
+          internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_fieldAccessorTable = new
+            com.google.protobuf.GeneratedMessage.FieldAccessorTable(
+              internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_WorkloadStats_Epoch_descriptor,
+              new java.lang.String[] { "NumberEpoch", "FintessAvg", });
           internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_SchedulerStats_descriptor =
             internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_descriptor.getNestedTypes().get(1);
           internal_static_ClusterSchedulingSimulation_ExperimentResultSet_ExperimentEnv_ExperimentResult_SchedulerStats_fieldAccessorTable = new
