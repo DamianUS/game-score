@@ -61,6 +61,9 @@ message ExperimentResultSet {
       optional double per_task_think_time = 12;
       optional EfficiencyStats efficiency_stats = 15;
       repeated Measurement measurements = 16;
+      optional double security_1_time = 17;
+      optional double security_2_time = 18;
+      optional double security_3_time = 19;
       // Next field number: 15
 
       // Workload-level stats.

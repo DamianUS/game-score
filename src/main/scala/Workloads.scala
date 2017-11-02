@@ -74,7 +74,7 @@ object Workloads {
     */
   val numMach = 1000
   val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
-  val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(6))
+  val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
   val machinesEnergy = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
 
 

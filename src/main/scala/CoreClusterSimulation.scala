@@ -133,7 +133,10 @@ abstract class ClusterSimulatorDesc(val runTime: Double) {
                    cellStateResourcesSorter: CellStateResourcesSorter,
                    cellStateResourcesPicker: CellStateResourcesPicker,
                    powerOnPolicy: PowerOnPolicy,
-                   powerOffPolicy: PowerOffPolicy): ClusterSimulator
+                   powerOffPolicy: PowerOffPolicy,
+                   securityLevel1Time: Double,
+                   securityLevel2Time: Double,
+                   securityLevel3Time: Double): ClusterSimulator
 }
 
 /**
@@ -159,7 +162,10 @@ class ClusterSimulator(val cellState: CellState,
                        cellStateResourcesSorter: CellStateResourcesSorter,
                        cellStateResourcesPicker: CellStateResourcesPicker,
                        powerOnPolicy: PowerOnPolicy,
-                       powerOffPolicy: PowerOffPolicy)
+                       powerOffPolicy: PowerOffPolicy,
+                       val securityLevel1Time: Double,
+                       val securityLevel2Time: Double,
+                       val securityLevel3Time: Double)
   extends Simulator(logging) {
   assert(schedulers.size > 0, "At least one scheduler must be provided to" +
     "scheduler constructor.")
@@ -1491,7 +1497,7 @@ case class Job(id: Long,
   var wastedTimeSchedulingPowering: Double = 0.0
   var turnOnRequests: Seq[Double] = Seq[Double]()
   val tasksPerformance = Array.fill[Double](numTasks)(Random.nextDouble() * (1.5) + 0.5)
-  val security = Random.nextInt(6)
+  val security = Random.nextInt(4)
   var makespanLogArray = new ListBuffer[ListBuffer[Double]]()
 
   var timeStarted: Double = 0.0

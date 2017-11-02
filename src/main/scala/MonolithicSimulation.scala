@@ -56,7 +56,10 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
                    cellStateResourcesSorter: CellStateResourcesSorter,
                    cellStateResourcesPicker: CellStateResourcesPicker,
                    powerOnPolicy: PowerOnPolicy,
-                   powerOffPolicy: PowerOffPolicy): ClusterSimulator = {
+                   powerOffPolicy: PowerOffPolicy,
+                   securityLevel1Time: Double,
+                   securityLevel2Time: Double,
+                   securityLevel3Time: Double): ClusterSimulator = {
     var schedulers = HashMap[String, Scheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -104,7 +107,10 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
       cellStateResourcesSorter = cellStateResourcesSorter,
       cellStateResourcesPicker = cellStateResourcesPicker,
       powerOnPolicy = powerOnPolicy,
-      powerOffPolicy = powerOffPolicy)
+      powerOffPolicy = powerOffPolicy,
+      securityLevel1Time = securityLevel1Time,
+      securityLevel2Time = securityLevel2Time,
+      securityLevel3Time = securityLevel3Time)
   }
 }
 

@@ -88,7 +88,10 @@ class SimulatorsTestSuite extends FunSuite {
       cellStateResourcesSorter = defaultSortingPolicy,
       cellStateResourcesPicker = defaultPickingPolicy,
       powerOnPolicy = defaultPowerOnPolicy,
-      powerOffPolicy = defaultPowerOffPolicy)
+      powerOffPolicy = defaultPowerOffPolicy,
+      securityLevel1Time = 0.0,
+      securityLevel2Time = 0.0,
+      securityLevel3Time = 0.0)
 
     assert(monolithicSimulator.schedulers.size == 1)
     assert(monolithicSimulator.workloadToSchedulerMap.size == 1)
@@ -146,7 +149,10 @@ class SimulatorsTestSuite extends FunSuite {
       cellStateResourcesSorter = defaultSortingPolicy,
       cellStateResourcesPicker = defaultPickingPolicy,
       powerOnPolicy = defaultPowerOnPolicy,
-      powerOffPolicy = defaultPowerOffPolicy)
+      powerOffPolicy = defaultPowerOffPolicy,
+      securityLevel1Time = 0.0,
+      securityLevel2Time = 0.0,
+      securityLevel3Time = 0.0)
 
     monolithicSimulator.run()
 
@@ -228,7 +234,10 @@ class SimulatorsTestSuite extends FunSuite {
       cellStateResourcesSorter = defaultSortingPolicy,
       cellStateResourcesPicker = defaultPickingPolicy,
       powerOnPolicy = defaultPowerOnPolicy,
-      powerOffPolicy = defaultPowerOffPolicy)
+      powerOffPolicy = defaultPowerOffPolicy,
+      securityLevel1Time = 0.0,
+      securityLevel2Time = 0.0,
+      securityLevel3Time = 0.0)
 
     mesosSimulator.run()
     assert(mesosSimulator.agendaSize == 0, ("Mesos Agenda should have been " +
@@ -303,7 +312,10 @@ class SimulatorsTestSuite extends FunSuite {
       cellStateResourcesSorter = defaultSortingPolicy,
       cellStateResourcesPicker = defaultPickingPolicy,
       powerOnPolicy = defaultPowerOnPolicy,
-      powerOffPolicy = defaultPowerOffPolicy)
+      powerOffPolicy = defaultPowerOffPolicy,
+      securityLevel1Time = 0.0,
+      securityLevel2Time = 0.0,
+      securityLevel3Time = 0.0)
 
     // Create a private copy of cellstate.
     val privateCellState = commonCellState.copy
@@ -428,7 +440,10 @@ class SimulatorsTestSuite extends FunSuite {
       cellStateResourcesSorter = defaultSortingPolicy,
       cellStateResourcesPicker = defaultPickingPolicy,
       powerOnPolicy = defaultPowerOnPolicy,
-      powerOffPolicy = defaultPowerOffPolicy)
+      powerOffPolicy = defaultPowerOffPolicy,
+      securityLevel1Time = 0.0,
+      securityLevel2Time = 0.0,
+      securityLevel3Time = 0.0)
 
     // The job should be scheduled as soon as it is added to the scheduler.
     println("adding a job to scheduler.")
@@ -482,7 +497,10 @@ class SimulatorsTestSuite extends FunSuite {
       cellStateResourcesSorter = defaultSortingPolicy,
       cellStateResourcesPicker = defaultPickingPolicy,
       powerOnPolicy = defaultPowerOnPolicy,
-      powerOffPolicy = defaultPowerOffPolicy)
+      powerOffPolicy = defaultPowerOffPolicy,
+      securityLevel1Time = 0.0,
+      securityLevel2Time = 0.0,
+      securityLevel3Time = 0.0)
 
     omegaSimulator.run()
     // Each job is scheduled two seconds after it arrives since all jobs

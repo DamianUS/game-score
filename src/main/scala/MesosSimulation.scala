@@ -52,7 +52,10 @@ class MesosSimulatorDesc(
                    cellStateResourcesSorter: CellStateResourcesSorter,
                    cellStateResourcesPicker: CellStateResourcesPicker,
                    powerOnPolicy: PowerOnPolicy,
-                   powerOffPolicy: PowerOffPolicy): ClusterSimulator = {
+                   powerOffPolicy: PowerOffPolicy,
+                   securityLevel1Time: Double,
+                   securityLevel2Time: Double,
+                   securityLevel3Time: Double): ClusterSimulator = {
     var schedulers = HashMap[String, MesosScheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -107,7 +110,10 @@ class MesosSimulatorDesc(
       cellStateResourcesSorter = cellStateResourcesSorter,
       cellStateResourcesPicker = cellStateResourcesPicker,
       powerOnPolicy = powerOnPolicy,
-      powerOffPolicy = powerOffPolicy)
+      powerOffPolicy = powerOffPolicy,
+      securityLevel1Time = securityLevel1Time,
+      securityLevel2Time = securityLevel2Time,
+      securityLevel3Time = securityLevel3Time)
   }
 }
 
@@ -122,7 +128,10 @@ class MesosSimulator(cellState: CellState,
                      cellStateResourcesSorter: CellStateResourcesSorter,
                      cellStateResourcesPicker: CellStateResourcesPicker,
                      powerOnPolicy: PowerOnPolicy,
-                     powerOffPolicy: PowerOffPolicy)
+                     powerOffPolicy: PowerOffPolicy,
+                     securityLevel1Time: Double,
+                     securityLevel2Time: Double,
+                     securityLevel3Time: Double)
   extends ClusterSimulator(cellState,
     schedulers,
     workloadToSchedulerMap,
@@ -133,7 +142,10 @@ class MesosSimulator(cellState: CellState,
     cellStateResourcesSorter = cellStateResourcesSorter,
     cellStateResourcesPicker = cellStateResourcesPicker,
     powerOnPolicy = powerOnPolicy,
-    powerOffPolicy = powerOffPolicy) {
+    powerOffPolicy = powerOffPolicy,
+    securityLevel1Time = securityLevel1Time,
+    securityLevel2Time = securityLevel2Time,
+    securityLevel3Time = securityLevel3Time) {
   assert(cellState.conflictMode.equals("resource-fit"),
     "Mesos requires cellstate to be set up with resource-fit conflictMode")
   // Set up a pointer to this simulator in the allocator.

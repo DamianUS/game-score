@@ -30,6 +30,16 @@ object AgnieszkaSecurityWithRandom extends CellStateResourcesPicker{
       var numTries =0
       val maxTries = 50
       val makespanLog = scala.collection.mutable.ListBuffer.empty[Double]
+      /*var securityTime = 0.0
+      if(job.security == 1) {
+        securityTime = simulator.securityLevel1Time
+      }
+      if(job.security == 2) {
+        securityTime = simulator.securityLevel2Time
+      }
+      else if(job.security == 3){
+        securityTime = simulator.securityLevel3Time
+      }*/
       //First approach: Initialization: Iterate over the tasks and choose any machine randomly and then we only apply the crossing thing between ALL machines in cluster.
       var stop = false
       //Initialization
@@ -57,8 +67,15 @@ object AgnieszkaSecurityWithRandom extends CellStateResourcesPicker{
                 assert(cellState.isMachineOn(mID), "Trying to pick a powered off machine with picker : " + name)
                 val tasksScheduled = schedule.getOrElseUpdate(mID, collection.mutable.ListBuffer.empty[Int])
                 tasksScheduled += taskID
-                if (cellState.machinesPerformance(mID) * job.taskDuration * job.tasksPerformance(taskID) > initialMakespan) {
-                  initialMakespan = cellState.machinesPerformance(mID) * job.taskDuration * job.tasksPerformance(taskID)
+                var securityTime = 0.0
+                if(cellState.machinesSecurity(mID) == 1)
+                  securityTime = simulator.securityLevel1Time
+                if(cellState.machinesSecurity(mID) == 2)
+                  securityTime = simulator.securityLevel2Time
+                else if(cellState.machinesSecurity(mID) == 3)
+                  securityTime = simulator.securityLevel3Time
+                if (((cellState.machinesPerformance(mID) * job.taskDuration * job.tasksPerformance(taskID)) + (securityTime * cellState.machinesPerformance(mID))) > initialMakespan) {
+                  initialMakespan = cellState.machinesPerformance(mID) * job.taskDuration * job.tasksPerformance(taskID) + (securityTime * cellState.machinesPerformance(mID))
                 }
                 scheduled = true
               }
@@ -80,20 +97,27 @@ object AgnieszkaSecurityWithRandom extends CellStateResourcesPicker{
         //if(!stop){
         makespanLog += initialMakespan
         //After this, we should have an array of machines that will host our tasks. We will then cross the worst machine with a random one
-        for (epoch <- 0 until 500) {
+        for (epoch <- 0 until 40) {
           var worstMakespan = 0.0
           var worstParent = -1
           var bestMakespan = Double.MaxValue
           var bestParent = -1
 
           for ((machineID, tasksMachine) <- schedule) {
+            var securityTime = 0.0
+            if(cellState.machinesSecurity(machineID) == 1)
+              securityTime = simulator.securityLevel1Time
+            if(cellState.machinesSecurity(machineID) == 2)
+              securityTime = simulator.securityLevel2Time
+            else if(cellState.machinesSecurity(machineID) == 3)
+              securityTime = simulator.securityLevel3Time
             for (taskID <- tasksMachine) {
-              if (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) > worstMakespan) {
-                worstMakespan = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
+              if (((cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)) + (securityTime * cellState.machinesPerformance(machineID))) > worstMakespan) {
+                worstMakespan = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) + (securityTime * cellState.machinesPerformance(machineID))
                 worstParent = machineID
               }
-              if (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) < bestMakespan) {
-                bestMakespan = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
+              if (((cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)) + (securityTime * cellState.machinesPerformance(machineID))) < bestMakespan) {
+                bestMakespan = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) + (securityTime * cellState.machinesPerformance(machineID))
                 bestParent = machineID
               }
             }
@@ -125,9 +149,16 @@ object AgnieszkaSecurityWithRandom extends CellStateResourcesPicker{
           var worstParentRandom = -1
 
           for ((machineID, tasksMachine) <- schedule) {
+            var securityTime = 0.0
+            if(cellState.machinesSecurity(machineID) == 1)
+              securityTime = simulator.securityLevel1Time
+            if(cellState.machinesSecurity(machineID) == 2)
+              securityTime = simulator.securityLevel2Time
+            else if(cellState.machinesSecurity(machineID) == 3)
+              securityTime = simulator.securityLevel3Time
             for (taskID <- tasksMachine) {
-              if (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) > worstMakespanRandom) {
-                worstMakespanRandom = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
+              if (((cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)) + (securityTime * cellState.machinesPerformance(machineID))) > worstMakespanRandom) {
+                worstMakespanRandom = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) + (securityTime * cellState.machinesPerformance(machineID))
                 worstParentRandom = machineID
               }
             }
@@ -170,40 +201,20 @@ object AgnieszkaSecurityWithRandom extends CellStateResourcesPicker{
           }
 
 
-          /*val secMachines = cellState.machinesSecurityMap.filterKeys(_ >= job.security).values
-        val availableMachines = ListBuffer.empty[Int]
-        for ( array <- secMachines){
-          availableMachines ++= array
-        }
-        val range = 0 until availableMachines.length
-        val index = (range(randomNumberGenerator.nextInt(range length)))
-        val mID = availableMachines(index)
-        val machineOcurrences = schedule.getOrElse(mID, scala.collection.mutable.ListBuffer.empty[Int]).size
-        val worstMachineOcurrences = schedule.getOrElse(worstParentRandom, scala.collection.mutable.ListBuffer.empty[Int]).size
-        if (mID != worstParentRandom && cellState.isMachineOn(mID) && cellState.machinesSecurity(mID) >= job.security && cellState.availableCpusPerMachine(mID) >= (machineOcurrences + worstMachineOcurrences) * job.cpusPerTask + 0.0001 && cellState.availableMemPerMachine(mID) >= (machineOcurrences + worstMachineOcurrences) * job.memPerTask + 0.0001) {
-          assert(cellState.isMachineOn(mID), "Trying to pick a powered off machine with picker : " + name)
-          val tasksScheduled = schedule.getOrElseUpdate(mID, collection.mutable.ListBuffer.empty[Int])
-          tasksScheduled ++= schedule.getOrElse(worstParentRandom, scala.collection.mutable.ListBuffer.empty[Int])
-          schedule.remove(worstParentRandom)
-          scheduled = true
-        }
-        else {
-          numTries += 1
-          if (numTries >= maxTries-1) {
-            stop = true;
-            loop1.break()
-          }
-        }
-      }*/
-
-
           //Only for testing purposes
           var checkMakespan = 0.0
 
           for ((machineID, tasksMachine) <- schedule) {
+            var securityTime = 0.0
+            if(cellState.machinesSecurity(machineID) == 1)
+              securityTime = simulator.securityLevel1Time
+            if(cellState.machinesSecurity(machineID) == 2)
+              securityTime = simulator.securityLevel2Time
+            else if(cellState.machinesSecurity(machineID) == 3)
+              securityTime = simulator.securityLevel3Time
             for (taskID <- tasksMachine) {
-              if (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) > checkMakespan) {
-                checkMakespan = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
+              if (((cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)) + (securityTime * cellState.machinesPerformance(machineID))) > checkMakespan) {
+                checkMakespan = cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) + (securityTime * cellState.machinesPerformance(machineID))
               }
             }
           }
@@ -213,13 +224,20 @@ object AgnieszkaSecurityWithRandom extends CellStateResourcesPicker{
       }
       //if(!stop){
       for ((machineID,tasksMachine) <- schedule){
+        var securityTime = 0.0
+        if(cellState.machinesSecurity(machineID) == 1)
+          securityTime = simulator.securityLevel1Time
+        if(cellState.machinesSecurity(machineID) == 2)
+          securityTime = simulator.securityLevel2Time
+        else if(cellState.machinesSecurity(machineID) == 3)
+          securityTime = simulator.securityLevel3Time
         for(taskID <- tasksMachine) {
           assert(machineID >= 0 && machineID < cellState.machineSeqNums.length, "Machine ID not valid")
           assert(taskID >= 0 && taskID < job.numTasks, "Task ID not valid")
           val claimDelta = new ClaimDelta(scheduler,
             machineID,
             cellState.machineSeqNums(machineID),
-            if (cellState.machinesHeterogeneous && job.workloadName == "Batch") cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) else job.taskDuration,
+            if (cellState.machinesHeterogeneous && job.workloadName == "Batch") (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) +  (securityTime * cellState.machinesPerformance(machineID))) else job.taskDuration + securityTime,
             job.cpusPerTask,
             job.memPerTask,
             job = job)

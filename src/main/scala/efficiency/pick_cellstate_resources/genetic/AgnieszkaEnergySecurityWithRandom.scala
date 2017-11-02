@@ -13,7 +13,6 @@ import scala.util.control.Breaks
 // This picker doesn't take into account yet shutted down machines nor capacity security margins nor performance
 object AgnieszkaEnergySecurityWithRandom extends CellStateResourcesPicker{
   val randomNumberGenerator = new util.Random(Seed())
-
   val spreadMargin = 0.05
   val marginPerc = 0.01
 
@@ -72,20 +71,20 @@ object AgnieszkaEnergySecurityWithRandom extends CellStateResourcesPicker{
           }
         }
       }
-      initialEnergy = getEnergyFromScheduleLogging(schedule,cellState,job)
+      initialEnergy = getEnergyFromScheduleLogging(schedule,cellState,job,simulator)
       if(schedule.size > 0) {
         assert(schedule.size > 0, "Empty schedule")
         //if(!stop){
         energyLog += initialEnergy
         //After this, we should have an array of machines that will host our tasks. We will then cross the worst machine with a random one
-        for (epoch <- 0 until 500) {
+        for (epoch <- 0 until 40) {
           var worstEnergy = 0.0
           var worstParent = -1
           var bestEnergy = Double.MaxValue
           var bestParent = -1
 
           for ((machineID, tasksMachine) <- schedule) {
-            var energy = getEnergyFromMachine(schedule,cellState,job,machineID)
+            var energy = getEnergyFromMachine(schedule,cellState,job,machineID,simulator)
             if(energy > worstEnergy){
               worstEnergy = energy
               worstParent = machineID
@@ -122,7 +121,7 @@ object AgnieszkaEnergySecurityWithRandom extends CellStateResourcesPicker{
           var worstParentRandom = -1
 
           for ((machineID, tasksMachine) <- schedule) {
-            val energy = getEnergyFromMachine(schedule,cellState,job,machineID)
+            val energy = getEnergyFromMachine(schedule,cellState,job,machineID,simulator)
             if (energy > worstEnergyRandom) {
               worstEnergyRandom = energy
               worstParentRandom = machineID
@@ -164,19 +163,33 @@ object AgnieszkaEnergySecurityWithRandom extends CellStateResourcesPicker{
               shouldBeStopped = true
             }
           }
-          energyLog += getEnergyFromScheduleLogging(schedule,cellState,job)
+          energyLog += getEnergyFromScheduleLogging(schedule,cellState,job,simulator)
           //End of testing purposes
         }
       }
       //if(!stop){
+      /*var securityTime = 0.0
+      if(job.security == 1)
+        securityTime = simulator.securityLevel1Time
+      if(job.security == 2)
+        securityTime = simulator.securityLevel2Time
+      else if(job.security == 3)
+        securityTime = simulator.securityLevel3Time*/
       for ((machineID,tasksMachine) <- schedule){
+        var securityTime = 0.0
+        if(cellState.machinesSecurity(machineID) == 1)
+          securityTime = simulator.securityLevel1Time
+        if(cellState.machinesSecurity(machineID) == 2)
+          securityTime = simulator.securityLevel2Time
+        else if(cellState.machinesSecurity(machineID) == 3)
+          securityTime = simulator.securityLevel3Time
         for(taskID <- tasksMachine) {
           assert(machineID >= 0 && machineID < cellState.machineSeqNums.length, "Machine ID not valid")
           assert(taskID >= 0 && taskID < job.numTasks, "Task ID not valid")
           val claimDelta = new ClaimDelta(scheduler,
             machineID,
             cellState.machineSeqNums(machineID),
-            if (cellState.machinesHeterogeneous && job.workloadName == "Batch") cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID) else job.taskDuration,
+            if (cellState.machinesHeterogeneous && job.workloadName == "Batch") ((job.taskDuration * cellState.machinesPerformance(machineID)) +  (securityTime * cellState.machinesPerformance(machineID))) else job.taskDuration + securityTime,
             job.cpusPerTask,
             job.memPerTask,
             job = job)
@@ -253,29 +266,74 @@ object AgnieszkaEnergySecurityWithRandom extends CellStateResourcesPicker{
   override val name: String = "agnieszka-energy-security-picker-random"
 
 
-  def getEnergyFromSchedule(schedule: HashMap[Int, ListBuffer[Int]], cellState: CellState, job: Job): Double ={
+  def getEnergyFromSchedule(schedule: HashMap[Int, ListBuffer[Int]], cellState: CellState, job: Job, simulator: ClusterSimulator): Double ={
     var energy = 0.0
+    /*var securityTime = 0.0
+    if(job.security == 1)
+      securityTime = simulator.securityLevel1Time
+    if(job.security == 2)
+      securityTime = simulator.securityLevel2Time
+    else if(job.security == 3)
+      securityTime = simulator.securityLevel3Time*/
     for ((machineID,tasksMachine) <- schedule) {
+      var securityTime = 0.0
+      if(cellState.machinesSecurity(machineID) == 1)
+        securityTime = simulator.securityLevel1Time
+      if(cellState.machinesSecurity(machineID) == 2)
+        securityTime = simulator.securityLevel2Time
+      else if(cellState.machinesSecurity(machineID) == 3)
+        securityTime = simulator.securityLevel3Time
       for (taskID <- tasksMachine) {
-        energy += job.cpusPerTask * cellState.simulator.powerPerCpuOn * cellState.machinesEnergy(machineID) * cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
+        var taskTime = (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID))+(securityTime * cellState.machinesPerformance(machineID))
+        energy += job.cpusPerTask * cellState.simulator.powerPerCpuOn * cellState.machinesEnergy(machineID) * taskTime
       }
     }
     return energy * (1+(schedule.keySet.size/10)) / 3600000
   }
 
-  def getEnergyFromMachine(schedule: HashMap[Int, ListBuffer[Int]], cellState: CellState, job: Job, machineID : Int): Double ={
+  def getEnergyFromMachine(schedule: HashMap[Int, ListBuffer[Int]], cellState: CellState, job: Job, machineID : Int, simulator: ClusterSimulator): Double ={
     var energy = 0.0
+    /*var securityTime = 0.0
+    if(job.security == 1)
+      securityTime = simulator.securityLevel1Time
+    if(job.security == 2)
+      securityTime = simulator.securityLevel2Time
+    else if(job.security == 3)
+      securityTime = simulator.securityLevel3Time*/
+    var securityTime = 0.0
+    if(cellState.machinesSecurity(machineID) == 1)
+      securityTime = simulator.securityLevel1Time
+    if(cellState.machinesSecurity(machineID) == 2)
+      securityTime = simulator.securityLevel2Time
+    else if(cellState.machinesSecurity(machineID) == 3)
+      securityTime = simulator.securityLevel3Time
     for (taskID <- schedule.get(machineID).get) {
-      energy += job.cpusPerTask * cellState.simulator.powerPerCpuOn * cellState.machinesEnergy(machineID) * cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
+      var taskTime = (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID))+(securityTime * cellState.machinesPerformance(machineID))
+      energy += job.cpusPerTask * simulator.powerPerCpuOn * cellState.machinesEnergy(machineID) * taskTime
     }
     return energy * (1+(schedule.keySet.size/10)) / 3600000
   }
 
-  def getEnergyFromScheduleLogging(schedule: HashMap[Int, ListBuffer[Int]], cellState: CellState, job: Job): Double ={
+  def getEnergyFromScheduleLogging(schedule: HashMap[Int, ListBuffer[Int]], cellState: CellState, job: Job, simulator: ClusterSimulator): Double ={
     var energy = 0.0
+    /*var securityTime = 0.0
+    if(job.security == 1)
+      securityTime = simulator.securityLevel1Time
+    if(job.security == 2)
+      securityTime = simulator.securityLevel2Time
+    else if(job.security == 3)
+      securityTime = simulator.securityLevel3Time*/
     for ((machineID,tasksMachine) <- schedule) {
+      var securityTime = 0.0
+      if(cellState.machinesSecurity(machineID) == 1)
+        securityTime = simulator.securityLevel1Time
+      if(cellState.machinesSecurity(machineID) == 2)
+        securityTime = simulator.securityLevel2Time
+      else if(cellState.machinesSecurity(machineID) == 3)
+        securityTime = simulator.securityLevel3Time
       for (taskID <- tasksMachine) {
-        energy += job.cpusPerTask * cellState.simulator.powerPerCpuOn * cellState.machinesEnergy(machineID) * cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID)
+        var taskTime = (cellState.machinesPerformance(machineID) * job.taskDuration * job.tasksPerformance(taskID))+(securityTime * cellState.machinesPerformance(machineID))
+        energy += job.cpusPerTask * simulator.powerPerCpuOn * cellState.machinesEnergy(machineID) * taskTime
       }
     }
     return energy / 3600000

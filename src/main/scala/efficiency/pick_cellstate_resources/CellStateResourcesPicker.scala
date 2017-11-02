@@ -22,11 +22,19 @@ trait CellStateResourcesPicker {
       scheduler.failedFindVictimAttempts += pickResult._2
       if(pickResult._1 > -1){
         val currMachID = pickResult._1
+        var securityTime = 0.0
+        if(cellState.machinesSecurity(currMachID) == 1)
+          securityTime = simulator.securityLevel1Time
+        if(cellState.machinesSecurity(currMachID) == 2)
+          securityTime = simulator.securityLevel2Time
+        else if(cellState.machinesSecurity(currMachID) == 3)
+          securityTime = simulator.securityLevel3Time
         assert(currMachID >= 0 && currMachID < cellState.machineSeqNums.length)
         val claimDelta = new ClaimDelta(scheduler,
           currMachID,
           cellState.machineSeqNums(currMachID),
-          if (cellState.machinesHeterogeneous && job.workloadName == "Batch") job.taskDuration * cellState.machinesPerformance(currMachID) else job.taskDuration,
+          //TODO: IMPORTANTE: AHORA MISMO LAS TAREAS SON CONSIDERADAS HOMOGÉNEAS EN TODOS LOS PICKERS QUE HEREDAN DE ESTE SCHEDULE SIN SOBREESCRIBIRLO
+          if (cellState.machinesHeterogeneous && job.workloadName == "Batch") ((job.taskDuration * cellState.machinesPerformance(currMachID)) +  (securityTime * cellState.machinesPerformance(currMachID))) else job.taskDuration + securityTime,
           job.cpusPerTask,
           job.memPerTask,
           job = job)

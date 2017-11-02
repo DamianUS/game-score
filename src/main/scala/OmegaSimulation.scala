@@ -52,7 +52,11 @@ class OmegaSimulatorDesc(
                    cellStateResourcesSorter: CellStateResourcesSorter,
                    cellStateResourcesPicker: CellStateResourcesPicker,
                    powerOnPolicy: PowerOnPolicy,
-                   powerOffPolicy: PowerOffPolicy): ClusterSimulator = {
+                   powerOffPolicy: PowerOffPolicy,
+                   securityLevel1Time: Double,
+                   securityLevel2Time: Double,
+                   securityLevel3Time: Double
+                  ): ClusterSimulator = {
     assert(blackListPercent >= 0.0 && blackListPercent <= 1.0)
     var schedulers = HashMap[String, OmegaScheduler]()
     // Create schedulers according to experiment parameters.
@@ -107,7 +111,10 @@ class OmegaSimulatorDesc(
       cellStateResourcesSorter = cellStateResourcesSorter,
       cellStateResourcesPicker = cellStateResourcesPicker,
       powerOnPolicy = powerOnPolicy,
-      powerOffPolicy = powerOffPolicy)
+      powerOffPolicy = powerOffPolicy,
+      securityLevel1Time = securityLevel1Time,
+      securityLevel2Time = securityLevel2Time,
+      securityLevel3Time = securityLevel3Time)
   }
 }
 
@@ -133,7 +140,10 @@ class OmegaSimulator(cellState: CellState,
                      cellStateResourcesSorter: CellStateResourcesSorter,
                      cellStateResourcesPicker: CellStateResourcesPicker,
                      powerOnPolicy: PowerOnPolicy,
-                     powerOffPolicy: PowerOffPolicy)
+                     powerOffPolicy: PowerOffPolicy,
+                     securityLevel1Time: Double,
+                     securityLevel2Time: Double,
+                     securityLevel3Time: Double)
   extends ClusterSimulator(cellState,
     schedulers,
     workloadToSchedulerMap,
@@ -144,7 +154,10 @@ class OmegaSimulator(cellState: CellState,
     cellStateResourcesSorter = cellStateResourcesSorter,
     cellStateResourcesPicker = cellStateResourcesPicker,
     powerOnPolicy = powerOnPolicy,
-    powerOffPolicy = powerOffPolicy) {
+    powerOffPolicy = powerOffPolicy,
+    securityLevel1Time = securityLevel1Time,
+    securityLevel2Time = securityLevel2Time,
+    securityLevel3Time = securityLevel3Time) {
   // Set up a pointer to this simulator in each scheduler.
   schedulers.values.foreach(_.omegaSimulator = this)
 }
