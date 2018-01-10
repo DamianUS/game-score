@@ -76,12 +76,14 @@ object Workloads {
   val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
   val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
   val machinesEnergy = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
+  val machineHeterogeneity = true
+  val tasksHeterogeneity = true
 
 
   val exampleCellStateDesc = new CellStateDesc(numMachines = numMach,
     cpusPerMachine = 4,
     memPerMachine = 8,
-    machinesHet = true,
+    machinesHet = machineHeterogeneity,
     machEn = machinesEnergy,
     machPerf = machinesPerformance,
     machSec = machinesSecurity)
@@ -120,14 +122,16 @@ object Workloads {
         avgTasksPerJob = 180.0,
         avgJobDuration = (90.0),
         avgCpusPerTask = 0.3,
-        avgMemPerTask = 0.5)
+        avgMemPerTask = 0.5,
+  heterogeneousTasks = tasksHeterogeneity)
     val exampleWorkloadGeneratorService =
       new DailyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
         initAvgJobInterarrivalTime = 140,
         avgTasksPerJob = 30.0,
         avgJobDuration = (2000.0),
         avgCpusPerTask = 0.5,
-        avgMemPerTask = 1.2)
+        avgMemPerTask = 1.2,
+  heterogeneousTasks = tasksHeterogeneity)
     val exampleWorkloadDesc = WorkloadDesc(cell = "example",
       assignmentPolicy = "CMB_PBB",
       workloadGenerators =
@@ -144,14 +148,16 @@ object Workloads {
     avgTasksPerJob = 50.0,
     avgJobDuration = (90.0),
     avgCpusPerTask = 0.3,
-    avgMemPerTask = 0.5)
+    avgMemPerTask = 0.5,
+    heterogeneousTasks = tasksHeterogeneity)
   val exampleWorkloadGeneratorService =
     new DailyExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
       initAvgJobInterarrivalTime = 900,
       avgTasksPerJob = 9.0,
       avgJobDuration = (2000.0),
       avgCpusPerTask = 0.5,
-      avgMemPerTask = 1.2)
+      avgMemPerTask = 1.2,
+      heterogeneousTasks = tasksHeterogeneity)
   val exampleWorkloadDesc = WorkloadDesc(cell = "example",
     assignmentPolicy = "CMB_PBB",
     workloadGenerators =
@@ -175,14 +181,16 @@ object Workloads {
         avgTasksPerJob = 180.0,
         avgJobDuration = (90.0),
         avgCpusPerTask = 0.3,
-        avgMemPerTask = 0.5)
+        avgMemPerTask = 0.5,
+  heterogeneousTasks = tasksHeterogeneity)
     val exampleWorkloadGeneratorService =
       new ExpExpExpWorkloadGenerator(workloadName = "Service".intern(),
         initAvgJobInterarrivalTime = 140,
         avgTasksPerJob = 30.0,
         avgJobDuration = (2000.0),
         avgCpusPerTask = 0.5,
-        avgMemPerTask = 1.2)
+        avgMemPerTask = 1.2,
+  heterogeneousTasks = tasksHeterogeneity)
     val exampleWorkloadDesc = WorkloadDesc(cell = "example",
       assignmentPolicy = "CMB_PBB",
       workloadGenerators =
