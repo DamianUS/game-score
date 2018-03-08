@@ -30,6 +30,7 @@ import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
 import efficiency.power_off_policies.PowerOffPolicy
 import efficiency.power_on_policies.PowerOnPolicy
+import stackelberg.StackelbergAgent
 
 import collection.mutable.HashMap
 
@@ -55,8 +56,8 @@ class OmegaSimulatorDesc(
                    powerOffPolicy: PowerOffPolicy,
                    securityLevel1Time: Double,
                    securityLevel2Time: Double,
-                   securityLevel3Time: Double
-                  ): ClusterSimulator = {
+                   securityLevel3Time: Double,
+                   stackelbergStrategy: StackelbergAgent): ClusterSimulator = {
     assert(blackListPercent >= 0.0 && blackListPercent <= 1.0)
     var schedulers = HashMap[String, OmegaScheduler]()
     // Create schedulers according to experiment parameters.
@@ -114,7 +115,8 @@ class OmegaSimulatorDesc(
       powerOffPolicy = powerOffPolicy,
       securityLevel1Time = securityLevel1Time,
       securityLevel2Time = securityLevel2Time,
-      securityLevel3Time = securityLevel3Time)
+      securityLevel3Time = securityLevel3Time,
+      stackelbergStrategy = stackelbergStrategy)
   }
 }
 
@@ -143,7 +145,8 @@ class OmegaSimulator(cellState: CellState,
                      powerOffPolicy: PowerOffPolicy,
                      securityLevel1Time: Double,
                      securityLevel2Time: Double,
-                     securityLevel3Time: Double)
+                     securityLevel3Time: Double,
+                     stackelbergStrategy: StackelbergAgent)
   extends ClusterSimulator(cellState,
     schedulers,
     workloadToSchedulerMap,
@@ -157,7 +160,8 @@ class OmegaSimulator(cellState: CellState,
     powerOffPolicy = powerOffPolicy,
     securityLevel1Time = securityLevel1Time,
     securityLevel2Time = securityLevel2Time,
-    securityLevel3Time = securityLevel3Time) {
+    securityLevel3Time = securityLevel3Time,
+    stackelbergStrategy = stackelbergStrategy) {
   // Set up a pointer to this simulator in each scheduler.
   schedulers.values.foreach(_.omegaSimulator = this)
 }

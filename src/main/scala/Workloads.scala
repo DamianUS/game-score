@@ -74,10 +74,11 @@ object Workloads {
     */
   val numMach = 1000
   val machinesPerformance = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
-  val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
+  //val machinesSecurity = Array.fill[Int](numMach)(Random.nextInt(4))
+  val machinesSecurity = Array.fill[Int](numMach)(4) //Every machine has the highest level so it can execute every task. We need to disable the performance penalty of the security
   val machinesEnergy = Array.fill[Double](numMach)(Random.nextDouble() * (1.5) + 0.5)
   val machineHeterogeneity = true
-  val tasksHeterogeneity = true
+  val tasksHeterogeneity = false
 
 
   val exampleCellStateDesc = new CellStateDesc(numMachines = numMach,

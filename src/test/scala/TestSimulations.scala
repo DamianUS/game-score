@@ -34,6 +34,7 @@ import efficiency.power_on_policies.ComposedPowerOnPolicy
 import efficiency.power_on_policies.action.unsatisfied.DefaultPowerOnAction
 import efficiency.power_on_policies.decision.NoPowerOnDecision
 import org.scalatest.FunSuite
+import stackelberg.NoStackelberg
 
 import scala.sys.process._
 
@@ -53,6 +54,7 @@ class SimulatorsTestSuite extends FunSuite {
     val defaultPickingPolicy = RandomPicker
     val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
     val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
+    val defaultStackelbergStrategy = NoStackelberg
 
     (1 to numJobs).foreach(i => {
       workload.addJob(new Job(id = i,
@@ -91,7 +93,8 @@ class SimulatorsTestSuite extends FunSuite {
       powerOffPolicy = defaultPowerOffPolicy,
       securityLevel1Time = 0.0,
       securityLevel2Time = 0.0,
-      securityLevel3Time = 0.0)
+      securityLevel3Time = 0.0,
+      stackelbergStrategy = defaultStackelbergStrategy)
 
     assert(monolithicSimulator.schedulers.size == 1)
     assert(monolithicSimulator.workloadToSchedulerMap.size == 1)
@@ -127,6 +130,7 @@ class SimulatorsTestSuite extends FunSuite {
         cpusPerTask = 1.0,
         memPerTask = 1.0))
     })
+    val defaultStackelbergStrategy = NoStackelberg
 
     // Create a simple scheduler.
     val scheduler = new MonolithicScheduler("simple_sched",
@@ -152,7 +156,8 @@ class SimulatorsTestSuite extends FunSuite {
       powerOffPolicy = defaultPowerOffPolicy,
       securityLevel1Time = 0.0,
       securityLevel2Time = 0.0,
-      securityLevel3Time = 0.0)
+      securityLevel3Time = 0.0,
+      stackelbergStrategy = defaultStackelbergStrategy)
 
     monolithicSimulator.run()
 
@@ -201,6 +206,7 @@ class SimulatorsTestSuite extends FunSuite {
         cpusPerTask = 1.0,
         memPerTask = 1.0))
     })
+    val defaultStackelbergStrategy = NoStackelberg
 
     // Create a simple scheduler, turn off partial job scheduling
     // So that we can check our think time calculations by just
@@ -237,7 +243,8 @@ class SimulatorsTestSuite extends FunSuite {
       powerOffPolicy = defaultPowerOffPolicy,
       securityLevel1Time = 0.0,
       securityLevel2Time = 0.0,
-      securityLevel3Time = 0.0)
+      securityLevel3Time = 0.0,
+      stackelbergStrategy = defaultStackelbergStrategy)
 
     mesosSimulator.run()
     assert(mesosSimulator.agendaSize == 0, ("Mesos Agenda should have been " +
@@ -273,6 +280,7 @@ class SimulatorsTestSuite extends FunSuite {
   test("omegaSimulatorCellStateSyncApplyDeltaAndCommitTest") {
     val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
     val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
+    val defaultStackelbergStrategy = NoStackelberg
     println("\n\n\n=====================")
     println("omegaSimulatorCellStateSyncApplyDeltaAndCommitTest")
     println("=====================\n\n")
@@ -315,7 +323,8 @@ class SimulatorsTestSuite extends FunSuite {
       powerOffPolicy = defaultPowerOffPolicy,
       securityLevel1Time = 0.0,
       securityLevel2Time = 0.0,
-      securityLevel3Time = 0.0)
+      securityLevel3Time = 0.0,
+      stackelbergStrategy = defaultStackelbergStrategy)
 
     // Create a private copy of cellstate.
     val privateCellState = commonCellState.copy
@@ -407,6 +416,7 @@ class SimulatorsTestSuite extends FunSuite {
   test("omegaSchedulerTest") {
     val defaultPowerOnPolicy = new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision)
     val defaultPowerOffPolicy = new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision)
+    val defaultStackelbergStrategy = NoStackelberg
     println("===========\nomegaSchedulerTest\n==========")
     println("\nRunning cellstate flow test.")
     var workload = new Workload("unif")
@@ -443,7 +453,8 @@ class SimulatorsTestSuite extends FunSuite {
       powerOffPolicy = defaultPowerOffPolicy,
       securityLevel1Time = 0.0,
       securityLevel2Time = 0.0,
-      securityLevel3Time = 0.0)
+      securityLevel3Time = 0.0,
+      stackelbergStrategy = NoStackelberg)
 
     // The job should be scheduled as soon as it is added to the scheduler.
     println("adding a job to scheduler.")
@@ -462,6 +473,7 @@ class SimulatorsTestSuite extends FunSuite {
     var workload = new Workload("unif")
     val defaultSortingPolicy = NoSorter;
     val defaultPickingPolicy = RandomPicker
+    val defaultStackelbergStrategy = NoStackelberg
     val numJobs = 40
     (1 to numJobs).foreach(i => {
       workload.addJob(Job(id = i,
@@ -500,7 +512,8 @@ class SimulatorsTestSuite extends FunSuite {
       powerOffPolicy = defaultPowerOffPolicy,
       securityLevel1Time = 0.0,
       securityLevel2Time = 0.0,
-      securityLevel3Time = 0.0)
+      securityLevel3Time = 0.0,
+      stackelbergStrategy = defaultStackelbergStrategy)
 
     omegaSimulator.run()
     // Each job is scheduled two seconds after it arrives since all jobs

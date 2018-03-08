@@ -36,6 +36,7 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.IndexedSeq
 import scala.collection.mutable.ListBuffer
 import org.apache.commons.math.distribution.ExponentialDistributionImpl
+import stackelberg.StackelbergAgent
 
 import scala.util.Random
 
@@ -139,7 +140,8 @@ abstract class ClusterSimulatorDesc(val runTime: Double) {
                    powerOffPolicy: PowerOffPolicy,
                    securityLevel1Time: Double,
                    securityLevel2Time: Double,
-                   securityLevel3Time: Double): ClusterSimulator
+                   securityLevel3Time: Double,
+                   stackelbergStrategy: StackelbergAgent): ClusterSimulator
 }
 
 /**
@@ -168,7 +170,8 @@ class ClusterSimulator(val cellState: CellState,
                        powerOffPolicy: PowerOffPolicy,
                        val securityLevel1Time: Double,
                        val securityLevel2Time: Double,
-                       val securityLevel3Time: Double)
+                       val securityLevel3Time: Double,
+                       val stackelbergStrategy: StackelbergAgent)
   extends Simulator(logging) {
   assert(schedulers.size > 0, "At least one scheduler must be provided to" +
     "scheduler constructor.")
@@ -195,7 +198,8 @@ class ClusterSimulator(val cellState: CellState,
   val sorter = cellStateResourcesSorter
   val picker = cellStateResourcesPicker
   val powerOn = powerOnPolicy
-  val powerOff = powerOffPolicy
+  var powerOff = powerOffPolicy
+  val stackelberg = stackelbergStrategy
   // Set up a pointer to this simulator in the cellstate.
   cellState.simulator = this
   // Set up a pointer to this simulator in each scheduler.

@@ -29,7 +29,8 @@ package ClusterSchedulingSimulation
 import efficiency.ordering_cellstate_resources_policies.{BasicLoadSorter, CellStateResourcesSorter}
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
 import efficiency.power_off_policies.PowerOffPolicy
-import efficiency.power_on_policies.{PowerOnPolicy}
+import efficiency.power_on_policies.PowerOnPolicy
+import stackelberg.StackelbergAgent
 
 import scala.collection.mutable
 import scala.collection.mutable.HashMap
@@ -59,7 +60,8 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
                    powerOffPolicy: PowerOffPolicy,
                    securityLevel1Time: Double,
                    securityLevel2Time: Double,
-                   securityLevel3Time: Double): ClusterSimulator = {
+                   securityLevel3Time: Double,
+                   stackelbergStrategy: StackelbergAgent): ClusterSimulator = {
     var schedulers = HashMap[String, Scheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -110,7 +112,8 @@ class MonolithicSimulatorDesc(schedulerDescs: Seq[SchedulerDesc],
       powerOffPolicy = powerOffPolicy,
       securityLevel1Time = securityLevel1Time,
       securityLevel2Time = securityLevel2Time,
-      securityLevel3Time = securityLevel3Time)
+      securityLevel3Time = securityLevel3Time,
+      stackelbergStrategy = stackelbergStrategy)
   }
 }
 
@@ -230,7 +233,8 @@ class MonolithicScheduler(name: String,
           // All tasks in job scheduled so don't put it back in pendingQueue.
           jobEventType = "fully-scheduled"
         }
-        //TODO: Buen sitio para la lógica de encender
+        //TODO: Stackelberg
+        simulator.stackelberg.play(claimDeltas,simulator.cellState,job,this,simulator)
         if(simulator.cellState.numberOfMachinesOn < simulator.cellState.numMachines){
           simulator.powerOn.powerOn(simulator.cellState, job, "monolithic")
         }

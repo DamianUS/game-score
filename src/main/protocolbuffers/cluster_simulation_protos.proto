@@ -64,6 +64,8 @@ message ExperimentResultSet {
       optional double security_1_time = 17;
       optional double security_2_time = 18;
       optional double security_3_time = 19;
+      optional string stackelberg = 20;
+
       // Next field number: 15
 
       // Workload-level stats.

@@ -52,6 +52,7 @@ import efficiency.power_on_policies.action.unsatisfied.DefaultPowerOnAction
 import efficiency.power_on_policies.decision.probabilistic.{ExponentialPowerOnDecision, GammaNormalPowerOnDecision}
 import efficiency.power_on_policies.decision.{CombinedPowerOnDecision, DefaultPowerOnDecision, MarginPowerOnDecision, NoPowerOnDecision}
 import efficiency.power_on_policies.{ComposedPowerOnPolicy, PowerOnPolicy}
+import stackelberg.{NoStackelberg, StackelbergAgent, SwitchBetweenCurrentAndSpecified}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -383,9 +384,12 @@ object Simulation {
     // val mesosWorkloadToSweep = "Batch"
     val mesosWorkloadToSweep = "Service"
 
-    val runMonolithic = false
-    val runMesos = true
+    val runMonolithic = true
+    val runMesos = false
     val runOmega = false
+
+
+    val runStackelberg = true
 
     //All sorting and picking policies
     val sortingPolicies = List[CellStateResourcesSorter](NoSorter,BasicLoadSorter)
@@ -402,10 +406,10 @@ object Simulation {
     //val pickingPolicies = List[CellStateResourcesPicker](GeneticNoCrossingMutatingWorstPicker)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaWithRandom) //This one is the best so far
     //val pickingPolicies = List[CellStateResourcesPicker](new NewGeneticStandardPicker(populationSize=10, mutationProbability=0.5, crossoverProbability = 0.7, crossingSelector=TwoBest, fitnessFunction = Makespan, epochNumber = 2000, crossingFunction = CrossGenes, mutatingFunction = WorstRandom))
-    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
+    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom,AgnieszkaEnergySecurityWithRandom)
     //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaSecurityWithRandom, new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.07), RandomPicker, AgnieszkaEnergySecurityWithRandom)
-    val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaEnergySecurityWithRandom)
+    //val pickingPolicies = List[CellStateResourcesPicker](AgnieszkaEnergySecurityWithRandom)
     val powerOnPolicies = List[PowerOnPolicy](new ComposedPowerOnPolicy(DefaultPowerOnAction, NoPowerOnDecision))
     val powerOffPolicies = List[PowerOffPolicy](new ComposedPowerOffPolicy(DefaultPowerOffAction, NoPowerOffDecision))
 
@@ -415,6 +419,17 @@ object Simulation {
     //val defaultPickingPolicy = List[CellStateResourcesPicker](BasicReversePickerCandidatePower)
     //val defaultPickingPolicy = List[CellStateResourcesPicker](new SpreadMarginReversePickerCandidatePower(spreadMargin = 0.05, marginPerc = 0.02))
     val defaultPickingPolicy = pickingPolicies
+
+    //Stackelberg strategies
+    val stackelbergCurrentAlwzOffMarginDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new FreeCapacityMinMarginPowerOffDecision(0.35))
+    val stackelbergCurrentAlwzOffLessMarginDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new FreeCapacityMinMarginPowerOffDecision(0.25))
+    val stackelbergCurrentAlwzOffRandomDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new RandomPowerOffDecision(0.5))
+    val stackelbergCurrentAlwzOffGammaDecision = new SwitchBetweenCurrentAndSpecified(new ComposedPowerOffPolicy(DefaultPowerOffAction, AlwzPowerOffDecision), new GammaPowerOffDecision(0.8, 25, 0.4))
+    var stackelbergStrategies = List[StackelbergAgent](stackelbergCurrentAlwzOffMarginDecision,NoStackelberg,stackelbergCurrentAlwzOffLessMarginDecision,stackelbergCurrentAlwzOffRandomDecision,stackelbergCurrentAlwzOffGammaDecision)
+    if(!runStackelberg){
+      stackelbergStrategies = List[StackelbergAgent](NoStackelberg)
+    }
+
 
     val loadRange = (0.4 /*:: 0.7*/ :: Nil)
     //val loadRange = (0.1 to 0.99 by 0.2).toList
@@ -485,7 +500,7 @@ object Simulation {
     val sweepGammaNormalLostFactor = true
     val sweepExponentialNormalLostFactor = true
     //Power Off
-    val runMaxLoadOff = false
+    val runMaxLoadOff = true
     val runMeanLoadOff = false
     val runMinFreeCapacity = true
     val runMeanFreeCapacity = false
@@ -899,13 +914,13 @@ object Simulation {
 
     //var security1Range = (1.0 :: 10.0 :: 30.0 :: Nil) //seconds added to tasks of this security level
     var security1Range = (10.0 :: 30.0 :: Nil)
-    //security1Range = (0.0 :: Nil) //disable
+    security1Range = (0.0 :: Nil) //disable
     //var security2Range = (10.0 :: 60.0 :: 120.0 :: Nil) //seconds added to tasks of this security level
     var security2Range = (60.0 :: 180.0 :: Nil) //seconds added to tasks of this security level
-    //security2Range = (0.0 :: Nil) //disable
+    security2Range = (0.0 :: Nil) //disable
     //var security3Range = (60.0 :: 120.0 :: 240.0 :: Nil) //seconds added to tasks of this security level
     var security3Range = (360.0 :: 1080.0 :: Nil) //seconds added to tasks of this security level
-    //security3Range = (0.0 :: Nil) //disable
+    security3Range = (0.0 :: Nil) //disable
     //val constantRange = (0.1 :: 1.0 :: Nil)
     val constantRange = (1.0 :: Nil)
     //val constantRange = (0.1 :: 1.0 :: 10.0 :: Nil)
@@ -1040,7 +1055,7 @@ object Simulation {
                 powerOffPolicies = defaultPowerOffPolicy,
                 level1SecurityTimes = security1Range,
                 level2SecurityTimes = security2Range,
-                level3SecurityTimes = security3Range)
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
             }
 
             if (sweepL) {
@@ -1068,7 +1083,7 @@ object Simulation {
                 powerOffPolicies = defaultPowerOffPolicy,
                 level1SecurityTimes = security1Range,
                 level2SecurityTimes = security2Range,
-                level3SecurityTimes = security3Range)
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
             }
 
             if (sweepPickiness) {
@@ -1096,7 +1111,7 @@ object Simulation {
                 powerOffPolicies = defaultPowerOffPolicy,
                 level1SecurityTimes = security1Range,
                 level2SecurityTimes = security2Range,
-                level3SecurityTimes = security3Range)
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
             }
 
             if (sweepLambda) {
@@ -1125,7 +1140,7 @@ object Simulation {
                 powerOffPolicies = defaultPowerOffPolicy,
                 level1SecurityTimes = security1Range,
                 level2SecurityTimes = security2Range,
-                level3SecurityTimes = security3Range)
+                level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
             }
           }
         }
@@ -1156,7 +1171,7 @@ object Simulation {
           powerOffPolicies = defaultPowerOffPolicy,
           level1SecurityTimes = security1Range,
           level2SecurityTimes = security2Range,
-          level3SecurityTimes = security3Range)
+          level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
       }
 
       if (sweepCL) {
@@ -1180,7 +1195,7 @@ object Simulation {
           powerOffPolicies = defaultPowerOffPolicy,
           level1SecurityTimes = security1Range,
           level2SecurityTimes = security2Range,
-          level3SecurityTimes = security3Range)
+          level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
       }
 
       if (sweepL) {
@@ -1204,7 +1219,7 @@ object Simulation {
           powerOffPolicies = defaultPowerOffPolicy,
           level1SecurityTimes = security1Range,
           level2SecurityTimes = security2Range,
-          level3SecurityTimes = security3Range)
+          level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
       }
 
       if (sweepPickiness) {
@@ -1228,7 +1243,7 @@ object Simulation {
           powerOffPolicies = defaultPowerOffPolicy,
           level1SecurityTimes = security1Range,
           level2SecurityTimes = security2Range,
-          level3SecurityTimes = security3Range)
+          level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
       }
 
       if (sweepLambda) {
@@ -1253,7 +1268,7 @@ object Simulation {
           powerOffPolicies = defaultPowerOffPolicy,
           level1SecurityTimes = security1Range,
           level2SecurityTimes = security2Range,
-          level3SecurityTimes = security3Range)
+          level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
       }
     }
 
@@ -1290,7 +1305,7 @@ object Simulation {
               powerOffPolicies = defaultPowerOffPolicy,
               level1SecurityTimes = security1Range,
               level2SecurityTimes = security2Range,
-              level3SecurityTimes = security3Range)
+              level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
           }
 
           if (sweepCL) {
@@ -1315,7 +1330,7 @@ object Simulation {
               powerOffPolicies = defaultPowerOffPolicy,
               level1SecurityTimes = security1Range,
               level2SecurityTimes = security2Range,
-              level3SecurityTimes = security3Range)
+              level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
           }
 
           if (sweepL) {
@@ -1340,7 +1355,7 @@ object Simulation {
               powerOffPolicies = defaultPowerOffPolicy,
               level1SecurityTimes = security1Range,
               level2SecurityTimes = security2Range,
-              level3SecurityTimes = security3Range)
+              level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
           }
 
           if (sweepPickiness) {
@@ -1365,7 +1380,7 @@ object Simulation {
               powerOffPolicies = defaultPowerOffPolicy,
               level1SecurityTimes = security1Range,
               level2SecurityTimes = security2Range,
-              level3SecurityTimes = security3Range)
+              level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
           }
 
           if (sweepLambda) {
@@ -1391,7 +1406,7 @@ object Simulation {
               powerOffPolicies = defaultPowerOffPolicy,
               level1SecurityTimes = security1Range,
               level2SecurityTimes = security2Range,
-              level3SecurityTimes = security3Range)
+              level3SecurityTimes = security3Range,stackelbergStrategies = stackelbergStrategies)
           }
         }
       }

@@ -30,6 +30,7 @@ import efficiency.ordering_cellstate_resources_policies.CellStateResourcesSorter
 import efficiency.pick_cellstate_resources.CellStateResourcesPicker
 import efficiency.power_off_policies.PowerOffPolicy
 import efficiency.power_on_policies.PowerOnPolicy
+import stackelberg.StackelbergAgent
 
 import collection.mutable.HashMap
 import collection.mutable.ListBuffer
@@ -55,7 +56,8 @@ class MesosSimulatorDesc(
                    powerOffPolicy: PowerOffPolicy,
                    securityLevel1Time: Double,
                    securityLevel2Time: Double,
-                   securityLevel3Time: Double): ClusterSimulator = {
+                   securityLevel3Time: Double,
+                   stackelbergStrategy: StackelbergAgent): ClusterSimulator = {
     var schedulers = HashMap[String, MesosScheduler]()
     // Create schedulers according to experiment parameters.
     schedulerDescs.foreach(schedDesc => {
@@ -113,7 +115,8 @@ class MesosSimulatorDesc(
       powerOffPolicy = powerOffPolicy,
       securityLevel1Time = securityLevel1Time,
       securityLevel2Time = securityLevel2Time,
-      securityLevel3Time = securityLevel3Time)
+      securityLevel3Time = securityLevel3Time,
+      stackelbergStrategy = stackelbergStrategy)
   }
 }
 
@@ -131,7 +134,8 @@ class MesosSimulator(cellState: CellState,
                      powerOffPolicy: PowerOffPolicy,
                      securityLevel1Time: Double,
                      securityLevel2Time: Double,
-                     securityLevel3Time: Double)
+                     securityLevel3Time: Double,
+                     stackelbergStrategy: StackelbergAgent)
   extends ClusterSimulator(cellState,
     schedulers,
     workloadToSchedulerMap,
@@ -145,7 +149,8 @@ class MesosSimulator(cellState: CellState,
     powerOffPolicy = powerOffPolicy,
     securityLevel1Time = securityLevel1Time,
     securityLevel2Time = securityLevel2Time,
-    securityLevel3Time = securityLevel3Time) {
+    securityLevel3Time = securityLevel3Time,
+    stackelbergStrategy = stackelbergStrategy) {
   assert(cellState.conflictMode.equals("resource-fit"),
     "Mesos requires cellstate to be set up with resource-fit conflictMode")
   // Set up a pointer to this simulator in the allocator.
