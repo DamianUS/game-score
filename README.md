@@ -2,7 +2,7 @@
 
 This simulator can be used to prototype and compare different cluster scheduling strategies and policies. It generates synthetic cluster workloads from empirical parameter distributions (thus generating unique workloads even from a small amount of input data), simulates their scheduling and execution using a discrete event simulator, and finally permits analysis of scheduling performance metrics.
 
-The simulator was originally written as part of research on the "Omega" shared-state cluster scheduling architecture at Google. A paper on Omega, published at EuroSys 2013, uses of this simulator for the comparative evaluation of Omega and other alternative architectures (referred to as a "lightweight" simulator there) [1]. As such, the simulators design is somewhat geared towards the comparative evaluation needs of this paper, but it does also permit more general experimentation with:
+The simulator was originally written as part of research on the "Omega" shared-state cluster scheduling architecture at Google, and then extended for the creation of the SCORE simulator. A paper on Omega, published at EuroSys 2013, uses of this simulator for the comparative evaluation of Omega and other alternative architectures (referred to as a "lightweight" simulator there) [1]. As such, the simulators design is somewhat geared towards the comparative evaluation needs of this paper, but it does also permit more general experimentation with:
 
  * scheduling policies and logics (i.e. "what machine should a task be bound to?"),
  * resource models (i.e. "how are machines represented for scheduling, and how are they shared between tasks?"),
@@ -35,6 +35,9 @@ Energy-efficiency related concepts: (can be found in **/src/main/scala/efficienc
 **Sorter**: Performs a sorting of the machines according to the suitability to host an incoming task.
 
 **Picker**: Decides which machine should be the right candidate to host a task after the sorting process.
+
+**Stackelberg Agent**: Decides which energy-efficiency policy should be applied after the scheduling process of each job is executed.
+
 
 ## Workflow
 
@@ -123,6 +126,10 @@ This approach is of major importance in avoiding resource conflicts and eliminat
 One way that this can be achieved is by adding a certain randomness to the picking-decision process. This policy selects the machines with the highest level of occupation from the available candidate pool that can host the task, but once the most occupied machine is found, a machine pivot that meets a specified safety margin is selected.
 
 This can be very useful in the prevention of runtime resource oversubscription.
+
+## Stackelberg (**/src/main/scala/stackelberg/**)
+
+These agents are responsible for choosing a Power-off policy from a catalog of available power-off policies as a response for the Leader (Scheduler) Stackelberg-Game move. Every Stackelberg Agent needs all the environment and scheduling move data in order to play its move.
 
 ## Downloading, building, and running
 
