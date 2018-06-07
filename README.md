@@ -1,4 +1,4 @@
-# Cluster scheduler simulator overview
+# GAME-SCORE Cluster scheduler simulator overview
 
 This simulator can be used to prototype and compare different cluster scheduling strategies and policies. It generates synthetic cluster workloads from empirical parameter distributions (thus generating unique workloads even from a small amount of input data), simulates their scheduling and execution using a discrete event simulator, and finally permits analysis of scheduling performance metrics.
 
